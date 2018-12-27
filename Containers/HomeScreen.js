@@ -95,7 +95,7 @@ export default class HomeScreen extends Component<Props> {
           <Image source={require('../Images/shop-1.png')}
           style={{width:100,height:100 ,borderRadius:10}} />
           <Image source={require('../Images/star.png')}
-          style={{width:40,height:40,position:'absolute'}} />
+          style={{width:40,height:40,position:'absolute',bottom:0}} />
         </View>
 
         <View style={styles.groceryDet}>

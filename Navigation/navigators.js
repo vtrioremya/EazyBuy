@@ -1,29 +1,22 @@
-import {DrawerNavigator, StackNavigator, TabNavigator, createBottomTabNavigator} from 'react-navigation'
+import {createDrawerNavigator, createStackNavigator, createBottomTabNavigator} from 'react-navigation'
 import React, { Component } from 'react'
+import { DrawerActions } from 'react-navigation';
 import Splash from '../Containers/Splash'
 import HomeScreen from '../Containers/HomeScreen'
-import Swiper from '../Containers/Swiper'
+import Swipers from '../Containers/Swipers'
 import MyOrders from '../Containers/MyOrders'
 import Account from '../Containers/Account'
 import Search from '../Containers/Search'
+import Location from '../Containers/Location'
+import Login from '../Containers/Login'
+import DrawerScreen from '../Containers/DrawerScreen'
+import NavigationBar from '../Components/NavigationBar'
 
 import {Image, View, Text, TouchableOpacity, Dimensions, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
 
-export const Stack = StackNavigator({
-  Splash : {screen: Splash},
-  HomeScreen : {screen: HomeScreen},
-  Swiper :{screen: Swiper},
-  MyOrders :{screen: MyOrders},
-  Account :{screen: Account},
-  Search :{screen: Search},
 
-},{
-  initialRouteName: 'HomeScreen',
-  headerMode: 'screen'
-})
-
-export const Tabs =createBottomTabNavigator({
+export const Tabs = createBottomTabNavigator({
   HomeScreen : {screen: HomeScreen,
     navigationOptions: {
       tabBarLabel: 'Home',
@@ -67,4 +60,30 @@ export const Tabs =createBottomTabNavigator({
   },
 }
 
+})
+
+export const Drawer = createDrawerNavigator({
+  Tabs: {screen : Tabs}
+},
+{
+    drawerWidth: 300,
+    contentComponent: DrawerScreen,
+    drawerType: 'slide'
+});
+
+export const Stack = createStackNavigator({
+  Drawer : {screen: Drawer},
+  Splash: {screen: Splash},
+  Swipers: {screen: Swipers},
+  Location: {screen: Location},
+  Login: {screen: Login}
+
+}
+,{
+    initialRouteName: 'Splash',
+    navigationOptions: ({ navigation }) => ({
+        headerLeft: (
+          <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })
 })

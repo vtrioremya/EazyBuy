@@ -9,6 +9,8 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image} from 'react-native';
 var {height, width} = Dimensions.get('window');
+import Swiper from 'react-native-swiper';
+import WelcomeText from '../Components/WelcomeText'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -20,44 +22,42 @@ const instructions = Platform.select({
 type Props = {};
 
 
-export default class Swiper extends Component<Props> {
+export default class Swipers extends Component<Props> {
 
   static navigationOptions = {
     header: null
+  }
+
+  open(){
+    this.props.navigation.navigate('Login');
   }
 
   render() {
     return (
       <View style={styles.container}>
 
+        <Swiper style={{width:width}}
+                dot= {
+                  <View style={{backgroundColor:'#9796a4', width: 8, height: 8,borderRadius: 4, marginLeft: 10, marginRight: 10, marginTop: 3, marginBottom: 3,}}  />
+                }
+                activeDot= {
+                  <View style={{backgroundColor: '#fff', width: 8, height: 8, borderRadius: 4, marginLeft: 10, marginRight: 10, marginTop: 3, marginBottom: 3,}} />
+                }>
 
-        <View style={{position:'absolute', zIndex:0}}>
-          <View style={styles.partOne}>
-            <Text>hai</Text>
+
+            <WelcomeText picture={require('../Images/welcome-1.jpg')} text='QUALITY ASSURED' open={this.open.bind(this)}/>
+
+
+          <View>
+              <WelcomeText picture={require('../Images/welcome-2.jpg')} text='CUSTOMER SATISFACTION' open={this.open.bind(this)}/>
           </View>
 
-          <View style={styles.partTwo}>
-
-            <Text>jhdhs</Text>
-
-          </View>
-        </View>
-
-        <View style={styles.imageView}>
-          <Image source={require('../Images/banner-1.jpg')} style={styles.qualityImage}/>
-
-          <TouchableOpacity style={styles.english}>
-            <Text style={styles.englishText}>QUALITY ASSURED</Text>
-
-          </TouchableOpacity>
-
-          <View style={styles.qualityText}>
-            <Text style={styles.quality}>Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry.
-            </Text>
+          <View>
+            <WelcomeText picture={require('../Images/welcome-3.jpg')} text='GREAT OFFERS' open={this.open.bind(this)}/>
           </View>
 
-        </View>
+
+        </Swiper>
 
 
       </View>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   },
   qualityText: {
     width: width/1.25,
-    justifyContent:'center',
+    // justifyContent:'center',
     marginTop:20,
   },
   quality: {

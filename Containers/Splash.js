@@ -31,13 +31,13 @@ export default class Splash extends Component<Props> {
     };
   }
 
-  // static navigationOptions = {
-  //   header: null
-  // }
+  static navigationOptions = {
+    header: null
+  }
 
   splash = () => {
-    Alert.alert("splash");
-    this.props.navigation.navigate('Swiper')
+    // Alert.alert("splash");
+    this.props.navigation.navigate('Swipers')
   }
 
   render() {

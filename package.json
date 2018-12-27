@@ -9,6 +9,7 @@
   "dependencies": {
     "react": "16.6.3",
     "react-native": "0.57.8",
+    "react-native-maps": "^0.22.1",
     "react-native-material-tabs": "^3.8.1",
     "react-native-slideshow": "^1.0.1",
     "react-native-swiper": "^1.5.14",
