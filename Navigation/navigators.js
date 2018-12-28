@@ -9,6 +9,9 @@ import Account from '../Containers/Account'
 import Search from '../Containers/Search'
 import Location from '../Containers/Location'
 import Login from '../Containers/Login'
+import Register from '../Containers/Register'
+import ForgotPassword from '../Containers/ForgotPassword'
+import ProductCategory from '../Containers/ProductCategory'
 import DrawerScreen from '../Containers/DrawerScreen'
 import NavigationBar from '../Components/NavigationBar'
 
@@ -76,11 +79,14 @@ export const Stack = createStackNavigator({
   Splash: {screen: Splash},
   Swipers: {screen: Swipers},
   Location: {screen: Location},
-  Login: {screen: Login}
+  Login: {screen: Login},
+  Register: {screen: Register},
+  ForgotPassword: {screen: ForgotPassword},
+  ProductCategory: {screen: ProductCategory},
 
 }
 ,{
-    initialRouteName: 'Splash',
+    initialRouteName: 'ProductCategory',
     navigationOptions: ({ navigation }) => ({
         headerLeft: (
           <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>

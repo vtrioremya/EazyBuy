@@ -43,8 +43,8 @@ export default class Splash extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <Image source={require('../Images/logo.jpg')} style={{width: width/1.5, height: height/3}}/>
+        <View style={{width:width/1.5, height:height/2.5}}>
+          <Image source={require('../Images/logo-splash.png')} style={{width: width/1.5, height: height/4}}/>
         </View>
         <TouchableOpacity style={styles.english} onPress={this.splash}>
           <Text style={styles.englishText}>ENGLISH</Text>

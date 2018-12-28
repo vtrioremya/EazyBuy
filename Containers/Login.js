@@ -40,6 +40,10 @@ export default class Login extends Component<Props> {
     this.props.navigation.navigate('HomeScreen');
   }
 
+  register(){
+    this.props.navigation.navigate('Register');
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -91,7 +95,7 @@ export default class Login extends Component<Props> {
         </View>
 
         <View style={styles.accountView}>
-          <TouchableOpacity>
+          <TouchableOpacity  onPress={this.register.bind(this)}>
             <Text style={styles.account}>Don't have an Account?'</Text>
           </TouchableOpacity>
         </View>

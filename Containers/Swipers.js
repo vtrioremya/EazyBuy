@@ -32,29 +32,53 @@ export default class Swipers extends Component<Props> {
     this.props.navigation.navigate('Login');
   }
 
+  home(){
+    this.props.navigation.navigate('HomeScreen');
+  }
+
   render() {
     return (
       <View style={styles.container}>
 
         <Swiper style={{width:width}}
+        
                 dot= {
                   <View style={{backgroundColor:'#9796a4', width: 8, height: 8,borderRadius: 4, marginLeft: 10, marginRight: 10, marginTop: 3, marginBottom: 3,}}  />
                 }
                 activeDot= {
                   <View style={{backgroundColor: '#fff', width: 8, height: 8, borderRadius: 4, marginLeft: 10, marginRight: 10, marginTop: 3, marginBottom: 3,}} />
-                }>
+                }
+                loop={false}>
 
 
-            <WelcomeText picture={require('../Images/welcome-1.jpg')} text='QUALITY ASSURED' open={this.open.bind(this)}/>
+            <WelcomeText
+            bg={require('../Images/welcome-bg-1.jpg')}
+            picture={require('../Images/welcome-1.jpg')}
+            text='QUALITY ASSURED'
+            buttonColor='#fbbc00'
+            open={this.open.bind(this)}
+            skip={this.home.bind(this)}/>
 
 
-          <View>
-              <WelcomeText picture={require('../Images/welcome-2.jpg')} text='CUSTOMER SATISFACTION' open={this.open.bind(this)}/>
-          </View>
 
-          <View>
-            <WelcomeText picture={require('../Images/welcome-3.jpg')} text='GREAT OFFERS' open={this.open.bind(this)}/>
-          </View>
+              <WelcomeText
+              bg={require('../Images/welcome-bg-2.jpg')}
+              picture={require('../Images/welcome-2.jpg')}
+              text='CUSTOMER SATISFACTION'
+              buttonColor='#2f2c49'
+              open={this.open.bind(this)}
+              skip={this.home.bind(this)}/>
+
+
+
+            <WelcomeText
+            bg={require('../Images/welcome-bg-1.jpg')}
+            picture={require('../Images/welcome-3.jpg')}
+            text='GREAT OFFERS'
+            buttonColor='#fbbc00'
+            open={this.open.bind(this)}
+            skip={this.home.bind(this)}/>
+
 
 
         </Swiper>

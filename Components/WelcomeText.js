@@ -9,16 +9,16 @@ import { NavigationActions } from 'react-navigation'
 const WelcomeText = (props) => {
 
   return(
-    <View style={{position:'absolute', zIndex:0, alignItems:'center',flexDirection:'column'}}>
-      <View style={styles.partOne}/>
-
-      <View style={styles.partTwo}/>
+    <View style={styles.container}>
+      <View style={{position:'absolute', alignItems:'center'}}>
+        <Image source={props.bg} style={{flex:1,width:width, height:height,resizeMode:'cover'}}/>
+      </View>
 
 
       <View style={styles.imageView}>
         <Image source={props.picture} style={styles.qualityImage}/>
 
-        <TouchableOpacity style={styles.english} onPress={props.open}>
+        <TouchableOpacity style={[styles.english,{backgroundColor:props.buttonColor}]} onPress={props.open}>
           <Text style={styles.englishText}>{props.text}</Text>
 
         </TouchableOpacity>
@@ -31,9 +31,18 @@ const WelcomeText = (props) => {
 
       </View>
 
-        <View style={{position:'absolute',bottom:10,
-        left:0,backgroundColor:'red', width:100, alignItems:'center',}}>
-          <Text>SKIP</Text>
+        <View style={{position:'absolute',bottom:20,
+        left:0, width:width/4, alignItems:'center'}}>
+          <TouchableOpacity onPress={props.skip}>
+            <Text style={{color:'#fff', fontSize:20}}>SKIP</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{position:'absolute',bottom:20,
+        right:0, width:width/4, alignItems:'center'}}>
+          <TouchableOpacity>
+            <Image source={require('../Images/next.png')} style={{width:30, height:30}}/>
+          </TouchableOpacity>
         </View>
 
     </View>
@@ -44,10 +53,10 @@ export default WelcomeText;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-    flexDirection: 'column',
+    // backgroundColor: '#F5FCFF',
+    // flexDirection: 'column',
 
   },
   welcome: {
@@ -62,7 +71,6 @@ const styles = StyleSheet.create({
   },
   english: {
     marginTop:20,
-    backgroundColor: '#fbbc00',
     width: width/1.25,
     justifyContent:'center',
     borderRadius:30,
@@ -95,6 +103,7 @@ const styles = StyleSheet.create({
   },
   imageView: {
     position:'absolute',
+    // backgroundColor:'red',
     zIndex:1,
     top:150,
     justifyContent:'center',

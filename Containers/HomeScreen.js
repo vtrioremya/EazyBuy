@@ -171,7 +171,7 @@ export default class HomeScreen extends Component<Props> {
 
         <View>
           <MaterialTabs
-            items={['Groceries', 'Maid Services', 'Technical Services']}
+            items={['Groceries', 'Maid Services', 'Techservice']}
             selectedIndex={this.state.selectedTab}
             onChange={index => this.setState({ selectedTab: index })}
             barColor='#fff'
