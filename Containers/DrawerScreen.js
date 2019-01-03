@@ -9,14 +9,14 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {ScrollView, Text, View, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
-import { DrawerActions } from 'react-navigation';
+import { DrawerActions, NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 
 
 type Props = {};
 export default class DrawerScreen extends Component<Props> {
 
-  avigateToScreen = (route) => () => {
+  navigateToScreen = (route) => () => {
     const navigateAction = NavigationActions.navigate({
       routeName: route
     });
@@ -51,7 +51,7 @@ export default class DrawerScreen extends Component<Props> {
           <View style={{marginTop:20}}>
             <View style={styles.menuItem}>
               <Image source={require('../Images/search.png')} style={{width:30, height:30}} />
-              <Text style={styles.textSize}>
+              <Text style={styles.textSize} onPress={this.navigateToScreen('ProductCategory')}>
                 Browse All
               </Text>
             </View>

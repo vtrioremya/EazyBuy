@@ -14,6 +14,7 @@ import ForgotPassword from '../Containers/ForgotPassword'
 import ProductCategory from '../Containers/ProductCategory'
 import ProductDetails from '../Containers/ProductDetails'
 import ProductList from '../Containers/ProductList'
+import EazybuySplash from '../Containers/EazybuySplash'
 import DrawerScreen from '../Containers/DrawerScreen'
 import NavigationBar from '../Components/NavigationBar'
 
@@ -87,10 +88,12 @@ export const Stack = createStackNavigator({
   ProductCategory: {screen: ProductCategory},
   ProductList: {screen: ProductList},
   ProductDetails: {screen: ProductDetails},
+  MyOrders: {screen: MyOrders},
+  EazybuySplash: {screen: EazybuySplash},
 
 }
 ,{
-    initialRouteName: 'ProductList',
+    initialRouteName: 'EazybuySplash',
     navigationOptions: ({ navigation }) => ({
         headerLeft: (
           <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>

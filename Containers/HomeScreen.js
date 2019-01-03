@@ -81,6 +81,10 @@ export default class HomeScreen extends Component<Props> {
   //   }
   // }
 
+  product = () => {
+    // Alert.alert("splash");
+    this.props.navigation.navigate('ProductCategory')
+  }
 
 
   renderRow(rowData, sectionID, rowID, highlightRow){
@@ -91,6 +95,7 @@ export default class HomeScreen extends Component<Props> {
 
     list.push(
       <View style={styles.grocery}>
+        <TouchableOpacity style={styles.grocery} onPress={this.product}>
         <View>
           <Image source={require('../Images/shop-1.png')}
           style={{width:100,height:100 ,borderRadius:10}} />
@@ -129,6 +134,7 @@ export default class HomeScreen extends Component<Props> {
           </View>
 
         </View>
+        </TouchableOpacity>
       </View>
     );
     return (<View>{list}</View>)

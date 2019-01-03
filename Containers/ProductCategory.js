@@ -68,6 +68,11 @@ export default class ProductCategory extends Component<Props> {
     this.props.navigation.navigate('HomeScreen');
   }
 
+  productlist = () => {
+    // Alert.alert("splash");
+    this.props.navigation.navigate('ProductList')
+  }
+
   _renderRow(rowData, sectionID, rowID, highlightRow){
     let list = []
     let i = 0
@@ -75,11 +80,13 @@ export default class ProductCategory extends Component<Props> {
     list.push(
 
       <View style={{width:width/3,height:height/6,alignItems:'center', marginTop:10, marginBottom:10}}>
-
+        <TouchableOpacity style={{width:width/3,height:height/6,
+          alignItems:'center', marginTop:10, marginBottom:10}}
+          onPress={this.productlist}>
           <Image source={require('../Images/catgry-img-1.jpg')}
           style={{width: width/3.8, height:80}}/>
           <Text style={{width:100, textAlign:'center', fontSize:18, color:'#000'}}>Food & Vegetables</Text>
-
+        </TouchableOpacity>
       </View>
     );
 

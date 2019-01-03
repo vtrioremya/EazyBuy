@@ -43,7 +43,9 @@ export default class ProductList extends Component<Props> {
     },
       headerLeft: (
         <View style={{marginLeft:10}}>
-          <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
+          <TouchableOpacity >
+            <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
+          </TouchableOpacity>
         </View>
       ),
       headerRight: (
@@ -53,6 +55,11 @@ export default class ProductList extends Component<Props> {
         </TouchableOpacity>
         </View>
       )
+    }
+
+    productdetail = () => {
+      // Alert.alert("splash");
+      this.props.navigation.navigate('ProductDetails')
     }
 
 
@@ -65,6 +72,7 @@ export default class ProductList extends Component<Props> {
 
     list.push(
       <View style={styles.grocery}>
+      <TouchableOpacity style={styles.grocery} onPress={this.productdetail}>
         <View style={{ justifyContent:'center'}}>
           <Image source={require('../Images/product-1.jpg')}
           style={{width:100,height:80 ,borderRadius:10}} />
@@ -135,6 +143,7 @@ export default class ProductList extends Component<Props> {
           </View>
 
         </View>
+        </TouchableOpacity>
       </View>
     );
     return (<View>{list}</View>)
