@@ -12,7 +12,7 @@ const NavigationBar = (props) => {
       <View style={{width: 50, height: 50, justifyContent:'center'}}>
         <TouchableOpacity onPress={props.toggleDrawer}>
           <Image source={require('../Images/ham.png')}
-          style={{marginLeft:10,width:30,height:30}}/>
+          style={{marginLeft:10,width:25,height:25}}/>
         </TouchableOpacity>
       </View>
 

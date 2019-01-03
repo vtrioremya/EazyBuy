@@ -12,6 +12,8 @@ import Login from '../Containers/Login'
 import Register from '../Containers/Register'
 import ForgotPassword from '../Containers/ForgotPassword'
 import ProductCategory from '../Containers/ProductCategory'
+import ProductDetails from '../Containers/ProductDetails'
+import ProductList from '../Containers/ProductList'
 import DrawerScreen from '../Containers/DrawerScreen'
 import NavigationBar from '../Components/NavigationBar'
 
@@ -83,10 +85,12 @@ export const Stack = createStackNavigator({
   Register: {screen: Register},
   ForgotPassword: {screen: ForgotPassword},
   ProductCategory: {screen: ProductCategory},
+  ProductList: {screen: ProductList},
+  ProductDetails: {screen: ProductDetails},
 
 }
 ,{
-    initialRouteName: 'ProductCategory',
+    initialRouteName: 'ProductList',
     navigationOptions: ({ navigation }) => ({
         headerLeft: (
           <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
