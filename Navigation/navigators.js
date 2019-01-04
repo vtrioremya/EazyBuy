@@ -15,6 +15,7 @@ import ProductCategory from '../Containers/ProductCategory'
 import ProductDetails from '../Containers/ProductDetails'
 import ProductList from '../Containers/ProductList'
 import EazybuySplash from '../Containers/EazybuySplash'
+import Cart from '../Containers/Cart'
 import DrawerScreen from '../Containers/DrawerScreen'
 import NavigationBar from '../Components/NavigationBar'
 
@@ -90,10 +91,11 @@ export const Stack = createStackNavigator({
   ProductDetails: {screen: ProductDetails},
   MyOrders: {screen: MyOrders},
   EazybuySplash: {screen: EazybuySplash},
+  Cart: {screen: Cart}
 
 }
 ,{
-    initialRouteName: 'EazybuySplash',
+    initialRouteName: 'Cart',
     navigationOptions: ({ navigation }) => ({
         headerLeft: (
           <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
