@@ -7,8 +7,11 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View,Image, TouchableOpacity, TextInput, Dimensions} from 'react-native';
+import {Platform,TouchableHighlight, Modal, StyleSheet, Text, View,Image, TouchableOpacity, TextInput, Dimensions} from 'react-native';
 import MapView from 'react-native-maps';
+import { NavigationActions } from 'react-navigation'
+
+
 var {height, width} = Dimensions.get('window');
 
 const instructions = Platform.select({
@@ -21,6 +24,13 @@ const instructions = Platform.select({
 type Props = {};
 export default class Location extends Component<Props> {
 
+  constructor(props){
+    super(props);
+    this.state = {
+      modalVisible: false
+    };
+  }
+
   static navigationOptions = {
     headerTitle: 'SELECT DELIVERY LOCATION',
     headerStyle: {
@@ -32,9 +42,17 @@ export default class Location extends Component<Props> {
     },
     headerLeft: (
       <View style={{marginLeft:10}}>
-        <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
+        <TouchableOpacity >
+          <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
+        </TouchableOpacity>
       </View>
     ),
+  }
+
+
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
   }
 
 
@@ -79,10 +97,51 @@ export default class Location extends Component<Props> {
         </MapView>
 
         <View style={styles.confirm}>
-          <TouchableOpacity style={styles.confirmButton}>
+          <TouchableOpacity style={styles.confirmButton} onPress={() => {
+            this.setModalVisible(true);
+          }}>
             <Text style={{color:'#fff', fontSize:18}}>CONFIRM</Text>
           </TouchableOpacity>
         </View>
+
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+
+          <TouchableHighlight
+            onPress={() => {
+              this.setModalVisible(!this.state.modalVisible);
+            }} style={styles.outerModal}>
+
+            <View style={styles.modalView}>
+              <View style={{width:width/2,  justifyContent:'center'}}>
+                <TextInput placeholder='Selected Location'
+                           placeholderTextColor='#000'
+                           style={styles.selectedLocationStyle}/>
+                <TextInput placeholder='Flat/Villa No.'
+                           placeholderTextColor='#000'
+                           style={styles.selectedLocationStyle}/>
+                <TextInput placeholder='Building Name/Number'
+                           placeholderTextColor='#000'
+                           style={styles.selectedLocationStyle}/>
+
+                <TouchableOpacity style={styles.saveButton}
+                        onPress={() => {
+                          this.setModalVisible(!this.state.modalVisible);
+                        }}>
+                  <Text style={styles.saveText}>SAVE</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+          </TouchableHighlight>
+
+        </Modal>
 
       </View>
     );
@@ -137,5 +196,40 @@ const styles = StyleSheet.create({
     borderColor:'transparent',
     borderRadius:width/2 /2,
     borderWidth:1
+  },
+  outerModal: {
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  modalView :{
+    alignItems:'center',
+    elevation: 4,
+    borderColor:'transparent',
+    borderRadius:20,
+    justifyContent:'center',
+    backgroundColor:'#fff',
+    width: width/1.5,
+    height: height/2,
+    shadowColor:'#000'
+  },
+  selectedLocationStyle :{
+    borderColor:'gray',
+    borderWidth:1,
+    borderRadius:5,
+    marginBottom:10,
+    fontSize: 18
+  },
+  saveButton: {
+    alignItems:'center',
+    padding:15,
+    backgroundColor:'#262050',
+    borderColor:'transparent',
+    borderRadius:50,
+    borderWidth:1
+  },
+  saveText: {
+    color:'#fff',
+    fontSize:18
   }
 });

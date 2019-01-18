@@ -11,6 +11,7 @@ import Swiper from 'react-native-swiper';
 import {Platform, StyleSheet, Text, View, FlatList, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
+import Api from '../Services/AppServices'
 
 type Props = {};
 export default class ProductCategory extends Component<Props> {
@@ -18,7 +19,9 @@ export default class ProductCategory extends Component<Props> {
   constructor(props){
     super(props);
     this.state = {
-      category: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}, {key: 'g'}, {key: 'h'}, {key: 'i'}, {key: 'j'}, {key: 'k'}, {key: 'l'}]
+      category: [],
+      bannerImage: [],
+      catName:''
     };
   }
 
@@ -64,16 +67,45 @@ export default class ProductCategory extends Component<Props> {
     )
   }
 
+  async componentDidMount(){
+
+    let fetchApiLogin = await Api.getCategory();
+    console.log("CATEGORY....", fetchApiLogin)
+
+        this.setState({
+          category: fetchApiLogin,
+        })
+
+        var formData = new FormData();
+        formData.append('store_id', this.props.navigation.state.params.storeId);
+
+        let fetchBanner = await Api.getCommonOffer(formData);
+        // console.log("API offers....", fetchBanner)
+        let i = 0
+         var image= []
+         for(i of fetchBanner.offer_list){
+           image.push(i.image)
+         }
+         // console.log("image push", image)
+         this.setState({
+           bannerImage: image
+         })
+         // console.log(this.state.bannerImage)
+
+  }
+
   login(){
     this.props.navigation.navigate('HomeScreen');
   }
 
-  productlist = () => {
+  productlist(catId, catName) {
+    // console.log("catId",catId)
     // Alert.alert("splash");
-    this.props.navigation.navigate('ProductList')
+    this.props.navigation.navigate('ProductList', {catId:catId, catName: catName})
   }
 
   _renderRow(rowData, sectionID, rowID, highlightRow){
+    // console.log("render", rowData)
     let list = []
     let i = 0
     let cat = rowData.item
@@ -82,10 +114,11 @@ export default class ProductCategory extends Component<Props> {
       <View style={{width:width/3,height:height/6,alignItems:'center', marginTop:10, marginBottom:10}}>
         <TouchableOpacity style={{width:width/3,height:height/6,
           alignItems:'center', marginTop:10, marginBottom:10}}
-          onPress={this.productlist}>
-          <Image source={require('../Images/catgry-img-1.jpg')}
+          onPress={this.productlist.bind(this, cat.category_id, cat.name)}>
+          <Image source={{uri: cat.image}}
           style={{width: width/3.8, height:80}}/>
-          <Text style={{width:100, textAlign:'center', fontSize:18, color:'#000'}}>Food & Vegetables</Text>
+          <Text style={{width:100, textAlign:'center', fontSize:18,
+          color:'#000'}}>{cat.name}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -107,6 +140,7 @@ export default class ProductCategory extends Component<Props> {
 
 
   render() {
+    // console.log("store id",this.props.navigation.state.params.storeId)
     return (
       <View style={styles.container}>
 
@@ -130,8 +164,9 @@ export default class ProductCategory extends Component<Props> {
         <Swiper style={{width:width,height:height/4.7}}
                 dotColor='#cfc8c1'
                 activeDotColor='#ffb013'>
+
           <View>
-            <Image  source={require('../Images/banner.jpg')} style={{width:width,height:150}}/>
+            <Image  source={{uri: this.state.bannerImage[0]}} style={{width:width,height:150}}/>
           </View>
           <View>
             <Image  source={require('../Images/banner.jpg')} style={{width:width,height:150}}/>

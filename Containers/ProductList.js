@@ -13,6 +13,7 @@ import { NavigationActions } from 'react-navigation'
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialTabs from 'react-native-material-tabs';
 import ModalDropdown from 'react-native-modal-dropdown';
+import Api from '../Services/AppServices'
 
 type Props = {};
 
@@ -24,7 +25,7 @@ export default class ProductList extends Component<Props> {
     this.state = {
       index:0,
       selectedTab: 0,
-      groceries: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
+      groceries: [],
       routes: [
       { key: 'first', title: 'First' },
       { key: 'second', title: 'Second' },
@@ -32,8 +33,10 @@ export default class ProductList extends Component<Props> {
     };
   }
 
-  static navigationOptions =  {
-    headerTitle: 'GROCERY & STAPLES',
+  static navigationOptions = ({ navigation }) => {
+      const { params = {} } = navigation.state;
+      return {
+    headerTitle: params.heading,
     headerStyle: {
       backgroundColor: '#39385a',
     },
@@ -43,39 +46,96 @@ export default class ProductList extends Component<Props> {
     },
       headerLeft: (
         <View style={{marginLeft:10}}>
-          <TouchableOpacity >
+          <TouchableOpacity onPress={()=> params.backbutton()}>
             <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
           </TouchableOpacity>
         </View>
       ),
       headerRight: (
         <View style={{marginRight:5}}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=> params.cartButton()}>
           <Image source={require('../Images/cart.png')} style={{width:30, height:30}} />
         </TouchableOpacity>
         </View>
       )
     }
+    }
 
-    productdetail = () => {
+    async componentDidMount(){
+      const { navigation } = this.props;
+
+      var catId= navigation.state.params.catId;
+
+      var formData = new FormData();
+      formData.append('category_id', catId);
+
+      let fetchApiLogin = await Api.getProducts(formData);
+      console.log("PROD LIST....", fetchApiLogin)
+
+
+          this.setState({
+            groceries: fetchApiLogin
+          })
+
+      this.props.navigation.setParams({
+        backbutton: this.backbutton.bind(this),
+          cartButton: this.cartButton.bind(this),
+          heading:this.props.navigation.state.params.catName
+      });
+    }
+
+
+
+    cartButton(){
+      this.props.navigation.dispatch({
+               type: NavigationActions.NAVIGATE,
+               routeName: 'Cart',
+               action: {
+                 type: NavigationActions.RESET,
+                 index: 0,
+                 actions: [{type: NavigationActions.NAVIGATE, routeName: 'Cart'}]
+               }
+             })
+    }
+
+    backbutton(){
+      this.props.navigation.dispatch({
+               type: NavigationActions.NAVIGATE,
+               routeName: 'ProductCategory',
+               action: {
+                 type: NavigationActions.RESET,
+                 index: 0,
+                 actions: [{type: NavigationActions.NAVIGATE, routeName: 'ProductCategory'}]
+               }
+             })
+    }
+
+
+    productdetail(prodId){
       // Alert.alert("splash");
-      this.props.navigation.navigate('ProductDetails')
+      this.props.navigation.navigate('ProductDetails',{prodId:prodId})
+    }
+
+    add(){
+      this.setState({
+        counter: this.state.counter+1
+      })
     }
 
 
 
   renderRow(rowData, sectionID, rowID, highlightRow){
-    console.log(rowData)
+    // console.log(rowData)
     let grocery =rowData.item
     let list = []
-    console.log(grocery.key)
+
 
     list.push(
       <View style={styles.grocery}>
-      <TouchableOpacity style={styles.grocery} onPress={this.productdetail}>
+      <TouchableOpacity style={styles.grocery} onPress={this.productdetail.bind(this,grocery.product_id)}>
         <View style={{ justifyContent:'center'}}>
-          <Image source={require('../Images/product-1.jpg')}
-          style={{width:100,height:80 ,borderRadius:10}} />
+          <Image source={{uri: grocery.image}}
+          style={{width:100,height:100 ,borderRadius:10}} />
           <Image source={require('../Images/fav.png')}
           style={{width:20,height:20,position:'absolute',top:0}} />
         </View>
@@ -83,12 +143,12 @@ export default class ProductList extends Component<Props> {
         <View style={styles.groceryDet}>
           <View>
             <View style={{flexDirection:'row', justifyContent:'space-between',}}>
-              <Text style={styles.headerName}>Coconut Oil</Text>
-              <Text style={{color:'#000', fontSize:15}}>Compare Price</Text>
+              <Text style={styles.headerName}>{grocery.name}</Text>
+              <Text style={{color:'#000', fontSize:15}} onPress={()=>this.props.navigation.navigate('Comparison')}>Compare Price</Text>
             </View>
             <View style={{flexDirection:'row'}}>
-              <Text style={{fontSize:16, color:'#000'}}>AED 15 </Text>
-              <Text style={{fontSize:16,}}>(17% Off)</Text>
+              <Text style={{fontSize:16, color:'#000'}}>AED {grocery.price} </Text>
+              {(this.state.special_price)? [<Text style={{fontSize:16,}}>(17% Off)</Text>]:[]}
             </View>
           </View>
 
@@ -117,7 +177,8 @@ export default class ProductList extends Component<Props> {
 
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
 
-                <TouchableOpacity style={{width:40, alignItems:'center',justifyContent:'center'}}>
+                <TouchableOpacity style={{width:40, alignItems:'center',justifyContent:'center'}}
+              >
                   <Image source={require('../Images/minus.png')}
                     style={{width:15,height:15}} />
                 </TouchableOpacity>
@@ -126,7 +187,8 @@ export default class ProductList extends Component<Props> {
                   <Text style={styles.ratandlocStyle}>0</Text>
                 </View>
 
-                <TouchableOpacity style={{width:40,  alignItems:'center',justifyContent:'center'}}>
+                <TouchableOpacity style={{width:40,  alignItems:'center',justifyContent:'center'}}
+                onPress={this.add.bind(this)}>
                   <Image source={require('../Images/plus.png')}
                     style={{width:15,height:15}} />
                 </TouchableOpacity>
@@ -151,6 +213,8 @@ export default class ProductList extends Component<Props> {
 
 
   render() {
+    const { navigation } = this.props;
+    console.log("CAT ID",navigation.state.params.catId)
     return (
       <View style={styles.container}>
 

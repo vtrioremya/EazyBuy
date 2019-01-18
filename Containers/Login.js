@@ -7,43 +7,101 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
+import {Platform,AsyncStorage, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
+import Api from '../Services/AppServices'
 
 type Props = {};
 export default class Login extends Component<Props> {
-
-  static navigationOptions = {
-    headerTitle: 'LOGIN',
-    headerStyle: {
-      backgroundColor: '#39385a'
-    },
-    headerTitleStyle: {
-      textAlign: 'center',alignSelf:'center'
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: '200',
-    },
-    headerLeft: (
-      <View style={{marginLeft:10}}>
-        <TouchableOpacity >
-          <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
-        </TouchableOpacity>
-      </View>
-    ),
-    headerRight: (<View />)
+  constructor(props){
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+    }
   }
 
-  login(){
-    this.props.navigation.navigate('HomeScreen');
+  static navigationOptions = ({ navigation }) => {
+      const { params = {} } = navigation.state;
+      return {
+        headerTitle: 'LOGIN',
+        headerStyle: {
+          backgroundColor: '#39385a'
+        },
+        headerTitleStyle: {
+          textAlign: 'center',alignSelf:'center'
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: '200',
+        },
+        headerLeft: (
+          <View style={{marginLeft:10}}>
+            <TouchableOpacity onPress={()=> params.backbutton()}>
+              <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
+            </TouchableOpacity>
+          </View>
+        ),
+        headerRight: (<View />)
+      }
+  }
+
+  componentDidMount(){
+    this.props.navigation.setParams({
+        backbutton: this.backbutton.bind(this),
+    });
+  }
+
+  backbutton(){
+    this.props.navigation.dispatch({
+             type: NavigationActions.NAVIGATE,
+             routeName: 'HomeScreen',
+             action: {
+               type: NavigationActions.RESET,
+               index: 0,
+               actions: [{type: NavigationActions.NAVIGATE, routeName: 'HomeScreen'}]
+             }
+           })
+  }
+
+  async login(){
+
+    var formData = new FormData();
+    formData.append('email', this.state.email);
+    formData.append('password', this.state.password);
+
+
+    let fetchApiLogin = await Api.login(formData);
+    // console.log("API RESULT....", fetchApiLogin)
+      if(fetchApiLogin.status == 'success'){
+
+         var result = fetchApiLogin
+        let user_object = {
+          isLoggedIn: true,
+          userId: result.user_id,
+          token: result.token,
+          pro_pic: result.profile_image
+        }
+
+        AsyncStorage.setItem('user_object', JSON.stringify(user_object));
+
+        this.props.navigation.navigate('HomeScreen');
+        Alert.alert(fetchApiLogin.message);
+      }
+      else if(fetchApiLogin.status == 'error'){
+        Alert.alert(fetchApiLogin.message);
+      }
+
   }
 
   register(){
     this.props.navigation.navigate('Register');
   }
 
+  forgot(){
+    this.props.navigation.navigate('ForgotPassword');
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -70,6 +128,8 @@ export default class Login extends Component<Props> {
           <TextInput
             placeholder = 'Enter Username'
             placeholderTextColor = '#ababab'
+            value={this.state.email}
+            onChangeText={(email) => this.setState({email})}
             style={styles.textInputStyle}
             underlineColorAndroid= '#cccccc'
           />
@@ -77,6 +137,9 @@ export default class Login extends Component<Props> {
           <TextInput
           placeholder = 'Enter Password'
           placeholderTextColor = '#ababab'
+          secureTextEntry={true}
+          value={this.state.password}
+          onChangeText={(password) => this.setState({password})}
           style={styles.textInputStyle}
           underlineColorAndroid= '#cccccc'
           />
@@ -89,7 +152,7 @@ export default class Login extends Component<Props> {
         </View>
 
         <View style={styles.forgotView}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.forgot.bind(this)}>
             <Text style={styles.forgotPassword}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>

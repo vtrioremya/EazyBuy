@@ -34,7 +34,9 @@ export default class Cart extends Component<Props> {
     };
   }
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => {
+      const { params = {} } = navigation.state;
+      return {
     headerTitle: 'YOUR CART',
     headerStyle: {
       backgroundColor: '#39385a',
@@ -45,7 +47,7 @@ export default class Cart extends Component<Props> {
     },
       headerLeft: (
         <View style={{marginLeft:10}}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> params.backbutton()}>
             <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
           </TouchableOpacity>
         </View>
@@ -53,10 +55,29 @@ export default class Cart extends Component<Props> {
       headerRight: (
         <View style={{marginRight:5}}>
         <TouchableOpacity>
-          <Image source={require('../Images/cart.png')} style={{width:30, height:30}} />
+          <Image source={require('../Images/delete.png')} style={{width:30, height:30}} />
         </TouchableOpacity>
         </View>
       )
+    }
+    }
+
+    componentDidMount(){
+      this.props.navigation.setParams({
+        backbutton: this.backbutton.bind(this)
+      });
+    }
+
+    backbutton(){
+      this.props.navigation.dispatch({
+               type: NavigationActions.NAVIGATE,
+               routeName: 'ProductList',
+               action: {
+                 type: NavigationActions.RESET,
+                 index: 0,
+                 actions: [{type: NavigationActions.NAVIGATE, routeName: 'ProductList'}]
+               }
+             })
     }
 
     productdetail = () => {
@@ -69,15 +90,15 @@ export default class Cart extends Component<Props> {
       let history =rowData.item
       let list = []
       list.push(
-          <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-            <View>
-              <Text>20 Pts</Text>
-              <Text>11/05/2018</Text>
+          <View style={{flexDirection:'row',padding:20, justifyContent:'space-between'}}>
+            <View style={{justifyContent:'space-around'}}>
+              <Text style={styles.points}>20 Pts</Text>
+              <Text style={styles.date}>11/05/2018</Text>
             </View>
 
             <View>
-              <Text>Purchase</Text>
-              <Text>AED 200</Text>
+              <Text style={styles.name}>Purchase</Text>
+              <Text style={styles.rate}>AED 200</Text>
             </View>
           </View>
       );
@@ -176,7 +197,7 @@ export default class Cart extends Component<Props> {
 
         <ScrollView style={{width:width}}>
 
-          <ToggleBox label='Add Coupon Code'  expanded={false} arrowDownType='add'
+          <ToggleBox label={<Text>Add Coupon Code</Text>}  expanded={false} arrowDownType='add'
           arrowUpType='remove' style={{borderColor:'#d6d6d6',backgroundColor: '#fff', borderBottomWidth: 1,fontSize:20}}>
             <View style={{alignItems: 'center',height:200,marginBottom:20,
              backgroundColor: '#fff'}} arrowUpType='remove'>
@@ -192,7 +213,7 @@ export default class Cart extends Component<Props> {
           </ToggleBox>
 
 
-          <ToggleBox label='Loyalty Points'  expanded={false} arrowDownType='add'
+          <ToggleBox label={<Text>Loyalty Points</Text>} expanded={false} arrowDownType='add'
           arrowUpType='remove' style={{borderColor:'#d6d6d6',backgroundColor: '#fff', borderBottomWidth: 1,fontSize:20}}>
             <View style={{alignItems: 'center', marginBottom:20,
              backgroundColor: '#fff'}}>
@@ -204,9 +225,9 @@ export default class Cart extends Component<Props> {
                 <Text style={{color:'#fff', fontSize:18 }}>REDEEM</Text>
               </TouchableOpacity>
 
-              <View style={{borderTopWidth:1, marginTop:20, width:width}}>
+              <View style={{borderTopWidth:1,borderColor:'#e5e5e5', marginTop:20, width:width}}>
                 <View style={{padding:20}}>
-                  <Text>HISTORY</Text>
+                  <Text style={styles.history}>HISTORY</Text>
                 </View>
 
                 <View>
@@ -244,7 +265,7 @@ export default class Cart extends Component<Props> {
         <View style={{padding:20, flexDirection:'row', justifyContent:'space-between'}}>
           <Text style={{fontSize:25,color:'#000', fontWeight:'bold'}}>Order Total</Text>
           <View style={{alignItems:'flex-end', flexDirection:'column'}}>
-            <Text style={{fontSize:25,color:'#000', fontWeight:'BOLD'}}>AED 30</Text>
+            <Text style={{fontSize:25,color:'#000', fontWeight:'bold'}}>AED 30</Text>
             <Text style={{textDecorationLine: 'underline', color: '#7694ca', fontSize:16}}>Add an Item</Text>
           </View>
         </View>
@@ -257,7 +278,8 @@ export default class Cart extends Component<Props> {
           <View style={{width:width/2,alignItems:'center'}}>
             <TouchableOpacity style={{width:width/2.2, backgroundColor:'#39385a',borderRadius: width/3 /2,
               height:60, borderColor:'transparent', borderWidth:1,  justifyContent:'center'}}>
-              <Text style={{fontSize:18, color:'#fff', textAlign:'center'}}>ORDER NOW</Text>
+              <Text style={{fontSize:18, color:'#fff', textAlign:'center'}}
+              onPress={()=> this.props.navigation.navigate('Checkout')}>ORDER NOW</Text>
             </TouchableOpacity>
           </View>
 
@@ -351,4 +373,23 @@ const styles = StyleSheet.create({
     alignItems:'center',
     fontSize:18
   },
+  history: {
+    fontSize:25
+  },
+  points:{
+    fontSize:18,
+    color:'#000'
+  },
+  date: {
+    fontSize: 18,
+    color:'#9b9b9b'
+  },
+  rate: {
+    fontSize:18,
+    color:'#000'
+  },
+  name: {
+    fontSize: 18,
+    color:'#9b9b9b'
+  }
 });

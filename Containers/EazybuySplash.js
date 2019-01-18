@@ -43,16 +43,18 @@ export default class EazybuySplash extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{width:width, alignItems:'center'}}>
+        <View>
+        </View>
+
+        <View style={{width:width, alignItems:'center', justifyContent:'center'}}>
           <Image source={require('../Images/logo-splash.png')}
           style={{width: 150, height: 150}}/>
-        </View>
-        <TouchableOpacity style={styles.english} onPress={this.splash}>
-          <Text style={styles.englishText}>EVERYDAY YOU GET OUR BEST</Text>
-        </TouchableOpacity>
 
-        <View>
-          <Image source={require('../Images/catgry-img-1.jpg')}/>
+          <TouchableOpacity style={styles.english} onPress={this.splash}>
+            <Text style={styles.englishText}>EVERYDAY YOU GET OUR BEST</Text>
+          </TouchableOpacity>
+        
+            <Image source={require('../Images/splash-bot-img.jpg')} style={{resizeMode: 'stretch',width:width, height:height/1.9}}/>
         </View>
       </View>
     );
@@ -62,7 +64,7 @@ export default class EazybuySplash extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#fff',
     flexDirection: 'column',
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'transparent',
     height:40,
-    marginTop: 40
+    // marginTop: 40
   },
   englishText: {
     color: '#fff',

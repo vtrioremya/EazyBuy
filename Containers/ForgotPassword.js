@@ -10,34 +10,75 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
+import Api from '../Services/AppServices'
 
 type Props = {};
 export default class ForgotPassword extends Component<Props> {
 
-  static navigationOptions = {
-    headerTitle: 'FORGOT PASSWORD',
-    headerStyle: {
-      backgroundColor: '#39385a'
-    },
-    headerTitleStyle: {
-      textAlign: 'center',alignSelf:'center'
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: '200',
-    },
-    headerLeft: (
-      <View style={{marginLeft:10}}>
-        <TouchableOpacity >
-          <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
-        </TouchableOpacity>
-      </View>
-    ),
-    headerRight: (<View />)
+  constructor(props){
+    super(props);
+    this.state = {
+      email: '',
+    }
   }
 
-  login(){
-    this.props.navigation.navigate('HomeScreen');
+  static navigationOptions= ({ navigation }) => {
+      const { params = {} } = navigation.state;
+      return {
+        headerTitle: 'FORGOT PASSWORD',
+        headerStyle: {
+          backgroundColor: '#39385a'
+        },
+        headerTitleStyle: {
+          textAlign: 'center',alignSelf:'center'
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: '200',
+        },
+        headerLeft: (
+          <View style={{marginLeft:10}}>
+            <TouchableOpacity onPress={()=> params.backbutton()}>
+              <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
+            </TouchableOpacity>
+          </View>
+        ),
+        headerRight: (<View />)
+      }
+  }
+  componentDidMount(){
+    this.props.navigation.setParams({
+        backbutton: this.backbutton.bind(this),
+    });
+  }
+
+  backbutton(){
+    this.props.navigation.dispatch({
+             type: NavigationActions.NAVIGATE,
+             routeName: 'Login',
+             action: {
+               type: NavigationActions.RESET,
+               index: 0,
+               actions: [{type: NavigationActions.NAVIGATE, routeName: 'Login'}]
+             }
+           })
+  }
+
+  async send(){
+    var formData = new FormData();
+    formData.append('email', this.state.email);
+
+
+    let fetchApiLogin = await Api.forgot(formData);
+    // console.log("API RESULT....", fetchApiLogin)
+      if(fetchApiLogin.status == 'success'){
+
+        this.props.navigation.navigate('Login');
+        Alert.alert(fetchApiLogin.message);
+      }
+      else if(fetchApiLogin.status == 'fail'){
+        Alert.alert(fetchApiLogin.message);
+      }
   }
 
 
@@ -60,6 +101,8 @@ export default class ForgotPassword extends Component<Props> {
           <TextInput
             placeholder = 'Enter Email'
             placeholderTextColor = '#ababab'
+            value={this.state.email}
+            onChangeText={(email) => this.setState({email})}
             style={styles.textInputStyle}
             underlineColorAndroid= '#cccccc'
           />
@@ -67,7 +110,7 @@ export default class ForgotPassword extends Component<Props> {
         </View>
 
         <View style={{marginTop:30}}>
-          <TouchableOpacity style={styles.loginButton} onPress={this.login.bind(this)}>
+          <TouchableOpacity style={styles.loginButton} onPress={this.send.bind(this)}>
             <Text style={styles.login}>SEND</Text>
           </TouchableOpacity>
         </View>

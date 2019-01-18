@@ -7,30 +7,23 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
+import {Platform,AsyncStorage, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, DrawerActions } from 'react-navigation'
 import Swiper from 'react-native-swiper';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialTabs from 'react-native-material-tabs';
+import CartComponents from '../Components/CartComponents'
+import NavigationBar from '../Components/NavigationBar'
+import PropTypes from "prop-types";
+import Api from '../Services/AppServices'
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import { connect } from 'react-redux';
 
 type Props = {};
 
-const FirstRoute = () => (
-  <View style={{ backgroundColor: '#ff4081' }} />
-);
-const SecondRoute = () => (
-  <View style={{ backgroundColor: '#673ab7' }} />
-);
 
-export default class HomeScreen extends Component<Props> {
+class HomeScreen extends Component<Props> {
 
   constructor(props){
     super(props);
@@ -38,7 +31,8 @@ export default class HomeScreen extends Component<Props> {
     this.state = {
       index:0,
       selectedTab: 0,
-      groceries: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
+      groceries: [],
+      bannerImage:[],
       routes: [
       { key: 'first', title: 'First' },
       { key: 'second', title: 'Second' },
@@ -46,9 +40,11 @@ export default class HomeScreen extends Component<Props> {
     };
   }
 
-  static navigationOptions = ({ navigation }) => {
-    headerMode: 'screen'
-  };
+  static navigationOptions =  {
+    headerLeft: (
+      <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+        )
+  }
   //
   //     headerLeft: (
   //       <View style={{flex:1,flexDirection: 'row'}}>
@@ -80,39 +76,79 @@ export default class HomeScreen extends Component<Props> {
   //
   //   }
   // }
+  async componentDidMount(){
+    // this.props.navigation.setParams({ tabBarVisible: false });
+    // AsyncStorage.getItem('user_object', (err, results) => {
+    //    let user_object = JSON.parse(results);
+    //    if (user_object) {
+    //    }
+    //  });
 
-  product = () => {
+    let fetchBanner = await Api.getCommonOffer();
+    console.log("API offers....", fetchBanner)
+    let i = 0
+     var image= []
+     for(i of fetchBanner.offer_list){
+       image.push(i.image)
+     }
+     console.log("image push", image)
+     this.setState({
+       bannerImage: image
+     })
+     console.log(this.state.bannerImage)
+
+    let fetchApiLogin = await Api.getGroceries();
+    console.log("API Stores....", fetchApiLogin)
+     this.setState({
+       groceries: fetchApiLogin
+     })
+
+  }
+
+  
+
+  onScroll(){
+    // Alert.alert("hai")
+    // this.props.navigation.setParams({ tabBarVisible: true });
+  }
+
+  onStop(){
+    // Alert.alert("end")
+    // this.props.navigation.setParams({ tabBarVisible: false });
+  }
+
+  product(storeId){
     // Alert.alert("splash");
-    this.props.navigation.navigate('ProductCategory')
+    this.props.navigation.navigate('ProductCategory', {storeId: storeId})
   }
 
 
   renderRow(rowData, sectionID, rowID, highlightRow){
-    console.log(rowData)
+    // console.log(rowData)
     let grocery =rowData.item
     let list = []
-    console.log(grocery.key)
+    // console.log(grocery.key)
 
     list.push(
       <View style={styles.grocery}>
-        <TouchableOpacity style={styles.grocery} onPress={this.product}>
-        <View>
+
+        <View style={{width:width/3.8}}>
           <Image source={require('../Images/shop-1.png')}
-          style={{width:100,height:100 ,borderRadius:10}} />
+          style={{width:width/3.8, height:height/7.5 ,borderRadius:10}} />
           <Image source={require('../Images/star.png')}
           style={{width:40,height:40,position:'absolute',bottom:0}} />
         </View>
 
         <View style={styles.groceryDet}>
-          <Text style={styles.headerName}>Families Hyper Market</Text>
-          <Text>17B Street Opp. Emirates Bank, Dubai, UAE</Text>
+          <Text style={styles.headerName}>{grocery.name}</Text>
+          <Text>{grocery.address_arabic}</Text>
 
           <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginTop:15}}>
             <View style={{flexDirection:'row'}}>
 
                 <Image source={require('../Images/map-1.png')}
                 style={{width:15,height:20}} />
-                <Text style={styles.ratandlocStyle}>30 Mins</Text>
+                <Text style={styles.ratandlocStyle}>{grocery.config_detime}</Text>
 
             </View>
 
@@ -120,12 +156,13 @@ export default class HomeScreen extends Component<Props> {
 
                 <Image source={require('../Images/star-1.png')}
                 style={{width:20,height:20}} />
-                <Text style={styles.ratandlocStyle}>4.5</Text>
+                <Text style={styles.ratandlocStyle}>{grocery.rating}</Text>
 
             </View>
 
             <View>
-              <TouchableOpacity style={styles.openNowButton}>
+              <TouchableOpacity style={styles.openNowButton}
+              onPress={this.product.bind(this,grocery.store_id)}>
                 <Text style={{color:'#fff',fontSize:17}}>Open Now</Text>
               </TouchableOpacity>
             </View>
@@ -134,14 +171,28 @@ export default class HomeScreen extends Component<Props> {
           </View>
 
         </View>
-        </TouchableOpacity>
       </View>
     );
     return (<View>{list}</View>)
   }
 
+  Render_FlatList_Sticky_header = () => {
+
+    var Sticky_header_View = (
+
+
+      <View style={styles.header_style}>
+
+
+      </View>
+
+    );
+      return Sticky_header_View;
+  }
+
 
   render() {
+    console.log("state ot props",this.props.counter)
     return (
       <View style={styles.container}>
         <View style={{width:width,height:200}}>
@@ -149,7 +200,7 @@ export default class HomeScreen extends Component<Props> {
                   dotColor='#cfc8c1'
                   activeDotColor='#ffb013'>
             <View>
-              <Image  source={require('../Images/banner-1.jpg')} style={{width:width,height:200}}/>
+              <Image  source={{uri: this.state.bannerImage[0]}} style={{width:width,height:200}}/>
             </View>
 
             <View>
@@ -193,9 +244,14 @@ export default class HomeScreen extends Component<Props> {
 
              <FlatList data={this.state.groceries}
               renderItem={this.renderRow.bind(this)}
+              ListFooterComponent={this.Render_FlatList_Sticky_header}
+              onScroll={this.onScroll.bind(this)}
+              onEndReached={this.onStop.bind(this)}
+              onEndReachedThreshold={6}
             />
 
         </View>
+        <CartComponents />
 
       </View>
     );
@@ -205,7 +261,7 @@ export default class HomeScreen extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex:1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#fff',
     flexDirection: 'column',
   },
   welcome: {
@@ -252,11 +308,13 @@ const styles = StyleSheet.create({
   grocery: {
     flex:1,
     flexDirection: 'row',
-    padding:10
+    marginTop:10,
+    justifyContent:'center'
   },
   groceryDet: {
     flexDirection:'column',
-    paddingLeft:10
+    paddingLeft:10,
+    width:width/1.5
   },
   openNowButton: {
     backgroundColor:'#a9cf46',
@@ -274,5 +332,35 @@ const styles = StyleSheet.create({
   headerName: {
     fontSize:20,
     color:'#000'
+  },
+  header_style:{
+
+    width: width,
+    height:250,
+    backgroundColor: 'transparent',
+
   }
 });
+
+HomeScreen.propTypes = {
+  product: PropTypes.func.isRequired,
+  // authenticateUser: PropTypes.func.isRequired,
+  // isAuthenticated: PropTypes.bool,
+  // navigation: PropTypes.shape({
+  //   navigate: PropTypes.func.isRequired
+  // }).isRequired
+};
+
+HomeScreen.defaultProps = {
+  // authenticateUser: null,
+  // isAuthenticated: false,
+  product: false,
+  // navigation: null
+};
+
+const mapStateToProps = (state) => {
+  const { counter } = state
+  return { counter }
+};
+
+export default connect(mapStateToProps)(HomeScreen);

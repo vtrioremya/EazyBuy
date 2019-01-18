@@ -1,4 +1,4 @@
-import {createDrawerNavigator, createStackNavigator, createBottomTabNavigator} from 'react-navigation'
+import {createDrawerNavigator,createTopTabNavigator, createStackNavigator, createBottomTabNavigator} from 'react-navigation'
 import React, { Component } from 'react'
 import { DrawerActions } from 'react-navigation';
 import Splash from '../Containers/Splash'
@@ -16,8 +16,13 @@ import ProductDetails from '../Containers/ProductDetails'
 import ProductList from '../Containers/ProductList'
 import EazybuySplash from '../Containers/EazybuySplash'
 import Cart from '../Containers/Cart'
+import Checkout from '../Containers/Checkout'
+import PurchaseSuccess from '../Containers/PurchaseSuccess'
+import Comparison from '../Containers/Comparison'
+import ContactUs from '../Containers/ContactUs'
 import DrawerScreen from '../Containers/DrawerScreen'
 import NavigationBar from '../Components/NavigationBar'
+import DefaultBar from '../Components/DefaultBar'
 
 import {Image, View, Text, TouchableOpacity, Dimensions, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
@@ -55,32 +60,41 @@ export const Tabs = createBottomTabNavigator({
     }
   },
 },{
-  tabBarOptions: {
-  activeTintColor: '#e91e63',
-  inactiveTintColor:'#fff',
-  labelStyle: {
-    fontSize: 18,
-  },
-  style: {
-    height:75,
-    backgroundColor: '#2f2c49',
-  },
+  navigationOptions: ({ navigation }) => {
+  const routeParams = navigation.state.params;
+
+  return {
+    tabBarLabel: 'Demo',
+    // tabBarVisible: routeParams && routeParams.tabBarVisible,
+    tabBarOptions: {
+    activeTintColor: '#e91e63',
+    inactiveTintColor:'#fff',
+    labelStyle: {
+      fontSize: 18,
+    },
+    style: {
+      height:75,
+      backgroundColor: '#2f2c49',
+    },
+  }
+  }
 }
+
+
 
 })
 
-export const Drawer = createDrawerNavigator({
-  Tabs: {screen : Tabs}
-},
-{
-    drawerWidth: 300,
-    contentComponent: DrawerScreen,
-    drawerType: 'slide'
-});
+
+
+
 
 export const Stack = createStackNavigator({
-  Drawer : {screen: Drawer},
-  Splash: {screen: Splash},
+  Tabs: {screen : Tabs},
+  Splash: {screen: Splash,
+    navigationOptions: {
+      drawerLockMode: 'locked-closed'
+    }
+  },
   Swipers: {screen: Swipers},
   Location: {screen: Location},
   Login: {screen: Login},
@@ -89,16 +103,64 @@ export const Stack = createStackNavigator({
   ProductCategory: {screen: ProductCategory},
   ProductList: {screen: ProductList},
   ProductDetails: {screen: ProductDetails},
-  MyOrders: {screen: MyOrders},
+  MyOrders: {screen: MyOrders,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'ORDERS',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })
+  },
   EazybuySplash: {screen: EazybuySplash},
-  Cart: {screen: Cart}
+  Cart: {screen: Cart},
+  Checkout: {screen: Checkout},
+  Account :{screen: Account,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'ACCOUNT',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })
+  },
+  PurchaseSuccess :{screen: PurchaseSuccess},
+  Comparison :{screen: Comparison},
+  ContactUs :{screen: ContactUs,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'CONTACT US',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })
+  },
 
 }
 ,{
-    initialRouteName: 'Cart',
+    // headerMode: 'screen',
+    initialRouteName: 'MyOrders',
     navigationOptions: ({ navigation }) => ({
-        headerLeft: (
-          <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
-            ),
+    headerLeft: (
+      <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+        )
     })
 })
+
+export const Drawer = createDrawerNavigator({
+  Stack: {screen : Stack},
+  // TabsOrder: {screen : TabsOrder}
+},
+{
+    drawerWidth: 300,
+    contentComponent: DrawerScreen,
+    // drawerType: 'slide'
+});
+
+export default Drawer;

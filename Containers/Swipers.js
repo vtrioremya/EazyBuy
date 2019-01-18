@@ -29,7 +29,7 @@ export default class Swipers extends Component<Props> {
   }
 
   open(){
-    this.props.navigation.navigate('Login');
+    this.props.navigation.navigate('HomeScreen');
   }
 
   home(){
@@ -41,7 +41,7 @@ export default class Swipers extends Component<Props> {
       <View style={styles.container}>
 
         <Swiper style={{width:width}}
-        
+
                 dot= {
                   <View style={{backgroundColor:'#9796a4', width: 8, height: 8,borderRadius: 4, marginLeft: 10, marginRight: 10, marginTop: 3, marginBottom: 3,}}  />
                 }
