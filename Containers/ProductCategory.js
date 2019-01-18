@@ -77,10 +77,13 @@ export default class ProductCategory extends Component<Props> {
         })
 
         var formData = new FormData();
-        formData.append('store_id', this.props.navigation.state.params.storeId);
+        formData.append('store_id', 44);
+        // formData.append('store_id', this.props.navigation.state.params.storeId);
 
         let fetchBanner = await Api.getCommonOffer(formData);
         // console.log("API offers....", fetchBanner)
+
+        
         let i = 0
          var image= []
          for(i of fetchBanner.offer_list){

@@ -41,6 +41,21 @@ export default {
       return []
     }
   },
+  async getSubCategory(catId) {
+    try {
+      const response = await get(`/product/category&path=${catId}`)
+      console.log("service sub cat ",response)
+      if (response.status == 'success') {
+        return response;
+        // const data = omit(response, 'error', 'message')
+        // const data= response.categories;
+        // return Object.keys(data).map(key => data[key])
+      }
+      return []
+    } catch (e) {
+      return []
+    }
+  },
   async getProducts(formData) {
     try {
       const response = await post(`/product/product/getproductlist`, formData)
@@ -71,7 +86,7 @@ export default {
 
       const response = await get(`/product/product&product_id=${prodId}`)
       if (!response.error) {
-        return response.products;
+        return response;
       }
     } catch (e) {
       return []
@@ -96,6 +111,19 @@ export default {
         return Object.keys(data).map(key => data[key])
       }
       return []
+    } catch (e) {
+      return []
+    }
+  },
+  async getAccount(token) {
+    try {
+      const response = await get(`/account/account/userdetails&token=${token}`)
+      console.log(response)
+      if (!response.error) {
+        // const data = omit(response, 'error', 'message')
+        // return Object.keys(data).map(key => data[key])
+        return response.user_details
+      }
     } catch (e) {
       return []
     }

@@ -11,10 +11,32 @@ import {Platform,Text, View, TextInput, StyleSheet, Image, Dimensions, Touchable
 import { NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Api from '../Services/AppServices'
+import ImagePicker from 'react-native-image-crop-picker';
 
 type Props = {};
 
 export default class Account extends Component<Props> {
+
+  constructor(props){
+    super(props);
+    this.state={
+      firstname: '',
+      lastname: '',
+      email : '',
+      phone: '',
+      profile_pic:'',
+      address_1: '',
+      address_2 :'',
+      address_3 :'',
+      postcode:'',
+      addressClick:true,
+      paymentClick:false,
+      settingsClick:false,
+      editable: false,
+      autoFocus:false
+    }
+  }
 
   static navigationOptions = {
 
@@ -30,9 +52,85 @@ export default class Account extends Component<Props> {
         <TouchableOpacity >
           <Image source={require('../Images/hamp.png')} style={{width:30,height:30}}/>
         </TouchableOpacity>
+        <View>
+          <Text>Account</Text>
+        </View>
       </View>
     ),
+
   }
+
+  async componentDidMount(){
+    var token ='9bd316e1a9e455efac6a0bd9166779'
+    let accountDetails = await Api.getAccount(token);
+    // console.log("API account....", accountDetails)
+    // console.log("name",accountDetails.firstname)
+    this.setState({
+      firstname: accountDetails.firstname != null ? accountDetails.firstname: 'First name',
+      lastname: accountDetails.lastname!= null ? accountDetails.lastname: 'Last name',
+      email : accountDetails.email!= null ? accountDetails.email: 'Your email',
+      phone: accountDetails.telephone!= null ? accountDetails.telephone: 'Your telephone',
+      profile_pic: accountDetails.profile_image ,
+      address_1: accountDetails.address_1,
+      address_2: accountDetails.address_2,
+      address_3: accountDetails.city,
+      postcode: accountDetails.postcode
+  })
+}
+
+addPhoto(){
+  ImagePicker.openPicker({
+           compressImageMaxWidth: 640,
+           compressImageMaxHeight: 480,
+           compressImageQuality: 0.75,
+           cropping: true
+       }).then(image => {
+           console.log(image);
+           let photo = {
+               uri: image.path,
+               type: 'image/jpeg',
+               name: 'photo.jpg',
+           };
+           this.setState({
+               profile_pic_new: image.path,
+               profile_pic: image.path,
+               url: photo
+           })
+       });
+
+}
+
+payment(){
+  this.setState({
+    addressClick:false,
+    paymentClick: true,
+    settingsClick: false
+  })
+}
+
+address(){
+  this.setState({
+    addressClick:true,
+    settingsClick:false,
+    paymentClick:false
+  })
+}
+
+settings(){
+  this.setState({
+    addressClick:false,
+    settingsClick:true,
+    paymentClick:false
+  })
+}
+
+editProfile(){
+  this.setState({
+    editable:true,
+    autoFocus:true
+
+  })
+}
 
 
   render() {
@@ -44,28 +142,32 @@ export default class Account extends Component<Props> {
 
           <View style={styles.textStyle}>
             <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-              <Text style={styles.text}>Your Name</Text>
-              <TouchableOpacity style={styles.editButton} >
+              <TextInput autoFocus={this.state.autoFocus}
+                         editable={this.state.editable}
+                         style={styles.text}
+                         value={this.state.firstname}/>
+              <TouchableOpacity style={styles.editButton} onPress={this.editProfile.bind(this)}>
                 <Image style={{width:30, height:30}}
                 source={require('../Images/edit.png')}/>
               </TouchableOpacity>
             </View>
 
             <View>
-              <Text style={{fontSize:18, color:'#6c6c6c'}}> Your Email</Text>
+              <TextInput editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c'}} value={this.state.email}/>
             </View>
 
             <View>
-              <Text style={{fontSize:18, color:'#6c6c6c'}}>Your Mobile Number </Text>
+              <TextInput editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c'}} value={this.state.phone}/>
             </View>
 
           </View>
 
 
           <View style={styles.Image}>
-            <Image source={require('../Images/blank_profile_pic.png')}
+            <TouchableOpacity onPress={this.addPhoto.bind(this)}>
+              <Image source={{uri: this.state.profile_pic}}
               style={{width:150,height:150,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>
-
+            </TouchableOpacity>
           </View>
 
         </View>
@@ -74,7 +176,7 @@ export default class Account extends Component<Props> {
 
 
           <View >
-            <TouchableOpacity style={{alignItems:'center'}}>
+            <TouchableOpacity style={{alignItems:'center'}}onPress={this.address.bind(this)}>
               <View style={styles.deliveryAdd}>
                 <Image source={require('../Images/delv-adres-icon-1.png')}
                 style={{width:50, height:50}}/>
@@ -86,7 +188,7 @@ export default class Account extends Component<Props> {
 
 
           <View >
-            <TouchableOpacity style={{alignItems:'center'}}>
+            <TouchableOpacity style={{alignItems:'center'}} onPress={this.payment.bind(this)}>
               <View style={styles.paymentIcon}>
                 <Image source={require('../Images/payment-icon-2.png')}
                 style={{width:50, height:50}}/>
@@ -97,7 +199,7 @@ export default class Account extends Component<Props> {
           </View>
 
           <View >
-            <TouchableOpacity style={{alignItems:'center'}}>
+            <TouchableOpacity style={{alignItems:'center'}} onPress={this.settings.bind(this)}>
               <View style={styles.settings}>
                 <Image source={require('../Images/settings-icon-3.png')}
                 style={{width:50, height:50}}/>
@@ -108,33 +210,46 @@ export default class Account extends Component<Props> {
           </View>
         </View>
 
-        <View style={styles.addressTextArea}>
+        {this.state.addressClick && <View style={styles.addressTextArea}>
 
           <View style={styles.line1}>
             <TextInput placeholder='Delivery Address Line 1'
                        placeholderTextColor='#818181'
-                       style={styles.lineText}/>
+                       style={styles.lineText}
+                       value={this.state.address_1}/>
           </View>
 
           <View style={styles.line1}>
             <TextInput placeholder='Delivery Address Line 2'
                        placeholderTextColor='#818181'
-                       style={styles.lineText}/>
+                       style={styles.lineText}
+                       value={this.state.address_2}/>
           </View>
 
           <View style={styles.line1}>
             <TextInput placeholder='Delivery Address Line 3'
                        placeholderTextColor='#818181'
-                       style={styles.lineText}/>
+                       style={styles.lineText}
+                       value={this.state.address_3}/>
           </View>
 
           <View style={styles.postLine}>
             <TextInput placeholder='Post Code'
                        placeholderTextColor='#818181'
-                       style={styles.lineText}/>
+                       style={styles.lineText}
+                       value={this.state.postcode}/>
           </View>
 
-        </View>
+        </View>}
+
+          {this.state.paymentClick && <View style={styles.addressTextArea}>
+          <Text>payment</Text>
+        </View>}
+
+          {this.state.settingsClick && <View style={styles.addressTextArea}>
+          <Text>settings</Text>
+        </View>}
+
 
       </View>
       </KeyboardAwareScrollView>

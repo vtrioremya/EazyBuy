@@ -30,6 +30,8 @@ class ProductDetails extends Component<Props> {
       selectedTab: 0,
       groceries: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
       details: [],
+      size: [],
+      sliderImages:[],
       routes: [
       { key: 'first', title: 'First' },
       { key: 'second', title: 'Second' },
@@ -76,13 +78,32 @@ class ProductDetails extends Component<Props> {
       let fetchApiLogin = await Api.getProductDetails(prodId);
       console.log("API details....", fetchApiLogin)
       this.setState({
-        details : fetchApiLogin
+        details : fetchApiLogin.products,
+        size: this.state.details.size,
+        sliderImages: fetchApiLogin.images
       })
+
+      // var weights = this.state.size
+      // var weightName = []
+      // var weightId = []
+      // var weightResult = []
+      //
+      // weights.map((size)=>{
+      //
+      //   weightName.push(size.name)
+      //   weightId.push(size.option_value_id)
+      //   var object = []
+      //   object=[{'id': size.option_value_id,
+      //       'value': size.name,
+      //   }]
+      //   weightResult.push(object)
+      //
+      // })
 
       this.props.navigation.setParams({
         backbutton: this.backbutton.bind(this),
             cartButton: this.cartButton.bind(this),
-            heading: fetchApiLogin.heading_title
+            heading: this.state.details.heading_title
         });
 
     }
@@ -114,7 +135,7 @@ class ProductDetails extends Component<Props> {
 
   render() {
     console.log(this.props.navigation.state.params.prodId)
-    var url= 'http://18.220.177.244/grocaryapp//image/'
+
     return (
       <View style={styles.container}>
         <View style={{width:width,height:150}}>
@@ -150,12 +171,12 @@ class ProductDetails extends Component<Props> {
 
         <View>
           <View style={{alignItems:'center', justifyContent:'center', marginTop:10}}>
-            <Image source={{uri: url+ this.state.details.thumb}} style={{width: width/2, height: height/6}}/>
+            <Image source={{uri: this.state.details.thumb}} style={{width: width/2, height: height/6}}/>
           </View>
 
           <View>
             <Text style={{fontSize: 25, textAlign:'center', color:'#000'}}>{this.state.details.heading_title}</Text>
-            <Text style={{fontSize: 22, textAlign:'center', color:'#000', fontWeight:'bold'}}>19% Off</Text>
+            <Text style={{fontSize: 22, textAlign:'center', color:'#000', fontWeight:'bold'}}>{this.state.details.discount_percentage}% Off</Text>
           </View>
 
           <View style={{width:width,

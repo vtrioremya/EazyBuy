@@ -26,6 +26,9 @@ export default class ProductList extends Component<Props> {
       index:0,
       selectedTab: 0,
       groceries: [],
+      subCat: [],
+      subName: [],
+      kg: [],
       routes: [
       { key: 'first', title: 'First' },
       { key: 'second', title: 'Second' },
@@ -66,15 +69,37 @@ export default class ProductList extends Component<Props> {
 
       var catId= navigation.state.params.catId;
 
+      //gms and kg fontSize
+
+      // let fetchBanner = await Api.getCommonOffer();
+      // console.log("API kg and gms....", fetchBanner)
+
+      //sub categories api
+      let subCategory = await Api.getSubCategory(catId);
+      console.log("sub cat....", subCategory)
+      this.setState({
+        subCat: subCategory.categories
+      })
+
+      var subNames=[]
+      this.state.subCat.map((name) => {
+
+        subNames.push(name.name)
+
+      })
+      this.setState({
+        subName: subNames
+      })
+      console.log(this.state.subName)
+      //list api
       var formData = new FormData();
       formData.append('category_id', catId);
 
       let fetchApiLogin = await Api.getProducts(formData);
       console.log("PROD LIST....", fetchApiLogin)
 
-
           this.setState({
-            groceries: fetchApiLogin
+            groceries: fetchApiLogin,
           })
 
       this.props.navigation.setParams({
@@ -127,6 +152,28 @@ export default class ProductList extends Component<Props> {
   renderRow(rowData, sectionID, rowID, highlightRow){
     // console.log(rowData)
     let grocery =rowData.item
+    console.log("options",grocery.options)
+
+    var weights = grocery.options
+    var weightName = []
+    var weightId = []
+    var weightResult = []
+
+    weights.map((size)=>{
+
+      weightName.push(size.name)
+      weightId.push(size.option_value_id)
+      var object = []
+      object=[{'id': size.option_value_id,
+          'value': size.name,
+      }]
+      weightResult.push(object)
+
+    })
+
+    console.log("weightName",weightName)
+    console.log(weightId)
+    console.log(weightResult)
     let list = []
 
 
@@ -148,16 +195,16 @@ export default class ProductList extends Component<Props> {
             </View>
             <View style={{flexDirection:'row'}}>
               <Text style={{fontSize:16, color:'#000'}}>AED {grocery.price} </Text>
-              {(this.state.special_price)? [<Text style={{fontSize:16,}}>(17% Off)</Text>]:[]}
+              <Text style={{fontSize:16,}}>({grocery.discount_percentage}% Off)</Text>
             </View>
           </View>
 
           <View style={{flexDirection:'row',width:width/1.8,alignItems:'center', justifyContent:'space-between',marginTop:15}}>
 
 
-                <ModalDropdown options={['option 1', 'option 2']}
-                  style={{borderColor:'gray', borderWidth:0.5,height:30,borderRadius:5 }}
-                  dropdownStyle={{borderColor:'gray', borderWidth:1, borderRadius:5, width:50}}
+                <ModalDropdown options={weightName}
+                  style={{borderColor:'gray',borderWidth:0.5,height:30,borderRadius:5 }} dropdownTextStyle={{fontSize:18}}
+                  dropdownStyle={{borderColor:'gray', borderWidth:1, borderRadius:5, width:90}}
                 >
 
                 <View style={{width:70,marginLeft:5,marginRight:5,flexDirection:'row',justifyContent:'space-between'}}>
@@ -237,7 +284,7 @@ export default class ProductList extends Component<Props> {
 
         <View>
           <MaterialTabs
-            items={['All Items', 'Salt & Sugar', 'Atta & Other Flours']}
+            items={['allitems','akkdsj']}
             selectedIndex={this.state.selectedTab}
             onChange={index => this.setState({ selectedTab: index })}
             barColor='#fff'

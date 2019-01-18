@@ -168,7 +168,12 @@ export default class DrawerScreen extends Component<Props> {
                 My Account
               </Text>
             </View>
-
+            <View style={styles.menuItem}>
+              <Image source={require('../Images/signout.png')} style={{width:30, height:30}} />
+              <Text style={styles.textSize} >
+               Sign Out
+              </Text>
+            </View>
           </View>
         </ScrollView>
       </View>
