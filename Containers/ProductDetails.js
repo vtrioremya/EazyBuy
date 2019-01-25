@@ -71,12 +71,12 @@ class ProductDetails extends Component<Props> {
 
     async componentDidMount(){
 
-      console.log("details screen")
+      // console.log("details screen")
       // formData.append('store_id', 7);
       var prodId = this.props.navigation.state.params.prodId
 
       let fetchApiLogin = await Api.getProductDetails(prodId);
-      console.log("API details....", fetchApiLogin)
+      // console.log("API details....", fetchApiLogin)
       this.setState({
         details : fetchApiLogin.products,
         size: this.state.details.size,
@@ -134,7 +134,7 @@ class ProductDetails extends Component<Props> {
 
 
   render() {
-    console.log(this.props.navigation.state.params.prodId)
+    // console.log(this.props.navigation.state.params.prodId)
 
     return (
       <View style={styles.container}>

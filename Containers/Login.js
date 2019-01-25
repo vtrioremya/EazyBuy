@@ -86,7 +86,7 @@ export default class Login extends Component<Props> {
         }
 
         AsyncStorage.setItem('user_object', JSON.stringify(user_object));
-        console.log(user_object)
+        // console.log(user_object)
 
         this.props.navigation.navigate('HomeScreen');
         Alert.alert(fetchApiLogin.message);

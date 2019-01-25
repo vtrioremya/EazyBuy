@@ -85,27 +85,27 @@ class HomeScreen extends Component<Props> {
     //  });
 
     let fetchBanner = await Api.getCommonOffer();
-    console.log("API offers....", fetchBanner)
+    // console.log("API offers....", fetchBanner)
     let i = 0
      var image= []
      for(i of fetchBanner.offer_list){
        image.push(i.image)
      }
-     console.log("image push", image)
+     // console.log("image push", image)
      this.setState({
        bannerImage: image
      })
-     console.log(this.state.bannerImage)
+     // console.log(this.state.bannerImage)
 
     let fetchApiLogin = await Api.getGroceries();
-    console.log("API Stores....", fetchApiLogin)
+    // console.log("API Stores....", fetchApiLogin)
      this.setState({
        groceries: fetchApiLogin
      })
 
   }
 
-  
+
 
   onScroll(){
     // Alert.alert("hai")
@@ -192,7 +192,7 @@ class HomeScreen extends Component<Props> {
 
 
   render() {
-    console.log("state ot props",this.props.counter)
+    // console.log("state ot props",this.props.counter)
     return (
       <View style={styles.container}>
         <View style={{width:width,height:200}}>

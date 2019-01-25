@@ -128,6 +128,19 @@ export default {
       return []
     }
   },
+  async getOrders(token) {
+    try {
+      const response = await get(`/account/order/index&token=${token}`)
+      console.log(response)
+      if (!response.error) {
+        // const data = omit(response, 'error', 'message')
+        // return Object.keys(data).map(key => data[key])
+        return response
+      }
+    } catch (e) {
+      return []
+    }
+  },
   async getAllPhotos(userId) {
     try {
       const response = await get(`/photo/user/${userId}`)

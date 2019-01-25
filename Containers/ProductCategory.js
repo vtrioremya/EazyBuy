@@ -70,7 +70,7 @@ export default class ProductCategory extends Component<Props> {
   async componentDidMount(){
 
     let fetchApiLogin = await Api.getCategory();
-    console.log("CATEGORY....", fetchApiLogin)
+    // console.log("CATEGORY....", fetchApiLogin)
 
         this.setState({
           category: fetchApiLogin,
@@ -83,7 +83,7 @@ export default class ProductCategory extends Component<Props> {
         let fetchBanner = await Api.getCommonOffer(formData);
         // console.log("API offers....", fetchBanner)
 
-        
+
         let i = 0
          var image= []
          for(i of fetchBanner.offer_list){

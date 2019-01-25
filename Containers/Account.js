@@ -7,12 +7,15 @@
  */
 
 import React, {Component} from 'react';
-import {Platform,Text, View, TextInput, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {Platform, FlatList, Text, View, TextInput, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Api from '../Services/AppServices'
 import ImagePicker from 'react-native-image-crop-picker';
+import CheckBox from 'react-native-check-box'
+import ModalDropdown from 'react-native-modal-dropdown';
+import SwitchToggle from 'react-native-switch-toggle';
 
 type Props = {};
 
@@ -34,7 +37,15 @@ export default class Account extends Component<Props> {
       paymentClick:false,
       settingsClick:false,
       editable: false,
-      autoFocus:false
+      autoFocus:false,
+      radioButton:'value1',
+      cardcash: true,
+      bg:'#b3b3b3',
+      bga:'#262050',
+      bgs: '#b3b3b3',
+      cards: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
+      cardDet: false,
+      switchOn1: false
     }
   }
 
@@ -85,7 +96,7 @@ addPhoto(){
            compressImageQuality: 0.75,
            cropping: true
        }).then(image => {
-           console.log(image);
+           // console.log(image);
            let photo = {
                uri: image.path,
                type: 'image/jpeg',
@@ -104,7 +115,12 @@ payment(){
   this.setState({
     addressClick:false,
     paymentClick: true,
-    settingsClick: false
+    settingsClick: false,
+    bga: '#b3b3b3',
+    bgs: '#b3b3b3',
+    bg: '#262050',
+    cardcash: true,
+    cardDet:false
   })
 }
 
@@ -112,7 +128,10 @@ address(){
   this.setState({
     addressClick:true,
     settingsClick:false,
-    paymentClick:false
+    paymentClick:false,
+    bg: '#b3b3b3',
+    bgs: '#b3b3b3',
+    bga: '#262050'
   })
 }
 
@@ -120,7 +139,10 @@ settings(){
   this.setState({
     addressClick:false,
     settingsClick:true,
-    paymentClick:false
+    paymentClick:false,
+    bg: '#b3b3b3',
+    bgs: '#262050',
+    bga: '#b3b3b3'
   })
 }
 
@@ -131,6 +153,34 @@ editProfile(){
 
   })
 }
+card(){
+  this.setState({
+    radioButton: 'value2',
+    cardcash: false,
+    cardDet:true
+  })
+}
+cash(){
+  this.setState({
+    radioButton: 'value1'
+  })
+}
+
+onPress1(){
+  this.setState({
+    switchOn1: !this.state.switchOn1
+  })
+}
+
+renderRow(rowData, sectionID, rowID, highlightRow){
+  let list =[]
+  list.push(
+    <View style={styles.list}>
+        <Image source={require('../Images/catgry-img-9.jpg')} style={{width:50,height:50}}/>
+    </View>
+  )
+  return(<View>{list}</View>);
+}
 
 
   render() {
@@ -139,6 +189,13 @@ editProfile(){
       <View style={styles.container}>
 
         <View style={styles.proImage}>
+
+        <View style={styles.Image}>
+          <TouchableOpacity onPress={this.addPhoto.bind(this)}>
+            <Image source={{uri: this.state.profile_pic}}
+            style={{width:150,height:150,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>
+          </TouchableOpacity>
+        </View>
 
           <View style={styles.textStyle}>
             <View style={{flexDirection:'row',justifyContent:'space-around'}}>
@@ -162,14 +219,6 @@ editProfile(){
 
           </View>
 
-
-          <View style={styles.Image}>
-            <TouchableOpacity onPress={this.addPhoto.bind(this)}>
-              <Image source={{uri: this.state.profile_pic}}
-              style={{width:150,height:150,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>
-            </TouchableOpacity>
-          </View>
-
         </View>
 
         <View style={styles.delivery} >
@@ -177,11 +226,11 @@ editProfile(){
 
           <View >
             <TouchableOpacity style={{alignItems:'center'}}onPress={this.address.bind(this)}>
-              <View style={styles.deliveryAdd}>
+              <View style={[styles.deliveryAdd,{backgroundColor:this.state.bga}]}>
                 <Image source={require('../Images/delv-adres-icon-1.png')}
                 style={{width:50, height:50}}/>
               </View>
-              <Text style={styles.settingsText}>Delivery </Text>
+              <Text style={styles.settingsText}> Delivery </Text>
               <Text style={styles.settingsText}> Address</Text>
             </TouchableOpacity>
           </View>
@@ -189,7 +238,7 @@ editProfile(){
 
           <View >
             <TouchableOpacity style={{alignItems:'center'}} onPress={this.payment.bind(this)}>
-              <View style={styles.paymentIcon}>
+              <View style={[styles.paymentIcon,{backgroundColor:this.state.bg}]}>
                 <Image source={require('../Images/payment-icon-2.png')}
                 style={{width:50, height:50}}/>
               </View>
@@ -200,7 +249,7 @@ editProfile(){
 
           <View >
             <TouchableOpacity style={{alignItems:'center'}} onPress={this.settings.bind(this)}>
-              <View style={styles.settings}>
+              <View style={[styles.settings,{backgroundColor:this.state.bgs}]}>
                 <Image source={require('../Images/settings-icon-3.png')}
                 style={{width:50, height:50}}/>
               </View>
@@ -243,11 +292,176 @@ editProfile(){
         </View>}
 
           {this.state.paymentClick && <View style={styles.addressTextArea}>
-          <Text>payment</Text>
+          {(this.state.cardcash) && <View>
+            <CheckBox
+                style={{flex: 1, padding: 10}}
+                onClick={this.cash.bind(this)}
+                isChecked={this.state.radioButton === 'value1'}
+                leftText={"Cash Payment"}
+                leftTextStyle={{fontSize:20, color:'#000'}}
+                checkedImage={<Image source={require('../Images/radio-but-chk.png')}
+                style={{width: 30, height:30}}/>}
+                unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
+                 style={{width: 30, height:30}}/>}
+              />
+            <CheckBox
+              style={{flex: 1, padding: 10}}
+              onClick={this.card.bind(this)}
+              isChecked={this.state.radioButton === 'value2'}
+              leftText={"Card Payment"}
+              leftTextStyle={{fontSize:20, color:'#000'}}
+              checkedImage={<Image source={require('../Images/radio-but-chk.png')}
+              style={{width: 30, height:30}}/>}
+              unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
+               style={{width: 30, height:30}}/>}
+            />
+              </View>}
+
+              { this.state.cardDet && <View>
+
+                <View style={{backgroundColor:'#d3d3d3'}}>
+                  <Text style={styles.textPay}>We Accept</Text>
+                </View>
+
+                <View>
+                  <FlatList
+                    data={this.state.cards}
+                    renderItem={this.renderRow.bind(this)}
+                    horizontal={true}
+                  />
+                </View>
+
+                <View style={{backgroundColor:'#d3d3d3'}}>
+                  <Text style={styles.textPay}>Card Number</Text>
+                </View>
+
+                <View>
+                  <TextInput
+                    placeholder='Enter your card number'
+                  />
+                </View>
+
+                <View style={{backgroundColor:'#d3d3d3'}}>
+                  <Text style={styles.textPay}>Card Expiry Date</Text>
+                </View>
+
+                <View style={styles.expiryDate}>
+                  <ModalDropdown options={['option 1', 'option 2']}
+                    style={styles.month}
+                    dropdownTextStyle={{fontSize:18}}
+                    dropdownStyle={styles.monthDropdown}
+                  >
+
+                  <View style={styles.monthText}>
+                    <View>
+                      <Text style={styles.ratandlocStyle}>MM</Text>
+                    </View>
+
+                    <View style={styles.arrow}>
+                      <Image source={require('../Images/drop-down-arrow.png')}
+                      style={{width:10,height:10}} />
+                    </View>
+
+                  </View>
+                  </ModalDropdown>
+
+                  <ModalDropdown options={['option 1', 'option 2']}
+                    style={styles.month}
+                    dropdownTextStyle={{fontSize:18}}
+                    dropdownStyle={styles.monthDropdown}
+                  >
+
+                  <View style={styles.monthText}>
+                    <View>
+                      <Text style={styles.ratandlocStyle}>YY</Text>
+                    </View>
+
+                    <View style={styles.arrow}>
+                      <Image source={require('../Images/drop-down-arrow.png')}
+                      style={{width:10,height:10}} />
+                    </View>
+
+                  </View>
+                  </ModalDropdown>
+                </View>
+
+                <View style={{backgroundColor:'#d3d3d3'}}>
+                  <Text style={styles.textPay}>CVV Code</Text>
+                </View>
+
+                <View>
+                  <TextInput
+                    placeholder='Enter your cvv code'
+                  />
+                </View>
+
+                <View style={{alignItems:'center'}}>
+                  <TouchableOpacity style={{backgroundColor:'#262050',padding:10, width:100, alignItems:'center'}}>
+                    <Text style={{color:'#fff'}}>Pay Now</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>}
         </View>}
 
           {this.state.settingsClick && <View style={styles.addressTextArea}>
-          <Text>settings</Text>
+
+
+
+          <View style={styles.line1}>
+            <TextInput
+              placeholder='Enter your user name'
+              style={styles.username}
+              style={styles.lineText}
+              value={this.state.address_1}
+            />
+          </View>
+
+
+
+          <View style={styles.line1}>
+            <TextInput
+              placeholder='Enter your password'
+              style={styles.password}
+              style={styles.lineText}
+              value={this.state.address_1}
+            />
+          </View>
+
+
+
+          <View style={styles.line1}>
+            <ModalDropdown options={['English', 'Arabic']}
+              style={styles.language}
+              dropdownTextStyle={{fontSize:18}}
+              dropdownStyle={styles.languageDropdown}
+            >
+
+            <View style={styles.langText}>
+              <View>
+                <Text style={{fontSize:18}}>Language</Text>
+              </View>
+
+              <View style={styles.arrow}>
+                <Image source={require('../Images/drop-down-arrow.png')}
+                style={{width:10,height:10}} />
+              </View>
+
+            </View>
+            </ModalDropdown>
+          </View>
+
+          <View style={[styles.notification,{flexDirection:'row', justifyContent:'space-between'}]}>
+              <Text style={styles.textPay}> Notification</Text>
+              <SwitchToggle
+              switchOn={this.state.switchOn1}
+              onPress={this.onPress1.bind(this)}
+              circleColorOff='#d3d3d3'
+              circleColorOn='#232050'
+              />
+          </View>
+
+
         </View>}
 
 
@@ -306,20 +520,19 @@ const styles = StyleSheet.create({
     alignItems:'center',
   },
   settings :{
-    backgroundColor:'#b3b3b3',
     borderColor:'transparent',
     borderWidth:1,
     borderRadius: 50,
     padding:18
   },
   deliveryAdd: {
-    backgroundColor:'#262050',borderColor:'transparent',
+    borderColor:'transparent',
     borderWidth:1,
     borderRadius: 50,
     padding:18
   },
   paymentIcon: {
-    backgroundColor:'#b3b3b3',borderColor:'transparent',
+    borderColor:'transparent',
     borderWidth:1,
     borderRadius: 50,
     padding:18
@@ -347,5 +560,93 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:'#cccccc',
     borderRadius:10, marginBottom:10
+  },
+  list: {
+    flexDirection:'column',
+    width:40,
+    alignItems:'center',
+    padding:50,
+    justifyContent:'space-around'
+  },
+  ratandlocStyle: {
+    margin:5,
+    fontSize:17,
+    color:'#000'
+  },
+  expiryDate :{
+    flexDirection:'row',
+    justifyContent:'space-around',
+    alignItems:'center',
+    padding:5
+  },
+  month: {
+    borderColor:'gray',
+    borderWidth:0.5,
+    height:30,
+    borderRadius:5
+  },
+  monthDropdown: {
+    borderColor:'gray',
+    borderWidth:1,
+    borderRadius:5,
+    width:90
+  },
+  monthText: {
+    width:70,
+    marginLeft:5,
+    marginRight:5,
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },
+  arrow: {
+    width:30,
+    height:30,
+    alignItems:'center'
+  },
+  textPay: {
+    marginLeft:10,
+    fontSize:19,
+  },
+  language: {
+    padding:10
+
+
+  },
+  languageDropdown: {
+    borderColor:'gray',
+    borderWidth:1,
+    borderRadius:5,
+    width:width -50
+  },
+  langText: {
+    // width:70,
+    marginLeft:5,
+    marginRight:5,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center'
+  },
+  username: {
+    fontSize: 18,
+    color:'black',
+    borderColor:'gray',
+    borderWidth:1,
+    borderRadius:5,
+  },
+  name: {
+    backgroundColor:'#d3d3d3',
+  },
+  password: {
+    borderColor:'gray',
+    borderWidth:1,
+    borderRadius:5,
+  },
+  notification: {
+    borderWidth:1,
+    padding:10,
+    borderColor:'#cccccc',
+    borderRadius:10, marginBottom:10,
+    backgroundColor:'#d3d3d3',marginTop:10
   }
+
 });

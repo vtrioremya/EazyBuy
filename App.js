@@ -10,10 +10,10 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { Provider } from "react-redux";
 import { createStore } from 'redux';
-import reducer from './Reducer/index';
+import cartItems from './Reducer/cartItems';
 import {Drawer} from './Navigation/navigators'
 
-const store = createStore(reducer);
+const store = createStore(cartItems);
 
 type Props = {};
 export default class App extends Component<Props> {

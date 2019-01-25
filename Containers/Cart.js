@@ -14,10 +14,10 @@ import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialTabs from 'react-native-material-tabs';
 import ModalDropdown from 'react-native-modal-dropdown';
 import ToggleBox from 'react-native-show-hide-toggle-box'
-
+import {connect} from 'react-redux'
 type Props = {};
 
-export default class Cart extends Component<Props> {
+class Cart extends Component<Props> {
 
   constructor(props){
     super(props);
@@ -86,7 +86,7 @@ export default class Cart extends Component<Props> {
     }
 
     renderHistory(rowData, sectionID, rowID, highlightRow){
-      console.log(rowData)
+      // console.log(rowData)
       let history =rowData.item
       let list = []
       list.push(
@@ -109,10 +109,10 @@ export default class Cart extends Component<Props> {
 
 
   renderRow(rowData, sectionID, rowID, highlightRow){
-    console.log(rowData)
+    // console.log(rowData)
     let grocery =rowData.item
     let list = []
-    console.log(grocery.key)
+    // console.log(grocery.key)
 
     list.push(
       <View style={styles.grocery}>
@@ -182,7 +182,9 @@ export default class Cart extends Component<Props> {
 
 
   render() {
-    console.log(this.props)
+    // console.log("cart item length",this.props.cartItems.length)
+    console.log("REDUX PROPS",this.props)
+    // console.log("REDUX cart",this.props.cartItems)
     return (
       <ScrollView>
       <View style={styles.container}>
@@ -393,3 +395,10 @@ const styles = StyleSheet.create({
     color:'#9b9b9b'
   }
 });
+
+const mapStateToProps = (state) => {
+  return {
+    cartItems: state
+  }
+}
+export default connect(mapStateToProps)(Cart)

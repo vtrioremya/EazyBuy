@@ -14,6 +14,7 @@ import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialTabs from 'react-native-material-tabs';
 import ModalDropdown from 'react-native-modal-dropdown';
 import ToggleBox from 'react-native-show-hide-toggle-box'
+import Api from '../Services/AppServices'
 
 type Props = {};
 
@@ -25,7 +26,7 @@ export class OrderHistory extends Component<Props> {
     this.state = {
       index:0,
       selectedTab: 0,
-      orders: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
+      orders: [],
       routes: [
       { key: 'first', title: 'First' },
       { key: 'second', title: 'Second' },
@@ -74,6 +75,16 @@ export class OrderHistory extends Component<Props> {
   //       </View>
   //     )
   //   }
+
+  async componentDidMount(){
+
+      var token ='9bd316e1a9e455efac6a0bd9166779'
+      let orders = await Api.getOrders(token);
+      // console.log(orders)
+      // this.setState({
+      //     orders: orders
+      // })
+  }
 
     productdetail = () => {
       // Alert.alert("splash");

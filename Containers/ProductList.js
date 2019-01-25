@@ -14,14 +14,18 @@ import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialTabs from 'react-native-material-tabs';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Api from '../Services/AppServices'
+import PropTypes from 'prop-types';
 
+
+import { connect } from 'react-redux';
 type Props = {};
 
-export default class ProductList extends Component<Props> {
+class ProductList extends Component<Props> {
 
   constructor(props){
     super(props);
-    // this.splash=this.splash.bind(this);
+    // this.addItemToCart=this.addItemToCart.bind(this);
+
     this.state = {
       index:0,
       selectedTab: 0,
@@ -34,7 +38,11 @@ export default class ProductList extends Component<Props> {
       { key: 'second', title: 'Second' },
     ],
     };
+    // this.loadUserItems=this.loadUserItems.bind(this);
+
   }
+
+
 
   static navigationOptions = ({ navigation }) => {
       const { params = {} } = navigation.state;
@@ -76,7 +84,7 @@ export default class ProductList extends Component<Props> {
 
       //sub categories api
       let subCategory = await Api.getSubCategory(catId);
-      console.log("sub cat....", subCategory)
+      // console.log("sub cat....", subCategory)
       this.setState({
         subCat: subCategory.categories
       })
@@ -90,13 +98,13 @@ export default class ProductList extends Component<Props> {
       this.setState({
         subName: subNames
       })
-      console.log(this.state.subName)
+      // console.log(this.state.subName)
       //list api
       var formData = new FormData();
       formData.append('category_id', catId);
 
       let fetchApiLogin = await Api.getProducts(formData);
-      console.log("PROD LIST....", fetchApiLogin)
+      // console.log("PROD LIST....", fetchApiLogin)
 
           this.setState({
             groceries: fetchApiLogin,
@@ -147,12 +155,44 @@ export default class ProductList extends Component<Props> {
       })
     }
 
+    // updateCart = (grocery) => {
+    //   console.log("carttt", grocery)
+    //   this.addItemToCart()
+      // var cart_items = [{
+      //   "product_id": "56",
+      //   "quantity": "2",
+      //   "option": {
+      //     "product_option_id": "232",
+      //     "product_option_value_id": "28" ,
+      //     "side_dish":"item side dish",
+      //     "size":"M",
+      //     "special_request":"customer request"
+      //
+      // }]
+      // this.props.counter.push(cart_items)
+      // console.log("cart items",this.props.cartItems)
+
+    //   this.props.updateCart({name:'ahokd'})
+      // AsyncStorage.setItem
+      // "cart_items": [{
+      //   "product_id": "56",
+      //   "quantity": "2",
+      //   "option": {
+      //     "product_option_id": "232",
+      //     "product_option_value_id": "28" ,
+      //     "side_dish":"item side dish",
+      //     "size":"M",
+      //     "special_request":"customer request"
+      //   }
+      // }]
+    // }
+
 
 
   renderRow(rowData, sectionID, rowID, highlightRow){
-    // console.log(rowData)
+    // console.log("render cart",this.props.addItemToCart(rowData.item))
     let grocery =rowData.item
-    console.log("options",grocery.options)
+    // console.log("options",grocery.options)
 
     var weights = grocery.options
     var weightName = []
@@ -171,9 +211,9 @@ export default class ProductList extends Component<Props> {
 
     })
 
-    console.log("weightName",weightName)
-    console.log(weightId)
-    console.log(weightResult)
+    // console.log("weightName",weightName)
+    // console.log(weightId)
+    // console.log(weightResult)
     let list = []
 
 
@@ -243,7 +283,7 @@ export default class ProductList extends Component<Props> {
             </View>
 
             <View style={{width:50}}>
-              <TouchableOpacity style={styles.openNowButton}>
+              <TouchableOpacity style={styles.openNowButton} onPress={()=>this.props.addItemToCart(rowData.item)}>
                 <Text style={{color:'#fff',fontSize:17}}>ADD</Text>
               </TouchableOpacity>
             </View>
@@ -261,7 +301,13 @@ export default class ProductList extends Component<Props> {
 
   render() {
     const { navigation } = this.props;
-    console.log("CAT ID",navigation.state.params.catId)
+    // console.log("CAT ID",navigation.state.params.catId)
+    console.log("REDUX PROPS",this.props)
+    // console.log("REDUX cart length",this.props.cart.length)
+
+    // this.props.items && this.props.items.length > 0 ? console.log(this.props.items[0].type) : ''
+
+
     return (
       <View style={styles.container}>
 
@@ -400,3 +446,28 @@ const styles = StyleSheet.create({
     fontSize:18
   },
 });
+
+// const mapStateToProps = state => ({
+//   items: state.counter,
+// })
+
+const mapStateToProps = (state) => {
+  return {
+    cartItems: state
+  }
+}
+
+const mapDispatchToProps = (dispatch)=> {
+    return {
+      addItemToCart : (products) => dispatch({
+        type: 'ADD_TO_CART',
+         payload: products
+      })
+    }
+  }
+
+
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductList)

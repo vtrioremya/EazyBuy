@@ -73,7 +73,7 @@ export default class Register extends Component<Props> {
 
   async login(){
 
-    console.log("login")
+    // console.log("login")
 
       var formData = new FormData();
       formData.append('firstname', this.state.fName);
@@ -84,7 +84,7 @@ export default class Register extends Component<Props> {
       formData.append('confirm', this.state.confirm);
       formData.append('agree', '1');
 
-      console.log(formData)
+      // console.log(formData)
 
       let fetchApiLogin = await Api.register(formData);
       // console.log("API RESULT....", fetchApiLogin)

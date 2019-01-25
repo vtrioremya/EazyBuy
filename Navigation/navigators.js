@@ -23,6 +23,7 @@ import ContactUs from '../Containers/ContactUs'
 import DrawerScreen from '../Containers/DrawerScreen'
 import NavigationBar from '../Components/NavigationBar'
 import DefaultBar from '../Components/DefaultBar'
+import CounterApp from '../Containers/CounterApp'
 
 import {Image, View, Text, TouchableOpacity, Dimensions, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
@@ -96,6 +97,7 @@ export const Stack = createStackNavigator({
     }
   },
   Swipers: {screen: Swipers},
+  CounterApp: {screen: CounterApp},
   Location: {screen: Location},
   Login: {screen: Login},
   Register: {screen: Register},
@@ -145,7 +147,7 @@ export const Stack = createStackNavigator({
 }
 ,{
     // headerMode: 'screen',
-    initialRouteName: 'EazybuySplash',
+    initialRouteName: 'Account',
     navigationOptions: ({ navigation }) => ({
     headerLeft: (
       <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
