@@ -7,9 +7,11 @@
  */
 
 import React, {Component} from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {Platform, TextInput, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
+import Api from '../Services/AppServices'
 
 type Props = {};
 
@@ -19,7 +21,7 @@ export default class ContactUs extends Component<Props> {
     super(props);
     this.splash=this.splash.bind(this);
     this.state = {
-
+      description:''
     };
   }
 
@@ -41,6 +43,27 @@ export default class ContactUs extends Component<Props> {
     ),
   }
 
+  async send(){
+
+    if(!this.state.description){
+      Alert.alert("Description can't be blank")
+      return;
+    }
+
+    var formData = new FormData();
+    formData.append('token', '9bd316e1a9e455efac6a0bd9166779');
+    formData.append('description', this.state.description);
+
+    let feedback = await Api.sendFeedback(formData);
+    console.log("feedback",feedback)
+    if(feedback.status == "success"){
+      Alert.alert(feedback.message)
+    }
+    else {
+      Alert.alert(feedback.message)
+    }
+  }
+
   splash = () => {
     // Alert.alert("splash");
     this.props.navigation.navigate('Swipers')
@@ -48,21 +71,25 @@ export default class ContactUs extends Component<Props> {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+      <View >
         <View style={{width:width, alignItems:'center'}}>
           <Image source={require('../Images/logo-splash.png')} style={{width: 100, height: 100}}/>
         </View>
         <View style={{alignItems:'center'}}>
           <TextInput multiline={true} placeholder='Write your Feedback..'
                      style={styles.feedback}
+                     value={this.state.description}
+                     onChangeText={(description) => this.setState({description})}
                      numberOfLines = {20}/>
         </View>
         <View style={{alignItems:'center'}}>
-          <TouchableOpacity style={styles.send}>
+          <TouchableOpacity style={styles.send} onPress={this.send.bind(this)}>
             <Text style={styles.sendText}>SEND</Text>
           </TouchableOpacity>
         </View>
       </View>
+      </KeyboardAwareScrollView>
     );
   }
 }

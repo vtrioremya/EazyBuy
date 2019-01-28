@@ -35,6 +35,12 @@ export default class EazybuySplash extends Component<Props> {
     header: null
   }
 
+  // async componentDidMount(){
+
+    // let splash = await Api.getEazybuySplash(token);
+    // console.log("API account....", splash)
+  // }
+
   splash = () => {
     // Alert.alert("splash");
     this.props.navigation.navigate('Splash')
@@ -53,7 +59,7 @@ export default class EazybuySplash extends Component<Props> {
           <TouchableOpacity style={styles.english} onPress={this.splash}>
             <Text style={styles.englishText}>EVERYDAY YOU GET OUR BEST</Text>
           </TouchableOpacity>
-        
+
             <Image source={require('../Images/splash-bot-img.jpg')} style={{resizeMode: 'stretch',width:width, height:height/1.9}}/>
         </View>
       </View>

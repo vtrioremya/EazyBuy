@@ -118,7 +118,7 @@ export default {
   async getAccount(token) {
     try {
       const response = await get(`/account/account/userdetails&token=${token}`)
-      console.log(response)
+      // console.log(response)
       if (!response.error) {
         // const data = omit(response, 'error', 'message')
         // return Object.keys(data).map(key => data[key])
@@ -131,7 +131,43 @@ export default {
   async getOrders(token) {
     try {
       const response = await get(`/account/order/index&token=${token}`)
-      console.log(response)
+      // console.log(response)
+      if (!response.error) {
+        // const data = omit(response, 'error', 'message')
+        // return Object.keys(data).map(key => data[key])
+        return response
+      }
+    } catch (e) {
+      return []
+    }
+  },
+  async sendFeedback(formdata) {
+    try {
+      const response = await post(`/information/feedback/submit`,formdata)
+      if (!response.error) {
+        return response
+      }
+      return []
+    } catch (e) {
+      return []
+    }
+  },
+  async saveAddress(formdata) {
+    try {
+      const response = await post(`/account/account/addaddress`,formdata)
+      console.log("save add",response)
+      // if (!response.error) {
+      //   return response
+      // }
+      // return []
+    } catch (e) {
+      return []
+    }
+  },
+  async getEazybuySplash(token) {
+    try {
+      const response = await get(`/account/web&token=${token}`)
+      // console.log(response)
       if (!response.error) {
         // const data = omit(response, 'error', 'message')
         // return Object.keys(data).map(key => data[key])

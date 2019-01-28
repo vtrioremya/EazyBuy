@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {ScrollView, Share, AsyncStorage, Text, View, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {ScrollView, Share, AsyncStorage,Alert, Text, View, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
 import { DrawerActions, NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 // import Share from 'react-native-share';
@@ -69,12 +69,17 @@ export default class DrawerScreen extends Component<Props> {
     title: 'Wow, did you see that?'
   }, {
     // Android only:
-    dialogTitle: 'Share BAM goodness',
+    dialogTitle: 'Share EazyBuy',
     // iOS only:
     excludedActivityTypes: [
       'com.apple.UIKit.activity.PostToTwitter'
     ]
   })
+  }
+
+  signout= (route)=>{
+    // Alert.alert("signoput")
+    this.navigateToScreen('HomeScreen')
   }
 
   render () {
@@ -168,12 +173,7 @@ export default class DrawerScreen extends Component<Props> {
                 My Account
               </Text>
             </View>
-            <View style={styles.menuItem}>
-              <Image source={require('../Images/signout.png')} style={{width:30, height:30}} />
-              <Text style={styles.textSize} >
-               Sign Out
-              </Text>
-            </View>
+
           </View>
         </ScrollView>
       </View>

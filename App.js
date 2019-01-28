@@ -12,15 +12,29 @@ import { Provider } from "react-redux";
 import { createStore } from 'redux';
 import cartItems from './Reducer/cartItems';
 import {Drawer} from './Navigation/navigators'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+import { PersistGate } from 'redux-persist/integration/react'
 
-const store = createStore(cartItems);
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
+const persistedReducer = persistReducer(persistConfig, cartItems)
+
+const store = createStore(persistedReducer);
+
+let persistor = persistStore(store)
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
       <Provider store={ store }>
+        <PersistGate loading={null} persistor={persistor}>
           <Drawer />
+        </PersistGate>
         </Provider>
     );
   }

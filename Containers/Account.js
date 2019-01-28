@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, FlatList, Text, View, TextInput, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {Platform,Alert, FlatList, Text, View, TextInput, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -45,7 +45,8 @@ export default class Account extends Component<Props> {
       bgs: '#b3b3b3',
       cards: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
       cardDet: false,
-      switchOn1: false
+      switchOn1: false,
+      value:'Language'
     }
   }
 
@@ -74,20 +75,40 @@ export default class Account extends Component<Props> {
   async componentDidMount(){
     var token ='9bd316e1a9e455efac6a0bd9166779'
     let accountDetails = await Api.getAccount(token);
-    // console.log("API account....", accountDetails)
+    console.log("API account....", accountDetails)
     // console.log("name",accountDetails.firstname)
     this.setState({
       firstname: accountDetails.firstname != null ? accountDetails.firstname: 'First name',
       lastname: accountDetails.lastname!= null ? accountDetails.lastname: 'Last name',
       email : accountDetails.email!= null ? accountDetails.email: 'Your email',
       phone: accountDetails.telephone!= null ? accountDetails.telephone: 'Your telephone',
-      profile_pic: accountDetails.profile_image ,
+      profile_pic: accountDetails.profile_image != null ? accountDetails.profile_image: '',
       address_1: accountDetails.address_1,
       address_2: accountDetails.address_2,
       address_3: accountDetails.city,
       postcode: accountDetails.postcode
   })
 }
+
+
+  async save(){
+    console.log("save address click")
+    var formData = new FormData();
+    formData.append('token', '9bd316e1a9e455efac6a0bd9166779');
+    formData.append('address_1', this.state.address_1);
+    formData.append('address_2', this.state.address_2);
+    formData.append('city', this.state.address_3);
+    formData.append('country_id', '');
+    formData.append('zone_id', '');
+    formData.append('postcode', this.state.postcode);
+    formData.append('address_tag', '');
+
+    let addressApi = await Api.saveAddress(formData);
+    console.log("response address",addressApi)
+
+      Alert.alert(addressApi.message)
+
+  }
 
 addPhoto(){
   ImagePicker.openPicker({
@@ -190,19 +211,22 @@ renderRow(rowData, sectionID, rowID, highlightRow){
 
         <View style={styles.proImage}>
 
-        <View style={styles.Image}>
-          <TouchableOpacity onPress={this.addPhoto.bind(this)}>
-            <Image source={{uri: this.state.profile_pic}}
-            style={{width:150,height:150,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.Image}>
+            <TouchableOpacity onPress={this.addPhoto.bind(this)}>
+              { (this.state.profile_pic) ? <Image source={{uri: this.state.profile_pic}}
+              style={{width:150,height:150,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/> :
+              <Image source={require('../Images/blank_profile_pic.png')}
+              style={{width:150,height:150,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>}
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.textStyle}>
             <View style={{flexDirection:'row',justifyContent:'space-around'}}>
               <TextInput autoFocus={this.state.autoFocus}
                          editable={this.state.editable}
                          style={styles.text}
-                         value={this.state.firstname}/>
+                         value={this.state.firstname}
+                         onChangeText={(firstname) => this.setState({firstname})}/>
               <TouchableOpacity style={styles.editButton} onPress={this.editProfile.bind(this)}>
                 <Image style={{width:30, height:30}}
                 source={require('../Images/edit.png')}/>
@@ -210,11 +234,17 @@ renderRow(rowData, sectionID, rowID, highlightRow){
             </View>
 
             <View>
-              <TextInput editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c'}} value={this.state.email}/>
+              <TextInput
+              onChangeText={(email) => this.setState({email})}
+              editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c'}}
+              value={this.state.email}/>
             </View>
 
             <View>
-              <TextInput editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c'}} value={this.state.phone}/>
+              <TextInput
+              onChangeText={(phone) => this.setState({phone})}
+              editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c'}}
+              value={this.state.phone}/>
             </View>
 
           </View>
@@ -265,6 +295,7 @@ renderRow(rowData, sectionID, rowID, highlightRow){
             <TextInput placeholder='Delivery Address Line 1'
                        placeholderTextColor='#818181'
                        style={styles.lineText}
+                       onChangeText={(address_1) => this.setState({address_1})}
                        value={this.state.address_1}/>
           </View>
 
@@ -272,6 +303,7 @@ renderRow(rowData, sectionID, rowID, highlightRow){
             <TextInput placeholder='Delivery Address Line 2'
                        placeholderTextColor='#818181'
                        style={styles.lineText}
+                       onChangeText={(address_2) => this.setState({address_2})}
                        value={this.state.address_2}/>
           </View>
 
@@ -279,6 +311,7 @@ renderRow(rowData, sectionID, rowID, highlightRow){
             <TextInput placeholder='Delivery Address Line 3'
                        placeholderTextColor='#818181'
                        style={styles.lineText}
+                       onChangeText={(address_3) => this.setState({address_3})}
                        value={this.state.address_3}/>
           </View>
 
@@ -286,7 +319,14 @@ renderRow(rowData, sectionID, rowID, highlightRow){
             <TextInput placeholder='Post Code'
                        placeholderTextColor='#818181'
                        style={styles.lineText}
+                       onChangeText={(postcode) => this.setState({postcode})}
                        value={this.state.postcode}/>
+          </View>
+
+          <View style={{alignItems:'center'}}>
+            <TouchableOpacity style={styles.saveButton} onPress={this.save.bind(this)}>
+              <Text style={{color:'#fff'}}>Save</Text>
+            </TouchableOpacity>
           </View>
 
         </View>}
@@ -408,31 +448,39 @@ renderRow(rowData, sectionID, rowID, highlightRow){
 
 
 
-          <View style={styles.line1}>
+
+
+          <View style={{backgroundColor:'#d3d3d3'}}>
+            <Text style={styles.textPay}>User Name</Text>
+          </View>
+
+          <View>
             <TextInput
               placeholder='Enter your user name'
-              style={styles.username}
-              style={styles.lineText}
-              value={this.state.address_1}
+              value = {this.state.email}
             />
           </View>
 
+          <View style={{backgroundColor:'#d3d3d3'}}>
+            <Text style={styles.textPay}>Password</Text>
+          </View>
 
-
-          <View style={styles.line1}>
+          <View>
             <TextInput
               placeholder='Enter your password'
-              style={styles.password}
-              style={styles.lineText}
-              value={this.state.address_1}
+              value={this.state.password}
             />
           </View>
 
+          <View style={{backgroundColor:'#d3d3d3'}}>
+            <Text style={styles.textPay}>Language</Text>
+          </View>
 
-
-          <View style={styles.line1}>
+          <View style={styles.languageBar}>
             <ModalDropdown options={['English', 'Arabic']}
               style={styles.language}
+              defaultValue={this.state.value}
+              onSelect={(idx, value) => this.setState({value: value})}
               dropdownTextStyle={{fontSize:18}}
               dropdownStyle={styles.languageDropdown}
             >
@@ -451,14 +499,24 @@ renderRow(rowData, sectionID, rowID, highlightRow){
             </ModalDropdown>
           </View>
 
+          <View style={{backgroundColor:'#d3d3d3'}}>
+            <Text style={styles.textPay}>Notification</Text>
+          </View>
+
           <View style={[styles.notification,{flexDirection:'row', justifyContent:'space-between'}]}>
               <Text style={styles.textPay}> Notification</Text>
               <SwitchToggle
               switchOn={this.state.switchOn1}
               onPress={this.onPress1.bind(this)}
-              circleColorOff='#d3d3d3'
+              circleColorOff='#202000'
               circleColorOn='#232050'
               />
+          </View>
+
+          <View style={{alignItems:'center'}}>
+            <TouchableOpacity style={styles.applyButton}>
+              <Text style={{color:'#fff'}}>Apply</Text>
+            </TouchableOpacity>
           </View>
 
 
@@ -483,7 +541,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'space-around',
     // backgroundColor:'red',
-    margin:20
+    marginTop:10
   },
   menuItem:{
     padding: 10,
@@ -512,12 +570,13 @@ const styles = StyleSheet.create({
     color:'#000'
   },
   delivery: {
-    marginTop:30,
-    paddingBottom:50,
+    marginTop:10,
+    // paddingBottom:50,
     flexDirection:'row',
     width:width,
     justifyContent:'space-around',
     alignItems:'center',
+    // backgroundColor:'red'
   },
   settings :{
     borderColor:'transparent',
@@ -550,10 +609,15 @@ const styles = StyleSheet.create({
     borderColor:'#cccccc',
     borderRadius:10, marginBottom:10
   },
+  languageBar: {
+    // borderWidth:1,
+    // borderColor:'#cccccc',
+    // borderRadius:10,
+  },
   lineText: {
     marginLeft:10,
     fontSize:19,
-    color:'#818181'
+    color:'#000'
   },
   postLine: {
     width:width/2,
@@ -564,8 +628,10 @@ const styles = StyleSheet.create({
   list: {
     flexDirection:'column',
     width:40,
+    padding:10,
     alignItems:'center',
-    padding:50,
+    marginLeft:20,
+    marginRight:20,
     justifyContent:'space-around'
   },
   ratandlocStyle: {
@@ -609,13 +675,11 @@ const styles = StyleSheet.create({
   },
   language: {
     padding:10
-
-
   },
   languageDropdown: {
-    borderColor:'gray',
-    borderWidth:1,
-    borderRadius:5,
+    // borderColor:'gray',
+    // borderWidth:1,
+    // borderRadius:5,
     width:width -50
   },
   langText: {
@@ -647,6 +711,18 @@ const styles = StyleSheet.create({
     borderColor:'#cccccc',
     borderRadius:10, marginBottom:10,
     backgroundColor:'#d3d3d3',marginTop:10
-  }
+  },
+  saveButton: {
+    backgroundColor:'#262050',
+    padding:10,
+    width:100,
+    alignItems:'center'
+  },
+  applyButton: {
+    backgroundColor:'#262050',
+    padding:10,
+    width:100,
+    alignItems:'center'
+  },
 
 });
