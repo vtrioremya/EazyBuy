@@ -24,6 +24,8 @@ import DrawerScreen from '../Containers/DrawerScreen'
 import NavigationBar from '../Components/NavigationBar'
 import DefaultBar from '../Components/DefaultBar'
 import CounterApp from '../Containers/CounterApp'
+import Offers from '../Containers/Offers'
+import SuggestProduct from '../Containers/SuggestProduct'
 
 import {Image, View, Text, TouchableOpacity, Dimensions, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
@@ -132,11 +134,34 @@ export const Stack = createStackNavigator({
   },
   PurchaseSuccess :{screen: PurchaseSuccess},
   Comparison :{screen: Comparison},
+  Offers :{screen: Offers,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'OFFERS',
+      headerTintColor: '#fff',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })},
+  SuggestProduct :{screen: SuggestProduct,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'SUGGEST A PRODUCT',
+      headerTintColor: '#fff',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })},
   ContactUs :{screen: ContactUs,
     navigationOptions: ({ navigation }) => ({
       headerTitle:'CONTACT US',
+      headerTintColor: '#fff',
       headerStyle:{
-        backgroundColor:'#39385a'
+        backgroundColor:'#39385a',
       },
         headerLeft: (
           <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>

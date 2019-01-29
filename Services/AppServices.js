@@ -177,6 +177,45 @@ export default {
       return []
     }
   },
+  async logout(formdata) {
+    try {
+      const response = await post(`/account/logout`,formdata)
+      console.log("logout",response)
+      return response;
+      // if (!response.error) {
+      //   return response
+      // }
+      // return []
+    } catch (e) {
+      return []
+    }
+  },
+  async addAddress(formdata) {
+    try {
+      const response = await post(`/account/account/addAddress`,formdata)
+      console.log("addAddress",response)
+      return response;
+      // if (!response.error) {
+      //   return response
+      // }
+      // return []
+    } catch (e) {
+      return []
+    }
+  },
+  async suggest(formdata) {
+    try {
+      const response = await post(`/product/product/suggestProduct`,formdata)
+      // console.log("suggest",response)
+      return response;
+      // if (!response.error) {
+      //   return response
+      // }
+      // return []
+    } catch (e) {
+      return []
+    }
+  },
   async getAllPhotos(userId) {
     try {
       const response = await get(`/photo/user/${userId}`)

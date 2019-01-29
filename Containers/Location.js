@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import {Platform,TouchableHighlight, Modal, StyleSheet, Text, View,Image, TouchableOpacity, TextInput, Dimensions} from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { NavigationActions } from 'react-navigation'
 
 
@@ -22,13 +22,29 @@ const instructions = Platform.select({
 });
 
 type Props = {};
+const ASPECT_RATIO = width / height;
+const LATITUDE = 13.139238380834923;
+const LONGITUDE = 80.25188422300266;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 export default class Location extends Component<Props> {
 
   constructor(props){
     super(props);
     this.state = {
-      modalVisible: false
+      modalVisible: false,
+      region: {
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    },
     };
+  }
+
+  onRegionChange(region) {
+    this.setState({ region });
   }
 
   static navigationOptions = {
@@ -55,6 +71,50 @@ export default class Location extends Component<Props> {
     this.setState({modalVisible: visible});
   }
 
+  async confirm(){
+    this.setModalVisible(!this.state.modalVisible);
+    var formData = new FormData();
+    formData.append('email', this.state.email);
+    formData.append('password', this.state.password);
+    formData.append('email', 'remya1@vtrio.com');
+    formData.append('password', 'remya1238');
+
+    let addAddress = await Api.addAddress(formData);
+
+  }
+
+  componentDidMount(){
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          region: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }
+        });
+      },
+    (error) => console.log(error.message),
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    );
+    this.watchID = navigator.geolocation.watchPosition(
+      position => {
+        this.setState({
+          region: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }
+        });
+      }
+    );
+  }
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
+
 
   render() {
     return (
@@ -77,22 +137,15 @@ export default class Location extends Component<Props> {
         </View>
 
         <MapView
-        style={{position:'absolute',top:0,left:0,right:0,bottom:0}}
-         initialRegion={{
-           latitude: 10.0159,
-           longitude: 76.3419,
-           latitudeDelta: 0.1,
-           longitudeDelta: 0.1,
-         }}
+          style={{position:'absolute',top:0,left:0,right:0,bottom:0}}
+          region={this.state.region}
+          showsUserLocation={ true }
+          onRegionChange={(region)=>this.setState({region})}
+          onRegionChangeComplete={ region => this.setState({region}) }
         >
 
-          <MapView.Marker
-            coordinate={{
-              latitude: 10.0159,
-              longitude: 76.3419
-            }}
-            title={'Kakkanad'}
-            description={'My default Location'}
+            <MapView.Marker
+            coordinate={ this.state.region }
           />
         </MapView>
 
@@ -131,9 +184,7 @@ export default class Location extends Component<Props> {
                            style={styles.selectedLocationStyle}/>
 
                 <TouchableOpacity style={styles.saveButton}
-                        onPress={() => {
-                          this.setModalVisible(!this.state.modalVisible);
-                        }}>
+                        onPress={this.confirm.bind(this)}>
                   <Text style={styles.saveText}>SAVE</Text>
                 </TouchableOpacity>
               </View>

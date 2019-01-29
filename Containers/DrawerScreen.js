@@ -12,6 +12,7 @@ import {ScrollView, Share, AsyncStorage,Alert, Text, View, StyleSheet, Image, Di
 import { DrawerActions, NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 // import Share from 'react-native-share';
+import Api from '../Services/AppServices'
 
 type Props = {};
 
@@ -19,7 +20,10 @@ export default class DrawerScreen extends Component<Props> {
   constructor(props){
     super(props);
     this.state={
-      hide:true
+      hide:true,
+      signout:true,
+      email: '',
+      phone:'', name: ''
     }
   }
   navigateToScreen = (route) => () => {
@@ -44,15 +48,47 @@ export default class DrawerScreen extends Component<Props> {
       this.props.navigation.dispatch(navigateAction);
   }
 
-  componentDidMount(){
+  async componentDidMount(){
+    var token ='9bd316e1a9e455efac6a0bd9166779';
+    let accountDetails = await Api.getAccount(token);
+    console.log("API account....", accountDetails)
+    // console.log("name",accountDetails.firstname)
+    let user_object = {
+      firstname: accountDetails.firstname,
+      lastname: accountDetails.lastname,
+      phone: accountDetails.telephone,
+      email: accountDetails.email
+    }
+    AsyncStorage.mergeItem('user_object', JSON.stringify(user_object));
+    console.log("account",user_object)
+  }
+
+  shouldComponentUpdate(){
     AsyncStorage.getItem('user_object', (err, results) => {
        let user_object = JSON.parse(results);
-       // if (user_object.isLoggedIn == true) {
-       //   this.setState({
-       //     hide: false
-       //   })
-       // }
+       // console.log("user ob",user_object)
+       if (user_object.isLoggedIn == true) {
+
+         this.setState({
+           hide: false,
+           signout: true,
+           phone: user_object.phone != null ? user_object.phone: 'Your Mobile Number',
+           email: user_object.email !=null ? user_object.email :'Your Email',
+           name: user_object.firstname != null ? user_object.firstname: 'Your Name'
+         })
+       }
+       else{
+
+         this.setState({
+           hide: true,
+           signout: false,
+           phone: 'Your Mobile Number',
+           email: 'Your Email',
+           name: 'Your Name'
+         })
+       }
      });
+     return true;
   }
 
   refer(){
@@ -77,9 +113,29 @@ export default class DrawerScreen extends Component<Props> {
   })
   }
 
-  signout= (route)=>{
+  async signout(){
     // Alert.alert("signoput")
-    this.navigateToScreen('HomeScreen')
+    var formData = new FormData();
+    formData.append('token', '9bd316e1a9e455efac6a0bd9166779');
+    formData.append('device_id', '637568hh');
+
+    let logoutApi = await Api.logout(formData);
+    console.log("logout",logoutApi)
+
+    console.log(logoutApi.message)
+
+      let user_object = {
+        isLoggedIn: false,
+      }
+
+      AsyncStorage.setItem('user_object', JSON.stringify(user_object));
+
+
+    const navigateAction = NavigationActions.navigate({
+      routeName: 'HomeScreen'
+    });
+    this.props.navigation.dispatch(navigateAction);
+    this.props.navigation.dispatch(DrawerActions.closeDrawer())
   }
 
   render () {
@@ -94,14 +150,14 @@ export default class DrawerScreen extends Component<Props> {
 
           <View style={styles.textStyle}>
             <View style={{flexDirection:'row',marginBottom:5}}>
-              <Text style={styles.text}>Your Name</Text>
+              <Text style={styles.text}>{this.state.name}</Text>
               <TouchableOpacity style={styles.editButton} >
                 <Image style={{width:30, height:30}} source={require('../Images/edit.png')}/>
               </TouchableOpacity>
             </View>
 
-            <Text>Your Mobile Number </Text>
-            <Text> Your Email</Text>
+            <Text>{this.state.phone}</Text>
+            <Text>{this.state.email} </Text>
           </View>
         </View>
 
@@ -139,13 +195,13 @@ export default class DrawerScreen extends Component<Props> {
             </View>
             <View style={styles.menuItem}>
               <Image source={require('../Images/offfers.png')} style={{width:30, height:30}} />
-              <Text style={styles.textSize} >
+              <Text style={styles.textSize} onPress={this.navigateToScreen('Offers')} >
                Offers
               </Text>
             </View>
             <View style={styles.menuItem}>
               <Image source={require('../Images/settings.png')} style={{width:30, height:30}} />
-              <Text style={styles.textSize}>
+              <Text style={styles.textSize} onPress={this.navigateToScreen('Account')}>
               Settings
               </Text>
             </View>
@@ -157,7 +213,7 @@ export default class DrawerScreen extends Component<Props> {
             </View>
             <View style={styles.menuItem}>
               <Image source={require('../Images/suggest.png')} style={{width:30, height:30}} />
-              <Text style={styles.textSize}>
+              <Text style={styles.textSize} onPress={this.navigateToScreen('SuggestProduct')}>
                Suggest a Product
               </Text>
             </View>
@@ -173,6 +229,12 @@ export default class DrawerScreen extends Component<Props> {
                 My Account
               </Text>
             </View>
+            {this.state.signout ? <View style={styles.menuItem}>
+              <Image source={require('../Images/signout.png')} style={{width:30, height:30}} />
+              <Text  style={styles.textSize} onPress={this.signout.bind(this)}>
+                Signout
+              </Text>
+            </View> : <View></View>}
 
           </View>
         </ScrollView>

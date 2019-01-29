@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform,Alert, FlatList, Text, View, TextInput, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {Platform, AsyncStorage,Alert, FlatList, Text, View, TextInput, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -77,6 +77,15 @@ export default class Account extends Component<Props> {
     let accountDetails = await Api.getAccount(token);
     console.log("API account....", accountDetails)
     // console.log("name",accountDetails.firstname)
+    let user_object = {
+      firstname: accountDetails.firstname,
+      lastname: accountDetails.lastname,
+      phone: accountDetails.telephone,
+      email: accountDetails.email
+    }
+    AsyncStorage.mergeItem('user_object', JSON.stringify(user_object));
+    console.log("account",user_object)
+
     this.setState({
       firstname: accountDetails.firstname != null ? accountDetails.firstname: 'First name',
       lastname: accountDetails.lastname!= null ? accountDetails.lastname: 'Last name',

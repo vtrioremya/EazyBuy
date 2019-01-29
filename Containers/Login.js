@@ -68,10 +68,10 @@ export default class Login extends Component<Props> {
   async login(){
 
     var formData = new FormData();
-    // formData.append('email', this.state.email);
-    // formData.append('password', this.state.password);
-    formData.append('email', 'remya1@vtrio.com');
-    formData.append('password', 'remya1238');
+    formData.append('email', this.state.email);
+    formData.append('password', this.state.password);
+    // formData.append('email', 'remya1@vtrio.com');
+    // formData.append('password', 'remya1238');
 
     let fetchApiLogin = await Api.login(formData);
     // console.log("API RESULT....", fetchApiLogin)
@@ -86,7 +86,7 @@ export default class Login extends Component<Props> {
         }
 
         AsyncStorage.setItem('user_object', JSON.stringify(user_object));
-        // console.log(user_object)
+        console.log(user_object)
 
         this.props.navigation.navigate('HomeScreen');
         Alert.alert(fetchApiLogin.message);
