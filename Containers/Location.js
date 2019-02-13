@@ -91,7 +91,7 @@ export default class Location extends Component<Props> {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         console.log(position)
-        // let code 
+        // let code
         // this.setState({
         //     region: position
         // })

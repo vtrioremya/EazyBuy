@@ -19,6 +19,7 @@ import NavigationBar from '../Components/NavigationBar'
 import PropTypes from "prop-types";
 import Api from '../Services/AppServices'
 import {getToken} from '../Services/lib'
+import Fonts from '../Themes/Fonts'
 import { Rating } from 'react-native-ratings';
 
 import { connect } from 'react-redux';
@@ -195,7 +196,7 @@ class HomeScreen extends Component<Props> {
             <View style={{width:width/1.5,justifyContent:'center',marginRight:10  }}>
 
             <Text style={styles.headerName}>{grocery.name}</Text>
-            <Text>{grocery.address_arabic}</Text>
+            <Text style={{fontFamily:Fonts.base}}>{grocery.address_arabic}</Text>
 
             <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
               <View style={{flexDirection:'row'}}>
@@ -216,7 +217,7 @@ class HomeScreen extends Component<Props> {
 
 
                 <View style={styles.openNowButton}>
-                  <Text style={{color:'#fff',fontSize:17}} numberOfLines={1}>{grocery.config_open_status}</Text>
+                  <Text style={{color:'#fff',fontSize:15,fontFamily:Fonts.base}} numberOfLines={1}>{grocery.config_open_status}</Text>
                 </View>
 
 
@@ -266,15 +267,15 @@ class HomeScreen extends Component<Props> {
             </View>
         ]:[
           <View>
-        <View style={{width:width,height:200}}>
-          <Swiper style={{width:width,height:200}}
+        <View style={{width:width,height:150}}>
+          <Swiper style={{width:width,height:150}}
                   dotColor='#cfc8c1' loop={false}
                   activeDotColor='#ffb013'>
 
             {this.state.bannerImage.map((image)=>{
               return(
                 <View>
-                  <Image  source={{uri: image.image}} style={{width:width,height:200}}/>
+                  <Image  source={{uri: image.image}} style={{width:width,height:150}}/>
                 </View>
               )
             })}
@@ -294,11 +295,11 @@ class HomeScreen extends Component<Props> {
             activeTextColor='#484848'
             inactiveTextColor='#a1a1a1'
             uppercase={false}
-            textStyle={{fontSize:18}}
+            textStyle={{fontSize:18, fontFamily:Fonts.base}}
           />
         </View>
 
-        <View style={{width:width, height: height/2.23}}>
+        <View style={{width:width, height: height/1.95}}>
 
              <FlatList
               data={this.state.groceries}
@@ -330,7 +331,7 @@ class HomeScreen extends Component<Props> {
             <View style={styles.modalView}>
               <View style={{width:width/2,  justifyContent:'center'}}>
 
-                <Text style={{textAlign:'center',fontSize:16, fontWeight:'bold'}}>
+                <Text style={{textAlign:'center',fontSize:10, fontWeight:'bold'}}>
                       RATE ME
                 </Text>
 
@@ -428,11 +429,13 @@ const styles = StyleSheet.create({
   },
   ratandlocStyle: {
     marginLeft:5,
-    fontSize:17
+    fontSize: Fonts.mid,
+    // top:5
   },
   headerName: {
-    fontSize:20,
-    color:'#000'
+    fontSize: Fonts.nextRegular,
+    color:'#000',
+    fontFamily:Fonts.base
   },
   header_style:{
 
@@ -468,7 +471,7 @@ const styles = StyleSheet.create({
   },
   saveText: {
     color:'#fff',
-    fontSize:18
+    fontSize:Fonts.verySmall
   }
 });
 

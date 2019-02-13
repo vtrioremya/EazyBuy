@@ -48,7 +48,7 @@ export default class ProductCategory extends Component<Props> {
           <View style={{width: width/2, height: 50, flexDirection:'row'}} >
             <TextInput placeholder='Sample Address, Address Feild 1, Feild 2'
             placeholderTextColor= '#fff'
-            style={{width:width/1.5, fontSize:18, color:'#fff'}}/>
+            style={{width:width/1.5, fontSize:12, color:'#fff'}}/>
             <TouchableOpacity style={{width:20, height:50, justifyContent:'center', alignItems:'center'}}>
               <Image source={require('../Images/drop-down-arrow.png')} style={{width:12, height:12}}/>
             </TouchableOpacity>
@@ -77,23 +77,18 @@ export default class ProductCategory extends Component<Props> {
         })
 
         var formData = new FormData();
-        formData.append('store_id', 44);
-        // formData.append('store_id', this.props.navigation.state.params.storeId);
+        // formData.append('store_id', 44);
+        formData.append('store_id', this.props.navigation.state.params.storeId);
 
         let fetchBanner = await Api.getCommonOffer(formData);
-        // console.log("API offers....", fetchBanner)
+
+        console.log(fetchBanner)
+        console.log(this.props.navigation.state.params.storeId)
 
 
-        let i = 0
-         var image= []
-         for(i of fetchBanner.offer_list){
-           image.push(i.image)
-         }
-         // console.log("image push", image)
          this.setState({
-           bannerImage: image
+           bannerImage: fetchBanner.offer_list
          })
-         // console.log(this.state.bannerImage)
 
   }
 
@@ -114,13 +109,13 @@ export default class ProductCategory extends Component<Props> {
     let cat = rowData.item
     list.push(
 
-      <View style={{width:width/3,height:height/6,alignItems:'center', marginTop:10, marginBottom:10}}>
+      <View style={{width:width/3,height:height/6,alignItems:'center', marginTop:5, marginBottom:5}}>
         <TouchableOpacity style={{width:width/3,height:height/6,
-          alignItems:'center', marginTop:10, marginBottom:10}}
+          alignItems:'center', }}
           onPress={this.productlist.bind(this, cat.category_id, cat.name)}>
           <Image source={{uri: cat.image}}
           style={{width: width/3.8, height:80}}/>
-          <Text style={{width:100, textAlign:'center', fontSize:18,
+          <Text style={{width:100, textAlign:'center', fontSize:12,
           color:'#000'}}>{cat.name}</Text>
         </TouchableOpacity>
       </View>
@@ -134,7 +129,7 @@ export default class ProductCategory extends Component<Props> {
     <View
       style={{
         backgroundColor: 'gray',
-        height: 0.2,
+        height: 0.05,
         // margin:20
       }}
     />
@@ -168,24 +163,15 @@ export default class ProductCategory extends Component<Props> {
                 dotColor='#cfc8c1'
                 activeDotColor='#ffb013'>
 
-          <View>
-            <Image  source={{uri: this.state.bannerImage[0]}} style={{width:width,height:150}}/>
-          </View>
-          <View>
-            <Image  source={require('../Images/banner.jpg')} style={{width:width,height:150}}/>
-          </View>
-          <View>
-            <Image  source={require('../Images/banner.jpg')} style={{width:width,height:150}}/>
-          </View>
-          <View>
-            <Image  source={require('../Images/banner.jpg')} style={{width:width,height:150}}/>
-          </View>
-          <View>
-            <Image  source={require('../Images/banner.jpg')} style={{width:width,height:150}}/>
-          </View>
-          <View>
-            <Image  source={require('../Images/banner.jpg')} style={{width:width,height:150}}/>
-          </View>
+                {this.state.bannerImage.map((image)=>{
+                  return(
+                    <View>
+                      <Image  source={{uri: image.image}} style={{width:width,height:150}}/>
+                    </View>
+                  )
+                })}
+
+
         </Swiper>
       </View>
 
@@ -215,11 +201,11 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color:'#ababab',
-    fontSize:18
+    fontSize:12
   },
   textInputStyle : {
     width:width -100,
-    fontSize:20,
+    fontSize:15,
     margin:10
   },
   searchView: {
