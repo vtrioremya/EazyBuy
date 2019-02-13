@@ -185,7 +185,7 @@ class ProductDetails extends Component<Props> {
                   style={{backgroundColor:'#fdc82a', width:width-50,
                   height: 60, alignItems:'center', justifyContent:'center',
                 borderRadius:50, borderColor:'transparent', borderWidth:1}}>
-              <Text style={{color:'#000', fontSize:30}}>{this.state.details.special_price}</Text>
+              <Text style={{color:'#000', fontSize:25}}>{this.state.details.special_price}</Text>
             </View>
           </View>
 

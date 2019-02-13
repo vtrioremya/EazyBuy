@@ -83,7 +83,7 @@ _dropdownList(index,value){
   async send(){
 
     if(!this.state.description){
-      Alert.alert("Description can't be blank")
+      Alert.alert("Product name can't be blank")
       return;
     }
 

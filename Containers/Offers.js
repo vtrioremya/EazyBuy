@@ -47,7 +47,7 @@ export default class Offers extends Component<Props> {
     var formData = new FormData();
 
     let offers = await Api.getCommonOffer(formData);
-    // console.log("offers",offers)
+    console.log("offers",offers)
 
     this.setState({
       offers: offers.offer_list
@@ -55,6 +55,9 @@ export default class Offers extends Component<Props> {
   }
 
   _renderRow(rowData, sectionID, rowID, highlightRow){
+    let price= Math.round(rowData.item.price)
+    let special_price = Math.round(rowData.item.special_price)
+    let per = Math.floor(rowData.item.offer_percentage * 100) / 100
     let list =[]
     list.push(
       <View style={styles.list}>
@@ -62,8 +65,15 @@ export default class Offers extends Component<Props> {
           <Image source={{uri: rowData.item.image}} style={{width:width/2,height:height/4}}/>
         </View>
 
-        <Text style={styles.itemName}>{rowData.item.name}</Text>
-        <Text ></Text>
+        <Text style={[styles.itemName,{fontWeight:'bold'}]}>{rowData.item.grocery_name}</Text>
+        <Text style={styles.itemName}>{rowData.item.name}  </Text>
+        <View style={{flexDirection:'row', justifyContent:'space-around', alignItems:'center'}}>
+
+          <Text style={styles.itemName}>₹{special_price}  </Text>
+          <Text style={{textDecorationLine: 'line-through',color:'#000'}}>{price}  </Text>
+          <Text style={{color:'green'}}> {per}% off </Text>
+        </View>
+
       </View>
     )
     return(<View>{list}</View>);
@@ -105,8 +115,7 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     width:width/2,
     alignItems:'center',
-    padding:50,
-    justifyContent:'space-around'
+    justifyContent:'space-around',
   },
   price: {
     fontSize: 20,

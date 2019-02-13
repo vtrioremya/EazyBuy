@@ -10,6 +10,7 @@ export default {
       return {}
     }
   },
+
   async login(sendData) {
     try {
       const response = await post(`/account/login`, sendData)
@@ -19,15 +20,17 @@ export default {
       return {}
     }
   },
+
   async forgot(sendData) {
     try {
-      const response = await post(`/account/forgotten`, sendData)
+      const response = await post(`/account/forgotten/forgotemail`, sendData)
       return response
     } catch (e) {
       console.log(e)
       return {}
     }
   },
+
   async getCategory() {
     try {
       const response = await get(`/product/product/getCategorylist`)
@@ -41,6 +44,7 @@ export default {
       return []
     }
   },
+
   async getSubCategory(catId) {
     try {
       const response = await get(`/product/category&path=${catId}`)
@@ -56,6 +60,7 @@ export default {
       return []
     }
   },
+
   async getProducts(formData) {
     try {
       const response = await post(`/product/product/getproductlist`, formData)
@@ -69,6 +74,7 @@ export default {
       return []
     }
   },
+
   async getGroceries() {
     try {
       const response = await post(`/module/store/groceries`)
@@ -81,6 +87,7 @@ export default {
       return []
     }
   },
+
   async getProductDetails(prodId) {
     try {
 
@@ -92,6 +99,7 @@ export default {
       return []
     }
   },
+
   async getCommonOffer() {
     try {
       const response = await get(`/product/product/getofferlist`)
@@ -103,6 +111,7 @@ export default {
       return []
     }
   },
+
   async getOfferBanner() {
     try {
       const response = await post(`/product/product/getOfferbannerslide`)
@@ -115,6 +124,7 @@ export default {
       return []
     }
   },
+
   async getAccount(token) {
     try {
       const response = await get(`/account/account/userdetails&token=${token}`)
@@ -128,6 +138,7 @@ export default {
       return []
     }
   },
+
   async getOrders(token) {
     try {
       const response = await get(`/account/order/index&token=${token}`)
@@ -141,6 +152,7 @@ export default {
       return []
     }
   },
+
   async sendFeedback(formdata) {
     try {
       const response = await post(`/information/feedback/submit`,formdata)
@@ -152,21 +164,22 @@ export default {
       return []
     }
   },
+
   async saveAddress(formdata) {
     try {
       const response = await post(`/account/account/addaddress`,formdata)
-      console.log("save add",response)
-      // if (!response.error) {
-      //   return response
-      // }
-      // return []
+      if (!response.error) {
+        return response
+      }
+      return []
     } catch (e) {
       return []
     }
   },
-  async getEazybuySplash(token) {
+
+  async getEazybuySplash(lang,cont) {
     try {
-      const response = await get(`/account/web&token=${token}`)
+      const response = await get(`/account/web&language_id=${lang}&content_id=${cont}`)
       // console.log(response)
       if (!response.error) {
         // const data = omit(response, 'error', 'message')
@@ -177,6 +190,7 @@ export default {
       return []
     }
   },
+
   async logout(formdata) {
     try {
       const response = await post(`/account/logout`,formdata)
@@ -190,6 +204,7 @@ export default {
       return []
     }
   },
+
   async addAddress(formdata) {
     try {
       const response = await post(`/account/account/addAddress`,formdata)
@@ -203,6 +218,7 @@ export default {
       return []
     }
   },
+
   async suggest(formdata) {
     try {
       const response = await post(`/product/product/suggestProduct`,formdata)
@@ -216,6 +232,60 @@ export default {
       return []
     }
   },
+
+  async listAddress(token) {
+    try {
+      const response = await post(`/account/account/listAddress&token=${token}`)
+      // console.log("suggest",response)
+      return response;
+      // if (!response.error) {
+      //   return response
+      // }
+      // return []
+    } catch (e) {
+      return []
+    }
+  },
+
+  async editAddress(formData) {
+    try {
+      const response = await post(`/account/account/editAddress`,formData)
+      return response;
+      // if (!response.error) {
+      //   return response
+      // }
+      // return []
+    } catch (e) {
+      return []
+    }
+  },
+
+  async getCartItems(token) {
+    try {
+      const response = await get(`/checkout/cart/cartlisting&token=${token}`)
+      return response;
+      // if (!response.error) {
+      //   return response
+      // }
+      // return []
+    } catch (e) {
+      return []
+    }
+  },
+
+  async addStoreRating(formData) {
+    try {
+      const response = await post(`/account/account/adduserrating`,formData)
+      return response;
+      // if (!response.error) {
+      //   return response
+      // }
+      // return []
+    } catch (e) {
+      return []
+    }
+  },
+
   async getAllPhotos(userId) {
     try {
       const response = await get(`/photo/user/${userId}`)
@@ -251,13 +321,7 @@ export default {
     }
   },
 
-  async joinevent(data) {
-    try {
-      return await post(`/guest`, data)
-    } catch (e) {
-      console.log(e)
-    }
-  },
+
 
   async uploadPhoto(data) {
     try {
@@ -267,13 +331,7 @@ export default {
     }
   },
 
-  async broadcast(data) {
-    try {
-      return await post(`/broadcast`, data)
-    } catch (e) {
-      console.log(e)
-    }
-  },
+
 
   async deleteEvent(data) {
     try {
@@ -284,23 +342,5 @@ export default {
     }
   },
 
-  async eventInfo(code) {
-    try {
-      const response = await get(`/event/${code}`)
-      return response
-    } catch (e) {
-      console.log(e)
-    }
-  },
 
-  async eventurl(code) {
-    try {
-      const response = await get(`/event/url/${code}`)
-
-      console.log(response)
-      return response
-    } catch (e) {
-      console.log(e)
-    }
-  }
 }

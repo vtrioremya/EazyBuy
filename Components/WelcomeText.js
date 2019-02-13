@@ -18,14 +18,13 @@ const WelcomeText = (props) => {
       <View style={styles.imageView}>
         <Image source={props.picture} style={styles.qualityImage}/>
 
-        <TouchableOpacity style={[styles.english,{backgroundColor:props.buttonColor}]} onPress={props.open}>
-          <Text style={styles.englishText}>{props.text}</Text>
+        <View style={[styles.english,{backgroundColor:props.buttonColor}]} >
+          <Text numberOfLines={1} style={styles.englishText}>{props.text}</Text>
 
-        </TouchableOpacity>
+        </View>
 
         <View style={styles.qualityText}>
-          <Text style={styles.quality}>Lorem Ipsum is simply dummy text of the printing and
-          typesetting industry.
+          <Text style={styles.quality}>{props.description}
           </Text>
         </View>
 
@@ -38,12 +37,7 @@ const WelcomeText = (props) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{position:'absolute',bottom:20,
-        right:0, width:width/4, alignItems:'center'}}>
-          <TouchableOpacity>
-            <Image source={require('../Images/next.png')} style={{width:30, height:30}}/>
-          </TouchableOpacity>
-        </View>
+        
 
     </View>
   );
@@ -82,7 +76,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     textAlign:'center',
-    alignItems:'center'
+    alignItems:'center',
   },
   partOne: {
     backgroundColor:'#fff',

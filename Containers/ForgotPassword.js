@@ -11,6 +11,7 @@ import {Platform, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, T
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
 import Api from '../Services/AppServices'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 type Props = {};
 export default class ForgotPassword extends Component<Props> {
@@ -65,12 +66,18 @@ export default class ForgotPassword extends Component<Props> {
   }
 
   async send(){
+    
+    if(!this.state.email){
+      Alert.alert("Email should not be blank.")
+      return;
+    }
+
     var formData = new FormData();
     formData.append('email', this.state.email);
-
+    console.log(formData)
 
     let fetchApiLogin = await Api.forgot(formData);
-    // console.log("API RESULT....", fetchApiLogin)
+    console.log("API forgot....", fetchApiLogin)
       if(fetchApiLogin.status == 'success'){
 
         this.props.navigation.navigate('Login');
@@ -79,45 +86,48 @@ export default class ForgotPassword extends Component<Props> {
       else if(fetchApiLogin.status == 'fail'){
         Alert.alert(fetchApiLogin.message);
       }
+      Alert.alert(fetchApiLogin.message);
   }
 
 
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAwareScrollView>
+        <View style={styles.container}>
 
-        <View style={{alignItems:'center', width:width/1.2,justifyContent:'center', marginTop:40}}>
-          <View style={{marginTop:20}}>
-            <Image source={require('../Images/warning.png')} style={{width:70, height:70}} />
+          <View style={{alignItems:'center', width:width/1.2,justifyContent:'center', marginTop:40}}>
+            <View style={{marginTop:20}}>
+              <Image source={require('../Images/warning.png')} style={{width:70, height:70}} />
+            </View>
+
+            <View style={{margin:20}}>
+              <Text style={{fontSize:20, lineHeight: 40,color:'#000', textAlign:'center'}}>Enter your email address here to receive further instructions.</Text>
+            </View>
           </View>
 
-          <View style={{margin:20}}>
-            <Text style={{fontSize:20, lineHeight: 40,color:'#000', textAlign:'center'}}>Enter your email address here to receive further instructions.</Text>
+          <View style={{marginTop:30}}>
+            <TextInput
+              placeholder = 'Enter Email'
+              placeholderTextColor = '#ababab'
+              value={this.state.email}
+              onChangeText={(email) => this.setState({email})}
+              style={styles.textInputStyle}
+              underlineColorAndroid= '#cccccc'
+            />
+
           </View>
-        </View>
 
-        <View style={{marginTop:30}}>
-          <TextInput
-            placeholder = 'Enter Email'
-            placeholderTextColor = '#ababab'
-            value={this.state.email}
-            onChangeText={(email) => this.setState({email})}
-            style={styles.textInputStyle}
-            underlineColorAndroid= '#cccccc'
-          />
+          <View style={{marginTop:30}}>
+            <TouchableOpacity style={styles.loginButton} onPress={this.send.bind(this)}>
+              <Text style={styles.login}>SEND</Text>
+            </TouchableOpacity>
+          </View>
+
+
 
         </View>
-
-        <View style={{marginTop:30}}>
-          <TouchableOpacity style={styles.loginButton} onPress={this.send.bind(this)}>
-            <Text style={styles.login}>SEND</Text>
-          </TouchableOpacity>
-        </View>
-
-
-
-      </View>
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -125,9 +135,9 @@ export default class ForgotPassword extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:50,
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    height:height
   },
   textStyle: {
     color:'#000',

@@ -1,12 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.easybuy">
+    package="com.easybuy" xmlns:tools="http://schemas.android.com/tools" android:versionCode="5" android:versionName="5.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.front" android:required="false" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
 
     <application
       android:name=".MainApplication"
@@ -27,7 +30,7 @@
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBV1f2B589d9P5tvqg_pzHx7I9rEt5yK98"/>
+            android:value="AIzaSyBSj_BW8JKaiDHu_rjoZmc5EeHSg-aSM2M"/>
     </application>
 
 </manifest>

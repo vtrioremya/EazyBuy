@@ -4,8 +4,8 @@ import {ScrollView, Text, View,TextInput, StyleSheet, Image, Dimensions, Touchab
 import { DrawerActions , NavigationActions} from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 
-
 const CartComponents = (props) => {
+
   return(
     <View style={{flexDirection: 'row',bottom:0,justifyContent:'space-between',
     backgroundColor:'rgba(57, 56, 90, 0.8)',position :'absolute', width:width, padding:10}}>
@@ -16,7 +16,7 @@ const CartComponents = (props) => {
 
       <View style={{justifyContent:'center'}}>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.cart}>
           <Text style={{color:'white'}}>View Cart</Text>
         </TouchableOpacity>
 

@@ -26,7 +26,7 @@ const NavigationBar = (props) => {
         <View style={{width: width/2, height: 50}} >
           <TextInput placeholder='Sample Address, Address Feild 1, Feild 2'
           placeholderTextColor= '#000'
-          style={{width:width/1.5, fontSize:18}}/>
+          style={{width:width/1.5, fontSize:15}}/>
         </View>
 
       </View>

@@ -7,15 +7,19 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, AsyncStorage,Alert, FlatList, Text, View, TextInput, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
+import {Platform,ScrollView, KeyboardAvoidingView, AsyncStorage,Alert, FlatList, Text, View, TextInput, StyleSheet,
+  Image, Dimensions, TouchableOpacity} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Api from '../Services/AppServices'
+import {getToken, uploadPhoto} from '../Services/lib'
 import ImagePicker from 'react-native-image-crop-picker';
 import CheckBox from 'react-native-check-box'
 import ModalDropdown from 'react-native-modal-dropdown';
 import SwitchToggle from 'react-native-switch-toggle';
+import PasswordInputText from 'react-native-hide-show-password-input';
+import Loader from '../Components/Loader'
 
 type Props = {};
 
@@ -24,16 +28,16 @@ export default class Account extends Component<Props> {
   constructor(props){
     super(props);
     this.state={
-      firstname: '',
+      firstname: 'Your name',
       lastname: '',
-      email : '',
-      phone: '',
+      email : 'Your email',
+      phone: 'Your Phone',
       profile_pic:'',
       address_1: '',
       address_2 :'',
       address_3 :'',
       postcode:'',
-      addressClick:true,
+      addressClick:false,
       paymentClick:false,
       settingsClick:false,
       editable: false,
@@ -46,7 +50,12 @@ export default class Account extends Component<Props> {
       cards: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
       cardDet: false,
       switchOn1: false,
-      value:'Language'
+      value:'Language',
+      month:'MM',
+      year:'YY',
+      loader:true,
+      token:null,
+      allSave:false
     }
   }
 
@@ -72,32 +81,62 @@ export default class Account extends Component<Props> {
 
   }
 
-  async componentDidMount(){
-    var token ='9bd316e1a9e455efac6a0bd9166779'
-    let accountDetails = await Api.getAccount(token);
-    console.log("API account....", accountDetails)
-    // console.log("name",accountDetails.firstname)
-    let user_object = {
-      firstname: accountDetails.firstname,
-      lastname: accountDetails.lastname,
-      phone: accountDetails.telephone,
-      email: accountDetails.email
-    }
-    AsyncStorage.mergeItem('user_object', JSON.stringify(user_object));
-    console.log("account",user_object)
 
-    this.setState({
-      firstname: accountDetails.firstname != null ? accountDetails.firstname: 'First name',
-      lastname: accountDetails.lastname!= null ? accountDetails.lastname: 'Last name',
-      email : accountDetails.email!= null ? accountDetails.email: 'Your email',
-      phone: accountDetails.telephone!= null ? accountDetails.telephone: 'Your telephone',
-      profile_pic: accountDetails.profile_image != null ? accountDetails.profile_image: '',
-      address_1: accountDetails.address_1,
-      address_2: accountDetails.address_2,
-      address_3: accountDetails.city,
-      postcode: accountDetails.postcode
-  })
+
+  async componentDidMount(){
+
+    if(this.props.navigation.state.params.settings == 'yes'){
+      this.setState({
+        addressClick:false,
+        settingsClick:true,
+        paymentClick:false,
+        bg: '#b3b3b3',
+        bgs: '#262050',
+        bga: '#b3b3b3'
+      })
+    }
+    else{
+      this.setState({
+        addressClick:true,
+        settingsClick:false,
+        paymentClick:false,
+        bg: '#b3b3b3',
+        bgs: '#b3b3b3',
+        bga: '#262050'
+      })
+    }
+    try{
+      let token = await getToken()
+      this.setState({
+        token: token
+      })
+      let accountDetails = await Api.getAccount(token);
+      let list = await Api.listAddress(token);
+      console.log("all addresses",list.address)
+      let lists =list.address
+
+      this.setState({
+        loader:false,
+        firstname: accountDetails.firstname != null ? accountDetails.firstname: 'First name',
+        lastname: accountDetails.lastname!= null ? accountDetails.lastname: 'Last name',
+        email : accountDetails.email!= null ? accountDetails.email: 'Your email',
+        phone: accountDetails.telephone!= null ? accountDetails.telephone: 'Your telephone',
+        profile_pic: accountDetails.profile_image != null ? accountDetails.profile_image: '',
+        address_1: lists[0].address_1,
+        address_2: lists[0].address_2,
+        address_3: lists[0].city,
+        postcode: lists[0].postcode,
+        addressId: lists[0].address_id
+    })
+  }
+  catch(err){
+    console.log(err)
+    this.props.navigation.navigate('Login')
+    this.setState({loader:false})
+  }
 }
+
+
 
 
   async save(){
@@ -111,22 +150,36 @@ export default class Account extends Component<Props> {
     formData.append('zone_id', '');
     formData.append('postcode', this.state.postcode);
     formData.append('address_tag', '');
-
+    console.log(formData)
     let addressApi = await Api.saveAddress(formData);
     console.log("response address",addressApi)
 
       Alert.alert(addressApi.message)
 
+      let token = await getToken()
+      let accountDetails = await Api.getAccount(token);
+
+      this.setState({
+        firstname: accountDetails.firstname != null ? accountDetails.firstname: 'First name',
+        lastname: accountDetails.lastname!= null ? accountDetails.lastname: 'Last name',
+        email : accountDetails.email!= null ? accountDetails.email: 'Your email',
+        phone: accountDetails.telephone!= null ? accountDetails.telephone: 'Your telephone',
+        profile_pic: accountDetails.profile_image != null ? accountDetails.profile_image: '',
+        address_1: accountDetails.address_1,
+        address_2: accountDetails.address_2,
+        address_3: accountDetails.city,
+        postcode: accountDetails.postcode
+    })
   }
 
-addPhoto(){
+  addPhoto(){
   ImagePicker.openPicker({
            compressImageMaxWidth: 640,
            compressImageMaxHeight: 480,
            compressImageQuality: 0.75,
            cropping: true
        }).then(image => {
-           // console.log(image);
+           console.log(image);
            let photo = {
                uri: image.path,
                type: 'image/jpeg',
@@ -137,7 +190,13 @@ addPhoto(){
                profile_pic: image.path,
                url: photo
            })
+
+              // let imageUpload = await uploadPhoto(this.state.profile_pic_new,this.state.token)
+              // console.log("uploaded", imageUpload)
+
        });
+
+
 
 }
 
@@ -179,7 +238,8 @@ settings(){
 editProfile(){
   this.setState({
     editable:true,
-    autoFocus:true
+    autoFocus:true,
+    allSave: true
 
   })
 }
@@ -194,6 +254,7 @@ cash(){
   this.setState({
     radioButton: 'value1'
   })
+  // this.props.navigation.navigate('Checkout')
 }
 
 onPress1(){
@@ -212,338 +273,388 @@ renderRow(rowData, sectionID, rowID, highlightRow){
   return(<View>{list}</View>);
 }
 
+_dropdownListMonth(id, value){
+  console.log(value)
+  console.log(id)
+  this.setState({
+    month: value
+  })
+}
+
+_dropdownListYear(id, value){
+  console.log(value)
+  console.log(id)
+  this.setState({
+    year: value
+  })
+}
+
+
+
 
   render() {
+    console.log(this.props.navigation.state.params.settings)
     return (
-      <KeyboardAwareScrollView>
-      <View style={styles.container}>
 
-        <View style={styles.proImage}>
+        <KeyboardAvoidingView behavior={'padding'} style={{flex:1}}>
+          <ScrollView>
+            <View style={styles.container}>
 
-          <View style={styles.Image}>
-            <TouchableOpacity onPress={this.addPhoto.bind(this)}>
-              { (this.state.profile_pic) ? <Image source={{uri: this.state.profile_pic}}
-              style={{width:150,height:150,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/> :
-              <Image source={require('../Images/blank_profile_pic.png')}
-              style={{width:150,height:150,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>}
-            </TouchableOpacity>
-          </View>
+            <Loader
+              loading={this.state.loader} />
 
-          <View style={styles.textStyle}>
-            <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-              <TextInput autoFocus={this.state.autoFocus}
-                         editable={this.state.editable}
-                         style={styles.text}
-                         value={this.state.firstname}
-                         onChangeText={(firstname) => this.setState({firstname})}/>
-              <TouchableOpacity style={styles.editButton} onPress={this.editProfile.bind(this)}>
-                <Image style={{width:30, height:30}}
-                source={require('../Images/edit.png')}/>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.proImage}>
 
-            <View>
-              <TextInput
-              onChangeText={(email) => this.setState({email})}
-              editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c'}}
-              value={this.state.email}/>
-            </View>
-
-            <View>
-              <TextInput
-              onChangeText={(phone) => this.setState({phone})}
-              editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c'}}
-              value={this.state.phone}/>
-            </View>
-
-          </View>
-
-        </View>
-
-        <View style={styles.delivery} >
-
-
-          <View >
-            <TouchableOpacity style={{alignItems:'center'}}onPress={this.address.bind(this)}>
-              <View style={[styles.deliveryAdd,{backgroundColor:this.state.bga}]}>
-                <Image source={require('../Images/delv-adres-icon-1.png')}
-                style={{width:50, height:50}}/>
-              </View>
-              <Text style={styles.settingsText}> Delivery </Text>
-              <Text style={styles.settingsText}> Address</Text>
-            </TouchableOpacity>
-          </View>
-
-
-          <View >
-            <TouchableOpacity style={{alignItems:'center'}} onPress={this.payment.bind(this)}>
-              <View style={[styles.paymentIcon,{backgroundColor:this.state.bg}]}>
-                <Image source={require('../Images/payment-icon-2.png')}
-                style={{width:50, height:50}}/>
-              </View>
-              <Text style={styles.settingsText}>Payment </Text>
-              <Text style={styles.settingsText}> Option</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View >
-            <TouchableOpacity style={{alignItems:'center'}} onPress={this.settings.bind(this)}>
-              <View style={[styles.settings,{backgroundColor:this.state.bgs}]}>
-                <Image source={require('../Images/settings-icon-3.png')}
-                style={{width:50, height:50}}/>
-              </View>
-              <Text style={styles.settingsText}>Settings </Text>
-              <Text style={styles.settingsText}> </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {this.state.addressClick && <View style={styles.addressTextArea}>
-
-          <View style={styles.line1}>
-            <TextInput placeholder='Delivery Address Line 1'
-                       placeholderTextColor='#818181'
-                       style={styles.lineText}
-                       onChangeText={(address_1) => this.setState({address_1})}
-                       value={this.state.address_1}/>
-          </View>
-
-          <View style={styles.line1}>
-            <TextInput placeholder='Delivery Address Line 2'
-                       placeholderTextColor='#818181'
-                       style={styles.lineText}
-                       onChangeText={(address_2) => this.setState({address_2})}
-                       value={this.state.address_2}/>
-          </View>
-
-          <View style={styles.line1}>
-            <TextInput placeholder='Delivery Address Line 3'
-                       placeholderTextColor='#818181'
-                       style={styles.lineText}
-                       onChangeText={(address_3) => this.setState({address_3})}
-                       value={this.state.address_3}/>
-          </View>
-
-          <View style={styles.postLine}>
-            <TextInput placeholder='Post Code'
-                       placeholderTextColor='#818181'
-                       style={styles.lineText}
-                       onChangeText={(postcode) => this.setState({postcode})}
-                       value={this.state.postcode}/>
-          </View>
-
-          <View style={{alignItems:'center'}}>
-            <TouchableOpacity style={styles.saveButton} onPress={this.save.bind(this)}>
-              <Text style={{color:'#fff'}}>Save</Text>
-            </TouchableOpacity>
-          </View>
-
-        </View>}
-
-          {this.state.paymentClick && <View style={styles.addressTextArea}>
-          {(this.state.cardcash) && <View>
-            <CheckBox
-                style={{flex: 1, padding: 10}}
-                onClick={this.cash.bind(this)}
-                isChecked={this.state.radioButton === 'value1'}
-                leftText={"Cash Payment"}
-                leftTextStyle={{fontSize:20, color:'#000'}}
-                checkedImage={<Image source={require('../Images/radio-but-chk.png')}
-                style={{width: 30, height:30}}/>}
-                unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
-                 style={{width: 30, height:30}}/>}
-              />
-            <CheckBox
-              style={{flex: 1, padding: 10}}
-              onClick={this.card.bind(this)}
-              isChecked={this.state.radioButton === 'value2'}
-              leftText={"Card Payment"}
-              leftTextStyle={{fontSize:20, color:'#000'}}
-              checkedImage={<Image source={require('../Images/radio-but-chk.png')}
-              style={{width: 30, height:30}}/>}
-              unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
-               style={{width: 30, height:30}}/>}
-            />
-              </View>}
-
-              { this.state.cardDet && <View>
-
-                <View style={{backgroundColor:'#d3d3d3'}}>
-                  <Text style={styles.textPay}>We Accept</Text>
+                <View style={styles.Image}>
+                  <TouchableOpacity onPress={this.addPhoto}>
+                    { (this.state.profile_pic) ? <Image source={{uri: this.state.profile_pic}}
+                    style={{width:width/3,height:height/5.5,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/> :
+                    <Image source={require('../Images/blank_profile_pic.png')}
+                    style={{width:width/3,height:height/5.5,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>}
+                  </TouchableOpacity>
                 </View>
 
-                <View>
-                  <FlatList
-                    data={this.state.cards}
-                    renderItem={this.renderRow.bind(this)}
-                    horizontal={true}
-                  />
-                </View>
-
-                <View style={{backgroundColor:'#d3d3d3'}}>
-                  <Text style={styles.textPay}>Card Number</Text>
-                </View>
-
-                <View>
-                  <TextInput
-                    placeholder='Enter your card number'
-                  />
-                </View>
-
-                <View style={{backgroundColor:'#d3d3d3'}}>
-                  <Text style={styles.textPay}>Card Expiry Date</Text>
-                </View>
-
-                <View style={styles.expiryDate}>
-                  <ModalDropdown options={['option 1', 'option 2']}
-                    style={styles.month}
-                    dropdownTextStyle={{fontSize:18}}
-                    dropdownStyle={styles.monthDropdown}
-                  >
-
-                  <View style={styles.monthText}>
-                    <View>
-                      <Text style={styles.ratandlocStyle}>MM</Text>
-                    </View>
-
-                    <View style={styles.arrow}>
-                      <Image source={require('../Images/drop-down-arrow.png')}
-                      style={{width:10,height:10}} />
-                    </View>
-
+                <View style={styles.textStyle}>
+                  <View style={{flexDirection:'row',justifyContent:'space-around', width:width/2.5}}>
+                    <TextInput autoFocus={this.state.autoFocus}
+                          maxLength={10}
+                          editable={this.state.editable}
+                          style={styles.text}
+                          autoCapitalize='words'
+                          value={this.state.firstname}
+                          onChangeText={(firstname) => this.setState({firstname})}/>
+                    <TouchableOpacity style={styles.editButton} onPress={this.editProfile.bind(this)}>
+                      <Image style={{width:30, height:30}}
+                      source={require('../Images/edit.png')}/>
+                    </TouchableOpacity>
                   </View>
-                  </ModalDropdown>
 
-                  <ModalDropdown options={['option 1', 'option 2']}
-                    style={styles.month}
-                    dropdownTextStyle={{fontSize:18}}
-                    dropdownStyle={styles.monthDropdown}
-                  >
-
-                  <View style={styles.monthText}>
-                    <View>
-                      <Text style={styles.ratandlocStyle}>YY</Text>
-                    </View>
-
-                    <View style={styles.arrow}>
-                      <Image source={require('../Images/drop-down-arrow.png')}
-                      style={{width:10,height:10}} />
-                    </View>
-
+                  <View>
+                    <TextInput
+                      onChangeText={(email) => this.setState({email})}
+                      editable={this.state.editable}
+                      style={{fontSize:18, color:'#6c6c6c', width:width/2.5}}
+                      value={this.state.email}/>
                   </View>
-                  </ModalDropdown>
+
+                  <View>
+                    <TextInput
+                    onChangeText={(phone) => this.setState({phone})}
+                    keyboardType='numeric'
+                    maxLength={12}
+                    editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c', width:width/2.5}}
+                    value={this.state.phone}/>
+                  </View>
+
                 </View>
 
-                <View style={{backgroundColor:'#d3d3d3'}}>
-                  <Text style={styles.textPay}>CVV Code</Text>
+              </View>
+
+              <View style={styles.delivery} >
+
+
+                <View >
+                  <TouchableOpacity style={{alignItems:'center'}}onPress={this.address.bind(this)}>
+                    <View style={[styles.deliveryAdd,{backgroundColor:this.state.bga}]}>
+                      <Image source={require('../Images/delv-adres-icon-1.png')}
+                      style={{width:50, height:50}}/>
+                    </View>
+                    <Text style={styles.settingsText}> Delivery </Text>
+                    <Text style={styles.settingsText}> Address</Text>
+                  </TouchableOpacity>
                 </View>
 
-                <View>
-                  <TextInput
-                    placeholder='Enter your cvv code'
-                  />
+
+                <View >
+                  <TouchableOpacity style={{alignItems:'center'}} onPress={this.payment.bind(this)}>
+                    <View style={[styles.paymentIcon,{backgroundColor:this.state.bg}]}>
+                      <Image source={require('../Images/payment-icon-2.png')}
+                      style={{width:50, height:50}}/>
+                    </View>
+                    <Text style={styles.settingsText}>Payment </Text>
+                    <Text style={styles.settingsText}> Option</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View >
+                  <TouchableOpacity style={{alignItems:'center'}} onPress={this.settings.bind(this)}>
+                    <View style={[styles.settings,{backgroundColor:this.state.bgs}]}>
+                      <Image source={require('../Images/settings-icon-3.png')}
+                      style={{width:50, height:50}}/>
+                    </View>
+                    <Text style={styles.settingsText}>Settings </Text>
+                    <Text style={styles.settingsText}> </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {this.state.addressClick && <View style={styles.addressTextArea}>
+
+                <View style={styles.line1}>
+                  <TextInput placeholder='Delivery Address Line 1'
+                             placeholderTextColor='#818181'
+                             style={styles.lineText}
+                             onChangeText={(address_1) => this.setState({address_1})}
+                             value={this.state.address_1}/>
+                </View>
+
+                <View style={styles.line1}>
+                  <TextInput placeholder='Delivery Address Line 2'
+                             placeholderTextColor='#818181'
+                             style={styles.lineText}
+                             onChangeText={(address_2) => this.setState({address_2})}
+                             value={this.state.address_2}/>
+                </View>
+
+                <View style={styles.line1}>
+                  <TextInput placeholder='Delivery Address Line 3'
+                             placeholderTextColor='#818181'
+                             style={styles.lineText}
+                             onChangeText={(address_3) => this.setState({address_3})}
+                             value={this.state.address_3}/>
+                </View>
+
+                <View style={styles.postLine}>
+                  <TextInput placeholder='Post Code'
+                             placeholderTextColor='#818181'
+                             style={styles.lineText}
+                             onChangeText={(postcode) => this.setState({postcode})}
+                             value={this.state.postcode}/>
                 </View>
 
                 <View style={{alignItems:'center'}}>
-                  <TouchableOpacity style={{backgroundColor:'#262050',padding:10, width:100, alignItems:'center'}}>
-                    <Text style={{color:'#fff'}}>Pay Now</Text>
+                  <TouchableOpacity style={styles.saveButton} onPress={this.save.bind(this)}>
+                    <Text style={{color:'#fff'}}>Save</Text>
                   </TouchableOpacity>
                 </View>
 
               </View>}
-        </View>}
 
-          {this.state.settingsClick && <View style={styles.addressTextArea}>
+                {this.state.paymentClick && <View style={styles.addressTextArea}>
+                {(this.state.cardcash) && <View>
+
+                  <CheckBox
+                      style={{flex: 1, padding: 10}}
+                      onClick={this.cash.bind(this)}
+                      isChecked={this.state.radioButton === 'value1'}
+                      leftText={"Cash Payment"}
+                      leftTextStyle={{fontSize:20, color:'#000'}}
+                      checkedImage={<Image source={require('../Images/radio-but-chk.png')}
+                      style={{width: 30, height:30}}/>}
+                      unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
+                       style={{width: 30, height:30}}/>}
+                    />
+
+                  <CheckBox
+                    style={{flex: 1, padding: 10}}
+                    onClick={this.card.bind(this)}
+                    isChecked={this.state.radioButton === 'value2'}
+                    leftText={"Card Payment"}
+                    leftTextStyle={{fontSize:20, color:'#000'}}
+                    checkedImage={<Image source={require('../Images/radio-but-chk.png')}
+                    style={{width: 30, height:30}}/>}
+                    unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
+                     style={{width: 30, height:30}}/>}
+                  />
+                    </View>}
+
+                    { this.state.cardDet && <View>
+
+                      <View style={{backgroundColor:'#d3d3d3'}}>
+                        <Text style={styles.textPay}>We Accept</Text>
+                      </View>
+
+                      <View>
+                        <FlatList
+                          data={this.state.cards}
+                          renderItem={this.renderRow.bind(this)}
+                          horizontal={true}
+                        />
+                      </View>
+
+                      <View style={{backgroundColor:'#d3d3d3'}}>
+                        <Text style={styles.textPay}>Card Number</Text>
+                      </View>
+
+                      <View>
+                        <TextInput
+                          placeholder='Enter your card number'
+                        />
+                      </View>
+
+                      <View style={{backgroundColor:'#d3d3d3'}}>
+                        <Text style={styles.textPay}>Card Expiry Date</Text>
+                      </View>
+
+                      <View style={styles.expiryDate}>
+                        <ModalDropdown options={['1(JAN)','2(FEB)','3(MAR)','4(APR)','5(MAY)','6(JUN)','7(JUL)','8(AUG)','9(SEPT)','10(OCT)','11(NOV)','12(DEC)']}
+                          style={styles.month}
+                          dropdownTextStyle={{fontSize:18}}
+                          dropdownStyle={styles.monthDropdown}
+                        >
+
+                        <View style={styles.monthText}>
+                          <View>
+                            <Text style={styles.ratandlocStyle}>{this.state.month}</Text>
+                          </View>
+
+                          <View style={styles.arrow}>
+                            <Image source={require('../Images/drop-down-arrow.png')}
+                            style={{width:10,height:10}} />
+                          </View>
+
+                        </View>
+                        </ModalDropdown>
+
+                        <ModalDropdown options={['2019', '2020','2021','2022','2023','2024','2025','2026','2027','2028','2029','2030',
+                        '2031','2032','2033','2034','2035','2036','2037','2038','2039','2040','2041','2042','2043','2044',
+                        '2045','2046','2047','2048','2049']}
+                          style={styles.month}
+                          dropdownTextStyle={{fontSize:18}}
+                          dropdownStyle={styles.monthDropdown}
+                          onSelect={(idx, value) => this._dropdownList(idx, value)}
+                        >
+
+                        <View style={styles.monthText}>
+                          <View>
+                            <Text style={styles.ratandlocStyle}>YY</Text>
+                          </View>
+
+                          <View style={styles.arrow}>
+                            <Image source={require('../Images/drop-down-arrow.png')}
+                            style={{width:10,height:10}} />
+                          </View>
+
+                        </View>
+                        </ModalDropdown>
+                      </View>
+
+                      <View style={{backgroundColor:'#d3d3d3'}}>
+                        <Text style={styles.textPay}>CVV Code</Text>
+                      </View>
+
+                      <View>
+                        <TextInput
+                          placeholder='Enter your cvv code'
+                        />
+                      </View>
+
+                      <View style={{alignItems:'center'}}>
+                        <TouchableOpacity style={{backgroundColor:'#262050',padding:10, width:100, alignItems:'center'}}>
+                          <Text style={{color:'#fff'}}>Pay Now</Text>
+                        </TouchableOpacity>
+                      </View>
+
+                    </View>}
+              </View>}
+
+                {this.state.settingsClick && <View style={styles.addressTextArea}>
 
 
 
 
 
-          <View style={{backgroundColor:'#d3d3d3'}}>
-            <Text style={styles.textPay}>User Name</Text>
-          </View>
+                <View style={{backgroundColor:'#d3d3d3'}}>
+                  <Text style={styles.textPay}>User Name</Text>
+                </View>
 
-          <View>
-            <TextInput
-              placeholder='Enter your user name'
-              value = {this.state.email}
-            />
-          </View>
+                <View>
+                  <TextInput
+                    placeholder='Your email'
+                    value = {this.state.email}
+                  />
+                </View>
 
-          <View style={{backgroundColor:'#d3d3d3'}}>
-            <Text style={styles.textPay}>Password</Text>
-          </View>
+                <View style={{backgroundColor:'#d3d3d3'}}>
+                  <Text style={styles.textPay}>Password</Text>
+                </View>
 
-          <View>
-            <TextInput
-              placeholder='Enter your password'
-              value={this.state.password}
-            />
-          </View>
+                <View style={{marginLeft:10,marginRight:10}}>
+                  <PasswordInputText
+                    placeholder='Your password'
+                    value={this.state.password}
+                  />
+                </View>
 
-          <View style={{backgroundColor:'#d3d3d3'}}>
-            <Text style={styles.textPay}>Language</Text>
-          </View>
+                <View style={{backgroundColor:'#d3d3d3'}}>
+                  <Text style={styles.textPay}>Language</Text>
+                </View>
 
-          <View style={styles.languageBar}>
-            <ModalDropdown options={['English', 'Arabic']}
-              style={styles.language}
-              defaultValue={this.state.value}
-              onSelect={(idx, value) => this.setState({value: value})}
-              dropdownTextStyle={{fontSize:18}}
-              dropdownStyle={styles.languageDropdown}
-            >
+                <View style={styles.languageBar}>
+                  <ModalDropdown options={['English', 'Arabic']}
+                    style={styles.language}
+                    defaultValue={this.state.value}
+                    onSelect={(idx, value) => this.setState({value: value})}
+                    dropdownTextStyle={{fontSize:18}}
+                    dropdownStyle={styles.languageDropdown}
+                  >
 
-            <View style={styles.langText}>
-              <View>
-                <Text style={{fontSize:18}}>Language</Text>
-              </View>
+                  <View style={styles.langText}>
+                    <View>
+                      <Text style={{fontSize:18}}>Language</Text>
+                    </View>
 
-              <View style={styles.arrow}>
-                <Image source={require('../Images/drop-down-arrow.png')}
-                style={{width:10,height:10}} />
-              </View>
+                    <View style={styles.arrow}>
+                      <Image source={require('../Images/drop-down-arrow.png')}
+                      style={{width:10,height:10}} />
+                    </View>
+
+                  </View>
+                  </ModalDropdown>
+                </View>
+
+                <View style={{backgroundColor:'#d3d3d3'}}>
+                  <Text style={styles.textPay}>Notification</Text>
+                </View>
+
+                <View style={[styles.notification,{flexDirection:'row', justifyContent:'space-between'}]}>
+                    { this.state.switchOn1 ? <Text style={styles.textPay}> On</Text>:
+                    <Text style={styles.textPay}> Off</Text>}
+                    <SwitchToggle
+                    switchOn={this.state.switchOn1}
+                    onPress={this.onPress1.bind(this)}
+                    circleColorOff='#202000'
+                    circleColorOn='#232050'
+                    />
+                </View>
+
+                <View style={{alignItems:'center'}}>
+                  <TouchableOpacity style={styles.applyButton} activeOpacity={0.5}>
+                    <Text style={{color:'#fff'}}>Apply</Text>
+                  </TouchableOpacity>
+                </View>
+
+
+              </View>}
+
+
+
 
             </View>
-            </ModalDropdown>
-          </View>
+            </ScrollView>
+            {this.state.allSave && <View style={{flexDirection:'row',height:50,bottom:0, position:'absolute'}}>
+              <TouchableOpacity style={{backgroundColor:
+              '#262050',width:width/2, alignItems:'center',justifyContent:'center'}}>
+                <Text style={{color:'#fff'}}>Save all</Text>
+              </TouchableOpacity>
 
-          <View style={{backgroundColor:'#d3d3d3'}}>
-            <Text style={styles.textPay}>Notification</Text>
-          </View>
+              <TouchableOpacity style={{backgroundColor:'gray',width:width/2, alignItems:'center',justifyContent:'center'}}>
+                <Text style={{color:'#fff'}}>Cancel All</Text>
+              </TouchableOpacity>
 
-          <View style={[styles.notification,{flexDirection:'row', justifyContent:'space-between'}]}>
-              <Text style={styles.textPay}> Notification</Text>
-              <SwitchToggle
-              switchOn={this.state.switchOn1}
-              onPress={this.onPress1.bind(this)}
-              circleColorOff='#202000'
-              circleColorOn='#232050'
-              />
-          </View>
+            </View>}
+          </KeyboardAvoidingView>
 
-          <View style={{alignItems:'center'}}>
-            <TouchableOpacity style={styles.applyButton}>
-              <Text style={{color:'#fff'}}>Apply</Text>
-            </TouchableOpacity>
-          </View>
-
-
-        </View>}
-
-
-      </View>
-      </KeyboardAwareScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     // justifyContent: 'center',
     // alignItems: 'center',
     backgroundColor: '#fff',
+    // height:height,
   },
   proImage:{
     flexDirection:'row',
@@ -563,10 +674,12 @@ const styles = StyleSheet.create({
   },
   text :{
     fontSize:23,
-    color:'#000'
+    color:'#000',
+
   },
   Image: {
-    width: width/2.5
+    width: width/2.5,
+    alignItems:'center',justifyContent:'center'
   },
   editButton: {
     width:40,
@@ -715,11 +828,9 @@ const styles = StyleSheet.create({
     borderRadius:5,
   },
   notification: {
-    borderWidth:1,
     padding:10,
-    borderColor:'#cccccc',
-    borderRadius:10, marginBottom:10,
-    backgroundColor:'#d3d3d3',marginTop:10
+    marginBottom:10,
+    marginTop:10
   },
   saveButton: {
     backgroundColor:'#262050',

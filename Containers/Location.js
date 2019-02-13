@@ -7,8 +7,8 @@
  */
 
 import React, {Component} from 'react';
-import {Platform,TouchableHighlight, Modal, StyleSheet, Text, View,Image, TouchableOpacity, TextInput, Dimensions} from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import {Platform,Geolocation,TouchableHighlight, Modal, StyleSheet, Text, View,Image, TouchableOpacity, TextInput, Dimensions} from 'react-native';
+import MapView from 'react-native-maps';
 import { NavigationActions } from 'react-navigation'
 
 
@@ -22,11 +22,11 @@ const instructions = Platform.select({
 });
 
 type Props = {};
-const ASPECT_RATIO = width / height;
-const LATITUDE = 13.139238380834923;
-const LONGITUDE = 80.25188422300266;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+// const ASPECT_RATIO = width / height;
+// const LATITUDE = 13.139238380834923;
+// const LONGITUDE = 80.25188422300266;
+// const LATITUDE_DELTA = 0.0922;
+// const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default class Location extends Component<Props> {
 
@@ -35,10 +35,10 @@ export default class Location extends Component<Props> {
     this.state = {
       modalVisible: false,
       region: {
-      latitude: LATITUDE,
-      longitude: LONGITUDE,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
     },
     };
   }
@@ -47,7 +47,9 @@ export default class Location extends Component<Props> {
     this.setState({ region });
   }
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => {
+      const { params = {} } = navigation.state;
+      return {
     headerTitle: 'SELECT DELIVERY LOCATION',
     headerStyle: {
       backgroundColor: '#39385a',
@@ -58,12 +60,13 @@ export default class Location extends Component<Props> {
     },
     headerLeft: (
       <View style={{marginLeft:10}}>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={()=> params.backbutton()}>
           <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
         </TouchableOpacity>
       </View>
     ),
   }
+}
 
 
 
@@ -73,46 +76,48 @@ export default class Location extends Component<Props> {
 
   async confirm(){
     this.setModalVisible(!this.state.modalVisible);
-    var formData = new FormData();
-    formData.append('email', this.state.email);
-    formData.append('password', this.state.password);
-    formData.append('email', 'remya1@vtrio.com');
-    formData.append('password', 'remya1238');
-
-    let addAddress = await Api.addAddress(formData);
+    this.props.navigation.navigate('HomeScreen');
+    // var formData = new FormData();
+    // formData.append('email', this.state.email);
+    // formData.append('password', this.state.password);
+    // formData.append('email', 'remya1@vtrio.com');
+    // formData.append('password', 'remya1238');
+    //
+    // let addAddress = await Api.addAddress(formData);
 
   }
 
   componentDidMount(){
     navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState({
-          region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }
-        });
+      (position) => {
+        console.log(position)
+        // let code 
+        // this.setState({
+        //     region: position
+        // })
       },
-    (error) => console.log(error.message),
-    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-    );
-    this.watchID = navigator.geolocation.watchPosition(
-      position => {
-        this.setState({
-          region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }
-        });
-      }
-    );
+      (err) => console.log(err),
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 10000 }
+      );
+
+    this.props.navigation.setParams({
+      backbutton: this.backbutton.bind(this)
+    });
   }
   componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
+    // navigator.geolocation.clearWatch(this.watchID);
+  }
+
+  backbutton(){
+    this.props.navigation.dispatch({
+             type: NavigationActions.NAVIGATE,
+             routeName: 'HomeScreen',
+             action: {
+               type: NavigationActions.RESET,
+               index: 0,
+               actions: [{type: NavigationActions.NAVIGATE, routeName: 'HomeScreen'}]
+             }
+           })
   }
 
 

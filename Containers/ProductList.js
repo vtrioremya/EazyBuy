@@ -15,6 +15,7 @@ import MaterialTabs from 'react-native-material-tabs';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Api from '../Services/AppServices'
 import PropTypes from 'prop-types';
+// import {addToCart} from '../Services/lib';
 
 
 import { connect } from 'react-redux';
@@ -31,6 +32,7 @@ class ProductList extends Component<Props> {
       selectedTab: 0,
       groceries: [],
       subCat: [],
+      weightValue: 'Qty',
       subName: [],
       kg: [],
       routes: [
@@ -98,7 +100,7 @@ class ProductList extends Component<Props> {
       this.setState({
         subName: subNames
       })
-      // console.log(this.state.subName)
+      console.log("SUB CAT ",this.state.subName)
       //list api
       var formData = new FormData();
       formData.append('category_id', catId);
@@ -155,6 +157,12 @@ class ProductList extends Component<Props> {
       })
     }
 
+    minus(){
+      this.setState({
+        counter: this.state.counter-1
+      })
+    }
+
     // updateCart = (grocery) => {
     //   console.log("carttt", grocery)
     //   this.addItemToCart()
@@ -186,6 +194,18 @@ class ProductList extends Component<Props> {
       //   }
       // }]
     // }
+
+    _dropdownList(index,value){
+        console.log(value)
+        console.log(index)
+        this.setState({
+          weightValue: value
+        })
+    }
+
+    addItemToCart(){
+        // let response1 = await addToCart(data)
+    }
 
 
 
@@ -219,7 +239,7 @@ class ProductList extends Component<Props> {
 
     list.push(
       <View style={styles.grocery}>
-      <TouchableOpacity style={styles.grocery} onPress={this.productdetail.bind(this,grocery.product_id)}>
+      <TouchableOpacity style={styles.groceryView} onPress={this.productdetail.bind(this,grocery.product_id)}>
         <View style={{ justifyContent:'center'}}>
           <Image source={{uri: grocery.image}}
           style={{width:100,height:100 ,borderRadius:10}} />
@@ -231,7 +251,6 @@ class ProductList extends Component<Props> {
           <View>
             <View style={{flexDirection:'row', justifyContent:'space-between',}}>
               <Text style={styles.headerName}>{grocery.name}</Text>
-              <Text style={{color:'#000', fontSize:15}} onPress={()=>this.props.navigation.navigate('Comparison')}>Compare Price</Text>
             </View>
             <View style={{flexDirection:'row'}}>
               <Text style={{fontSize:16, color:'#000'}}>AED {grocery.price} </Text>
@@ -239,20 +258,24 @@ class ProductList extends Component<Props> {
             </View>
           </View>
 
-          <View style={{flexDirection:'row',width:width/1.8,alignItems:'center', justifyContent:'space-between',marginTop:15}}>
+          <View style={{flexDirection:'row',width:width/1.8,alignItems:'center',
+          justifyContent:'space-between',marginTop:15}}>
 
 
                 <ModalDropdown options={weightName}
-                  style={{borderColor:'gray',borderWidth:0.5,height:30,borderRadius:5 }} dropdownTextStyle={{fontSize:18}}
+                  style={{borderColor:'gray',borderWidth:0.5,height:30,borderRadius:5 }}
+                  dropdownTextStyle={{fontSize:18}}
+                  onSelect={(idx, value) => this._dropdownList(idx, value)}
                   dropdownStyle={{borderColor:'gray', borderWidth:1, borderRadius:5, width:90}}
                 >
 
-                <View style={{width:70,marginLeft:5,marginRight:5,flexDirection:'row',justifyContent:'space-between'}}>
-                  <View>
-                    <Text style={styles.ratandlocStyle}>1 Kg</Text>
+                <View style={{width:70,alignItems:'center',marginLeft:5,marginRight:5,flexDirection:'row',
+                justifyContent:'space-between'}}>
+                  <View style={{alignItems:'center',justifyContent:'center'}}>
+                    <Text style={styles.ratandlocStyle}>{this.state.weightValue}</Text>
                   </View>
 
-                  <View style={{width:30,height:30, alignItems:'center'}}>
+                  <View style={{width:30, alignItems:'center'}}>
                     <Image source={require('../Images/drop-down-arrow.png')}
                     style={{width:10,height:10}} />
                   </View>
@@ -265,13 +288,13 @@ class ProductList extends Component<Props> {
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
 
                 <TouchableOpacity style={{width:40, alignItems:'center',justifyContent:'center'}}
-              >
+              onPress={this.minus.bind(this)}>
                   <Image source={require('../Images/minus.png')}
                     style={{width:15,height:15}} />
                 </TouchableOpacity>
 
                 <View style={{alignItems:'center',width:30, borderColor:'gray', borderWidth:0.5, borderRadius:5}}>
-                  <Text style={styles.ratandlocStyle}>0</Text>
+                  <Text style={styles.ratandlocStyle}>{this.state.count}</Text>
                 </View>
 
                 <TouchableOpacity style={{width:40,  alignItems:'center',justifyContent:'center'}}
@@ -283,7 +306,7 @@ class ProductList extends Component<Props> {
             </View>
 
             <View style={{width:50}}>
-              <TouchableOpacity style={styles.openNowButton} onPress={()=>this.props.addItemToCart(rowData.item)}>
+              <TouchableOpacity style={styles.openNowButton} onPress={this.addItemToCart.bind(this)}>
                 <Text style={{color:'#fff',fontSize:17}}>ADD</Text>
               </TouchableOpacity>
             </View>
@@ -293,6 +316,15 @@ class ProductList extends Component<Props> {
 
         </View>
         </TouchableOpacity>
+
+        <View style={{width:width,backgroundColor:'#d3d3d3', alignItems:'flex-end',}}>
+          <TouchableOpacity onPress={()=>this.props.navigation.navigate('Comparison')}>
+              <View style={{ marginRight:10}}>
+                <Text style={{color:'#000', fontSize:15, fontWeight:'bold'}} >
+                Compare Price</Text>
+              </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
     return (<View>{list}</View>)
@@ -330,7 +362,7 @@ class ProductList extends Component<Props> {
 
         <View>
           <MaterialTabs
-            items={['allitems','akkdsj']}
+            items={['All Items','Foods']}
             selectedIndex={this.state.selectedTab}
             onChange={index => this.setState({ selectedTab: index })}
             barColor='#fff'
@@ -399,6 +431,15 @@ const styles = StyleSheet.create({
   },
   grocery: {
     flex:1,
+    flexDirection: 'column',
+    // padding:10,
+    margin:5,
+    // marginRight:10,
+    width:width-50,
+    justifyContent:'space-between'
+  },
+  groceryView: {
+    flex:1,
     flexDirection: 'row',
     // padding:10,
     margin:5,
@@ -420,9 +461,11 @@ const styles = StyleSheet.create({
     // borderWidth:1
   },
   ratandlocStyle: {
-    margin:5,
+    marginLeft:5,
     fontSize:17,
-    color:'#000'
+    color:'#000',
+    textAlign:'center',
+    alignSelf:'center'
   },
   headerName: {
     fontSize:20,

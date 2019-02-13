@@ -23,7 +23,9 @@ export default class Comparison extends Component<Props> {
     };
   }
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => {
+      const { params = {} } = navigation.state;
+      return {
     headerTitle: 'PRODUCT COMPARISON',
     headerStyle: {
       backgroundColor: '#39385a',
@@ -34,11 +36,30 @@ export default class Comparison extends Component<Props> {
     },
     headerLeft: (
       <View style={{marginLeft:10}}>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={()=> params.backbutton()}>
           <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
         </TouchableOpacity>
       </View>
     ),
+  }
+}
+
+  componentDidMount(){
+    this.props.navigation.setParams({
+      backbutton: this.backbutton.bind(this),
+    });
+  }
+
+  backbutton(){
+    this.props.navigation.dispatch({
+             type: NavigationActions.NAVIGATE,
+             routeName: 'ProductList',
+             action: {
+               type: NavigationActions.RESET,
+               index: 0,
+               actions: [{type: NavigationActions.NAVIGATE, routeName: 'ProductCategory'}]
+             }
+           })
   }
 
   _renderRow(rowData, sectionID, rowID, highlightRow){

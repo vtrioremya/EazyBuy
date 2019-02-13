@@ -7,10 +7,12 @@
  */
 
 import React, {Component} from 'react';
-import {Platform,AsyncStorage, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
+import {Platform,ToastAndroid,AsyncStorage, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
 import Api from '../Services/AppServices'
+import Loader from '../Components/Loader'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 type Props = {};
 export default class Login extends Component<Props> {
@@ -19,6 +21,7 @@ export default class Login extends Component<Props> {
     this.state = {
       email: '',
       password: '',
+      loader: false
     }
   }
 
@@ -66,6 +69,9 @@ export default class Login extends Component<Props> {
   }
 
   async login(){
+    this.setState({
+      loader: true
+    })
 
     var formData = new FormData();
     formData.append('email', this.state.email);
@@ -76,7 +82,9 @@ export default class Login extends Component<Props> {
     let fetchApiLogin = await Api.login(formData);
     // console.log("API RESULT....", fetchApiLogin)
       if(fetchApiLogin.status == 'success'){
-
+        this.setState({
+          loader: false
+        })
          var result = fetchApiLogin
         let user_object = {
           isLoggedIn: true,
@@ -85,13 +93,18 @@ export default class Login extends Component<Props> {
           pro_pic: result.profile_image
         }
 
+        await AsyncStorage.setItem('token', result.token);
+        // console.log(token)
         AsyncStorage.setItem('user_object', JSON.stringify(user_object));
-        console.log(user_object)
 
         this.props.navigation.navigate('HomeScreen');
-        Alert.alert(fetchApiLogin.message);
+        // Alert.alert(fetchApiLogin.message);
+        ToastAndroid.show(fetchApiLogin.message, ToastAndroid.SHORT);
       }
       else if(fetchApiLogin.status == 'error'){
+        this.setState({
+          loader: false
+        })
         Alert.alert(fetchApiLogin.message);
       }
 
@@ -106,66 +119,72 @@ export default class Login extends Component<Props> {
   }
   render() {
     return (
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.textStyle}>Login with your Social Account?</Text>
-        </View>
+      <KeyboardAwareScrollView>
+        <View style={styles.container}>
 
-        <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+        <Loader
+          loading={this.state.loader} />
 
-          <View style={{width:width/4,marginTop:30, marginBottom:30,alignItems:'center'}}>
-            <Image source={require('../Images/facebook.png')} style={{width:60, height:60}}/>
+          <View>
+            <Text style={styles.textStyle}>Login with your Social Account?</Text>
           </View>
 
-          <View style={{width:width/4, marginTop:30, marginBottom:30, alignItems:'center'}}>
-            <Image source={require('../Images/google-plus.png')} style={{width:60, height:60}}/>
+          <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+
+            <View style={{width:width/4,marginTop:30, marginBottom:30,alignItems:'center'}}>
+              <Image source={require('../Images/facebook.png')} style={{width:60, height:60}}/>
+            </View>
+
+            <View style={{width:width/4, marginTop:30, marginBottom:30, alignItems:'center'}}>
+              <Image source={require('../Images/google-plus.png')} style={{width:60, height:60}}/>
+            </View>
           </View>
-        </View>
 
-        <View>
-          <Text style={styles.textStyle}>OR</Text>
-        </View>
+          <View>
+            <Text style={styles.textStyle}>OR</Text>
+          </View>
 
-        <View style={{margin:20}}>
-          <TextInput
-            placeholder = 'Enter Username'
+          <View style={{margin:20}}>
+            <TextInput
+              placeholder = 'Enter Username'
+              placeholderTextColor = '#ababab'
+              value={this.state.email}
+              onChangeText={(email) => this.setState({email})}
+              style={styles.textInputStyle}
+              underlineColorAndroid= '#cccccc'
+            />
+
+            <TextInput
+            placeholder = 'Enter Password'
             placeholderTextColor = '#ababab'
-            value={this.state.email}
-            onChangeText={(email) => this.setState({email})}
+            secureTextEntry={true}
+            value={this.state.password}
+            onChangeText={(password) => this.setState({password})}
             style={styles.textInputStyle}
             underlineColorAndroid= '#cccccc'
-          />
+            />
+          </View>
 
-          <TextInput
-          placeholder = 'Enter Password'
-          placeholderTextColor = '#ababab'
-          secureTextEntry={true}
-          value={this.state.password}
-          onChangeText={(password) => this.setState({password})}
-          style={styles.textInputStyle}
-          underlineColorAndroid= '#cccccc'
-          />
+          <View>
+            <TouchableOpacity style={styles.loginButton} onPress={this.login.bind(this)}>
+              <Text style={styles.login}>LOGIN</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.forgotView}>
+            <TouchableOpacity onPress={this.forgot.bind(this)}>
+              <Text style={styles.forgotPassword}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.accountView}>
+            <TouchableOpacity  onPress={this.register.bind(this)}>
+              <Text style={styles.account}>Don't have an Account?</Text>
+            </TouchableOpacity>
+          </View>
+
         </View>
-
-        <View>
-          <TouchableOpacity style={styles.loginButton} onPress={this.login.bind(this)}>
-            <Text style={styles.login}>LOGIN</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.forgotView}>
-          <TouchableOpacity onPress={this.forgot.bind(this)}>
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.accountView}>
-          <TouchableOpacity  onPress={this.register.bind(this)}>
-            <Text style={styles.account}>Don't have an Account?'</Text>
-          </TouchableOpacity>
-        </View>
-
-      </View>
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -176,6 +195,7 @@ const styles = StyleSheet.create({
     paddingTop:50,
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    height:height
   },
   textStyle: {
     color:'#000',
@@ -213,6 +233,9 @@ const styles = StyleSheet.create({
     fontSize:22
   },
   accountView :{
-    marginTop:30
+    width:width,
+    height:100,
+    alignItems:'center',
+    justifyContent:'center'
   }
 });

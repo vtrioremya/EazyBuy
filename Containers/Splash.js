@@ -25,7 +25,6 @@ export default class Splash extends Component<Props> {
 
   constructor(props){
     super(props);
-    this.splash=this.splash.bind(this);
     this.state = {
 
     };
@@ -35,9 +34,14 @@ export default class Splash extends Component<Props> {
     header: null
   }
 
-  splash = () => {
-    // Alert.alert("splash");
-    this.props.navigation.navigate('Swipers')
+  english () {
+
+    this.props.navigation.navigate('Swipers',{lang: 1})
+  }
+
+  arabic  ()  {
+
+    this.props.navigation.navigate('Swipers',{lang: 2})
   }
 
   render() {
@@ -46,11 +50,11 @@ export default class Splash extends Component<Props> {
         <View style={{width:width, alignItems:'center'}}>
           <Image source={require('../Images/logo-splash.png')} style={{width: 150, height: 150}}/>
         </View>
-        <TouchableOpacity style={styles.english} onPress={this.splash}>
+        <TouchableOpacity style={styles.english} onPress={this.english.bind(this)}>
           <Text style={styles.englishText}>ENGLISH</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.arabic}>
+        <TouchableOpacity style={styles.arabic} onPress={this.arabic.bind(this)}>
           <Text style={styles.arabicText}>ARABIC</Text>
         </TouchableOpacity>
       </View>

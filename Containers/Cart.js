@@ -25,6 +25,7 @@ class Cart extends Component<Props> {
     this.state = {
       index:0,
       selectedTab: 0,
+      coupon:'',
       groceries: [{key: 'a'}, {key: 'b'}],
       history: [{key: 'a'}, {key: 'b'}],
       routes: [
@@ -160,13 +161,13 @@ class Cart extends Component<Props> {
 
               <View style={{flexDirection:'row', marginTop:5, justifyContent:'space-between'}}>
                 <View style={{flexDirection:'row',justifyContent:'center'}}>
-                  <Text style={{fontSize:16, color:'#000'}}>AED 15 </Text>
-                  <Text style={{fontSize:16,}}>(17% Off)</Text>
+                  <Text style={{fontSize:14, color:'#000'}}>AED 15 </Text>
+                  <Text style={{fontSize:14}}>(17% Off)</Text>
                 </View>
 
                 <View style={{width:100, right:0}}>
                   <TouchableOpacity style={styles.openNowButton}>
-                    <Text style={{color:'#fff',fontSize:17}}>1 Units X AED 15</Text>
+                    <Text style={{color:'#fff',fontSize:17}} numberOfLines={1}>1 Units X AED 15</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -205,7 +206,8 @@ class Cart extends Component<Props> {
              backgroundColor: '#fff'}} arrowUpType='remove'>
 
 
-              <TextInput placeholder='Enter coupon code' />
+              <TextInput style={{borderColor:'#d3d3d3',borderWidth:1,borderRadius:10}} placeholder='Enter coupon code' value={this.state.coupon}
+              onChangeText={(coupon)=>this.setState({coupon})}/>
 
               <TouchableOpacity style={{width:width/2.5, padding:8, alignItems:'center',
                 backgroundColor:'#fdc82a', justifyContent:'center', marginTop:10, borderRadius:8}}>

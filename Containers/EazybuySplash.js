@@ -25,7 +25,7 @@ export default class EazybuySplash extends Component<Props> {
 
   constructor(props){
     super(props);
-    this.splash=this.splash.bind(this);
+    
     this.state = {
 
     };
@@ -35,16 +35,16 @@ export default class EazybuySplash extends Component<Props> {
     header: null
   }
 
-  // async componentDidMount(){
+  componentDidMount(){
 
-    // let splash = await Api.getEazybuySplash(token);
-    // console.log("API account....", splash)
-  // }
+    setTimeout(() => {this.navigateToConfirmation()}, 3000);
+  }
 
-  splash = () => {
-    // Alert.alert("splash");
+  navigateToConfirmation=()=> {
     this.props.navigation.navigate('Splash')
   }
+
+
 
   render() {
     return (
@@ -56,9 +56,9 @@ export default class EazybuySplash extends Component<Props> {
           <Image source={require('../Images/logo-splash.png')}
           style={{width: 150, height: 150}}/>
 
-          <TouchableOpacity style={styles.english} onPress={this.splash}>
+          <View style={styles.english}>
             <Text style={styles.englishText}>EVERYDAY YOU GET OUR BEST</Text>
-          </TouchableOpacity>
+          </View>
 
             <Image source={require('../Images/splash-bot-img.jpg')} style={{resizeMode: 'stretch',width:width, height:height/1.9}}/>
         </View>
