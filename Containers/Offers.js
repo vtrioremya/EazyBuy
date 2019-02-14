@@ -11,6 +11,7 @@ import {Platform,FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions,
 var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
 import Api from '../Services/AppServices'
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 
@@ -127,8 +128,9 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   itemName: {
-    fontSize: 20,
+    fontSize: Fonts.h4,
     color: '#000',
+    fontFamily:Fonts.base
 
   }
 

@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
+import {Platform,ToastAndroid, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
@@ -15,6 +15,9 @@ import MaterialTabs from 'react-native-material-tabs';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Api from '../Services/AppServices'
 import PropTypes from 'prop-types';
+import Fonts from '../Themes/Fonts'
+import Loader from '../Components/Loader'
+import AlertMessage from '../Components/AlertMessage'
 // import {addToCart} from '../Services/lib';
 
 
@@ -30,9 +33,11 @@ class ProductList extends Component<Props> {
     this.state = {
       index:0,
       selectedTab: 0,
+      deleteLoader:true,
       groceries: [],
       subCat: [],
       weightValue: 'Qty',
+      nothingtoDisplay:'noDisplay',
       subName: [],
       kg: [],
       routes: [
@@ -56,6 +61,7 @@ class ProductList extends Component<Props> {
     headerTintColor: '#fff',
     headerTitleStyle: {
       fontWeight: '200',
+      fontFamily:Fonts.base
     },
       headerLeft: (
         <View style={{marginLeft:10}}>
@@ -88,7 +94,8 @@ class ProductList extends Component<Props> {
       let subCategory = await Api.getSubCategory(catId);
       // console.log("sub cat....", subCategory)
       this.setState({
-        subCat: subCategory.categories
+        subCat: subCategory.categories,
+
       })
 
       var subNames=[]
@@ -107,10 +114,20 @@ class ProductList extends Component<Props> {
 
       let fetchApiLogin = await Api.getProducts(formData);
       // console.log("PROD LIST....", fetchApiLogin)
-
+        if(fetchApiLogin.length == 0 || fetchApiLogin.length == null){
           this.setState({
             groceries: fetchApiLogin,
+            deleteLoader:false,
+            nothingtoDisplay:'true'
           })
+        }
+        else{
+          this.setState({
+            groceries: fetchApiLogin,
+            deleteLoader:false,
+            nothingtoDisplay:'false'
+          })
+        }
 
       this.props.navigation.setParams({
         backbutton: this.backbutton.bind(this),
@@ -151,17 +168,7 @@ class ProductList extends Component<Props> {
       this.props.navigation.navigate('ProductDetails',{prodId:prodId})
     }
 
-    add(){
-      this.setState({
-        counter: this.state.counter+1
-      })
-    }
 
-    minus(){
-      this.setState({
-        counter: this.state.counter-1
-      })
-    }
 
     // updateCart = (grocery) => {
     //   console.log("carttt", grocery)
@@ -205,6 +212,7 @@ class ProductList extends Component<Props> {
 
     addItemToCart(){
         // let response1 = await addToCart(data)
+        ToastAndroid.show("Item added to cart", ToastAndroid.SHORT);
     }
 
 
@@ -242,7 +250,7 @@ class ProductList extends Component<Props> {
       <TouchableOpacity style={styles.groceryView} onPress={this.productdetail.bind(this,grocery.product_id)}>
         <View style={{ justifyContent:'center'}}>
           <Image source={{uri: grocery.image}}
-          style={{width:100,height:100 ,borderRadius:10}} />
+          style={{width:width/4.5,height:height/9 ,borderRadius:10}} />
           <Image source={require('../Images/fav.png')}
           style={{width:20,height:20,position:'absolute',top:0}} />
         </View>
@@ -253,18 +261,18 @@ class ProductList extends Component<Props> {
               <Text style={styles.headerName}>{grocery.name}</Text>
             </View>
             <View style={{flexDirection:'row'}}>
-              <Text style={{fontSize:16, color:'#000'}}>AED {grocery.price} </Text>
-              <Text style={{fontSize:16,}}>({grocery.discount_percentage}% Off)</Text>
+              <Text style={{fontSize:Fonts.verySmall, color:'#000', fontFamily:Fonts.base}}>AED {grocery.price} </Text>
+              <Text style={{fontSize:Fonts.verySmall, fontFamily:Fonts.base}}>({grocery.discount_percentage}% Off)</Text>
             </View>
           </View>
 
           <View style={{flexDirection:'row',width:width/1.8,alignItems:'center',
-          justifyContent:'space-between',marginTop:15}}>
+          justifyContent:'space-between'}}>
 
 
                 <ModalDropdown options={weightName}
-                  style={{borderColor:'gray',borderWidth:0.5,height:30,borderRadius:5 }}
-                  dropdownTextStyle={{fontSize:18}}
+                  style={{borderColor:'gray',borderWidth:0.5,height:30,borderRadius:5,fontSize:Fonts.verySmall, fontFamily:Fonts.base}}
+                  dropdownTextStyle={{fontSize:Fonts.verySmall, fontFamily:Fonts.base}}
                   onSelect={(idx, value) => this._dropdownList(idx, value)}
                   dropdownStyle={{borderColor:'gray', borderWidth:1, borderRadius:5, width:90}}
                 >
@@ -288,17 +296,18 @@ class ProductList extends Component<Props> {
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
 
                 <TouchableOpacity style={{width:40, alignItems:'center',justifyContent:'center'}}
-              onPress={this.minus.bind(this)}>
+              onPress={() => this.props.decreaseCounter()}>
                   <Image source={require('../Images/minus.png')}
                     style={{width:15,height:15}} />
                 </TouchableOpacity>
 
-                <View style={{alignItems:'center',width:30, borderColor:'gray', borderWidth:0.5, borderRadius:5}}>
-                  <Text style={styles.ratandlocStyle}>{this.state.count}</Text>
+                <View style={{alignItems:'center',width:25, borderColor:'gray',
+                borderWidth:0.5, borderRadius:5, justifyContent:'center'}}>
+                  <Text style={styles.ratandlocStyle}>{this.props.counter}</Text>
                 </View>
 
                 <TouchableOpacity style={{width:40,  alignItems:'center',justifyContent:'center'}}
-                onPress={this.add.bind(this)}>
+                onPress={() => this.props.increaseCounter()}>
                   <Image source={require('../Images/plus.png')}
                     style={{width:15,height:15}} />
                 </TouchableOpacity>
@@ -307,7 +316,7 @@ class ProductList extends Component<Props> {
 
             <View style={{width:50}}>
               <TouchableOpacity style={styles.openNowButton} onPress={this.addItemToCart.bind(this)}>
-                <Text style={{color:'#fff',fontSize:17}}>ADD</Text>
+                <Text style={{color:'#fff',fontSize:Fonts.mid, fontFamily:Fonts.base}}>ADD</Text>
               </TouchableOpacity>
             </View>
 
@@ -320,7 +329,7 @@ class ProductList extends Component<Props> {
         <View style={{width:width,backgroundColor:'#d3d3d3', alignItems:'flex-end',}}>
           <TouchableOpacity onPress={()=>this.props.navigation.navigate('Comparison')}>
               <View style={{ marginRight:10}}>
-                <Text style={{color:'#000', fontSize:15, fontWeight:'bold'}} >
+                <Text style={{color:'#000', fontSize:Fonts.mid, fontWeight:'bold', fontFamily:Fonts.base}} >
                 Compare Price</Text>
               </View>
           </TouchableOpacity>
@@ -342,6 +351,9 @@ class ProductList extends Component<Props> {
 
     return (
       <View style={styles.container}>
+      <Loader
+        loading={this.state.deleteLoader} />
+
 
           <View style={styles.searchView}>
 
@@ -370,9 +382,16 @@ class ProductList extends Component<Props> {
             activeTextColor='#484848'
             inactiveTextColor='#a1a1a1'
             uppercase={false}
-            textStyle={{fontSize:18}}
+            textStyle={{fontSize:Fonts.mid}}
           />
         </View>
+
+        {(this.state.nothingtoDisplay=='true')?
+        [
+            <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+              <AlertMessage title="No products to display!"/>
+            </View>
+        ]:[
 
         <View style={{width:width,marginBottom:40}}>
 
@@ -381,7 +400,7 @@ class ProductList extends Component<Props> {
             />
 
         </View>
-
+        ]}
       </View>
     );
   }
@@ -434,7 +453,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // padding:10,
     margin:5,
-    // marginRight:10,
+    marginRight:5,
     width:width-50,
     justifyContent:'space-between'
   },
@@ -462,13 +481,15 @@ const styles = StyleSheet.create({
   },
   ratandlocStyle: {
     marginLeft:5,
-    fontSize:17,
+    fontSize:Fonts.verySmall,
+     fontFamily:Fonts.base,
     color:'#000',
     textAlign:'center',
     alignSelf:'center'
   },
   headerName: {
-    fontSize:20,
+    fontSize:Fonts.nextRegular,
+    fontFamily: Fonts.base,
     color:'#000'
   },
   searchView: {
@@ -486,7 +507,8 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     alignItems:'center',
-    fontSize:18
+    fontSize:Fonts.input,
+    fontFamily:Fonts.base
   },
 });
 
@@ -494,23 +516,36 @@ const styles = StyleSheet.create({
 //   items: state.counter,
 // })
 
-const mapStateToProps = (state) => {
+// const mapStateToProps = (state) => {
+//   return {
+//     cartItems: state
+//   }
+// }
+//
+// const mapDispatchToProps = (dispatch)=> {
+//     return {
+//       addItemToCart : (products) => dispatch({
+//         type: 'ADD_TO_CART',
+//          payload: products
+//       })
+//     }
+//   }
+
+function mapStateToProps(state){
   return {
-    cartItems: state
+    counter : state.counter
   }
 }
 
-const mapDispatchToProps = (dispatch)=> {
-    return {
-      addItemToCart : (products) => dispatch({
-        type: 'ADD_TO_CART',
-         payload: products
-      })
-    }
+function mapDispatchToProps(dispatch){
+  return {
+    increaseCounter : () => dispatch({
+      type: 'INCREASE_COUNTER'
+    }),
+    decreaseCounter : () => dispatch({
+      type: 'DECREASE_COUNTER'
+    })
   }
-
-
-
-
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductList)

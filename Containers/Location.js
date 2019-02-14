@@ -10,7 +10,7 @@ import React, {Component} from 'react';
 import {Platform,Geolocation,TouchableHighlight, Modal, StyleSheet, Text, View,Image, TouchableOpacity, TextInput, Dimensions} from 'react-native';
 import MapView from 'react-native-maps';
 import { NavigationActions } from 'react-navigation'
-
+import Fonts from '../Themes/Fonts'
 
 var {height, width} = Dimensions.get('window');
 
@@ -34,12 +34,9 @@ export default class Location extends Component<Props> {
     super(props);
     this.state = {
       modalVisible: false,
-      region: {
-      latitude: 37.78825,
-      longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    },
+      latitude: null,
+      longitude: null,
+      error:null,
     };
   }
 
@@ -92,9 +89,10 @@ export default class Location extends Component<Props> {
       (position) => {
         console.log(position)
         // let code
-        // this.setState({
-        //     region: position
-        // })
+        this.setState({
+          latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+        })
       },
       (err) => console.log(err),
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 10000 }
@@ -105,7 +103,7 @@ export default class Location extends Component<Props> {
     });
   }
   componentWillUnmount() {
-    // navigator.geolocation.clearWatch(this.watchID);
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   backbutton(){
@@ -143,22 +141,29 @@ export default class Location extends Component<Props> {
 
         <MapView
           style={{position:'absolute',top:0,left:0,right:0,bottom:0}}
-          region={this.state.region}
+          initialRegion={{
+            latitude: 10.0051627,
+            longitude: 76.3532081,
+            latitudeDelta: 1,
+            longitudeDelta: 1
+            }}
           showsUserLocation={ true }
           onRegionChange={(region)=>this.setState({region})}
           onRegionChangeComplete={ region => this.setState({region}) }
         >
 
-            <MapView.Marker
-            coordinate={ this.state.region }
-          />
+        <MapView.Marker
+           coordinate={{"latitude":10.0051627,"longitude":76.3532081}}
+           title={"Your Location"}
+         />
+
         </MapView>
 
         <View style={styles.confirm}>
           <TouchableOpacity style={styles.confirmButton} onPress={() => {
             this.setModalVisible(true);
           }}>
-            <Text style={{color:'#fff', fontSize:18}}>CONFIRM</Text>
+            <Text style={{color:'#fff', fontSize:Fonts.input,fontFamily:Fonts.base}}>CONFIRM</Text>
           </TouchableOpacity>
         </View>
 
@@ -237,7 +242,8 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     alignItems:'center',
-    fontSize:18
+    fontSize:Fonts.input,
+    fontFamily:Fonts.base
   },
   confirm: {
     bottom:60,
@@ -274,7 +280,8 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderRadius:5,
     marginBottom:10,
-    fontSize: 18
+    fontSize: Fonts.input,
+    fontFamily:Fonts.base
   },
   saveButton: {
     alignItems:'center',
@@ -286,6 +293,7 @@ const styles = StyleSheet.create({
   },
   saveText: {
     color:'#fff',
-    fontSize:18
+    fontSize:Fonts.input,
+    fontFamily:Fonts.base
   }
 });

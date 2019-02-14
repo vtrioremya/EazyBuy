@@ -16,6 +16,7 @@ import MaterialTabs from 'react-native-material-tabs';
 import CartComponents from '../Components/CartComponents'
 import Loader from '../Components/Loader'
 import NavigationBar from '../Components/NavigationBar'
+import AlertMessage from '../Components/AlertMessage'
 import PropTypes from "prop-types";
 import Api from '../Services/AppServices'
 import {getToken} from '../Services/lib'
@@ -217,7 +218,7 @@ class HomeScreen extends Component<Props> {
 
 
                 <View style={styles.openNowButton}>
-                  <Text style={{color:'#fff',fontSize:15,fontFamily:Fonts.base}} numberOfLines={1}>{grocery.config_open_status}</Text>
+                  <Text style={{color:'#fff',fontSize:Fonts.mid,fontFamily:Fonts.base}} numberOfLines={1}>{grocery.config_open_status}</Text>
                 </View>
 
 
@@ -435,7 +436,7 @@ const styles = StyleSheet.create({
   headerName: {
     fontSize: Fonts.nextRegular,
     color:'#000',
-    fontFamily:Fonts.base
+    fontFamily:'Helventica-Bold'
   },
   header_style:{
 

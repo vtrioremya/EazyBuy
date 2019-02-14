@@ -12,6 +12,7 @@ import {Platform, TextInput, StyleSheet, Text, View, TouchableOpacity, Dimension
 var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
 import Api from '../Services/AppServices'
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 
@@ -113,12 +114,14 @@ const styles = StyleSheet.create({
   },
   sendText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: Fonts.input,
+    fontFamily:Fonts.base,
     textAlign:'center',
   },
   feedback: {
     borderWidth:1,
     borderRadius:10,
+    fontFamily:Fonts.base,
     borderColor:'transparent',
     // justifyContent:'center',
     backgroundColor:'#d8d8d8',

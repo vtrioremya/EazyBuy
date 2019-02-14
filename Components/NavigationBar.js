@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {ScrollView, Text, View,TextInput, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
 import { DrawerActions , NavigationActions} from 'react-navigation';
 var {height, width} = Dimensions.get('window');
+import Fonts from '../Themes/Fonts'
 
 
 const NavigationBar = (props) => {
@@ -26,7 +27,7 @@ const NavigationBar = (props) => {
         <View style={{width: width/2, height: 50}} >
           <TextInput placeholder='Sample Address, Address Feild 1, Feild 2'
           placeholderTextColor= '#000'
-          style={{width:width/1.5, fontSize:15}}/>
+          style={{width:width/1.5, fontSize: Fonts.nextRegular, fontFamily:Fonts.base}}/>
         </View>
 
       </View>

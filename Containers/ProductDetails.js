@@ -15,7 +15,8 @@ import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
 import MaterialTabs from 'react-native-material-tabs';
 import Api from '../Services/AppServices'
 import PropTypes from "prop-types";
-
+import Fonts from '../Themes/Fonts'
+import Loader from '../Components/Loader'
 
 import { connect } from 'react-redux';
 
@@ -30,7 +31,8 @@ class ProductDetails extends Component<Props> {
       selectedTab: 0,
       groceries: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
       details: [],
-      size: [],
+      loader:true,
+      size: null,
       sliderImages:[],
       routes: [
       { key: 'first', title: 'First' },
@@ -76,9 +78,10 @@ class ProductDetails extends Component<Props> {
       var prodId = this.props.navigation.state.params.prodId
 
       let fetchApiLogin = await Api.getProductDetails(prodId);
-      // console.log("API details....", fetchApiLogin)
+      console.log("API details....", fetchApiLogin)
       this.setState({
         details : fetchApiLogin.products,
+        loader:false,
         size: this.state.details.size,
         sliderImages: fetchApiLogin.images
       })
@@ -138,20 +141,25 @@ class ProductDetails extends Component<Props> {
 
     return (
       <View style={styles.container}>
+      <Loader
+        loading={this.state.loader} />
         <View style={{width:width,height:150}}>
           <Swiper style={{width:width,height:150}}
                   dotColor='#cfc8c1'
                   activeDotColor='#ffb013'>
             <View>
-              <Image  source={require('../Images/product-banner.jpg')} style={{width:width,height:150}}/>
+              <Image  source={require('../Images/product-banner.jpg')}
+              style={{width:width,height:150}}/>
             </View>
 
             <View>
-              <Image  source={require('../Images/product-banner.jpg')} style={{width:width,height:150}}/>
+              <Image  source={require('../Images/product-banner.jpg')}
+              style={{width:width,height:150}}/>
             </View>
 
             <View>
-              <Image  source={require('../Images/product-banner.jpg')} style={{width:width,height:150}}/>
+              <Image  source={require('../Images/product-banner.jpg')}
+              style={{width:width,height:150}}/>
             </View>
 
             <View>
@@ -169,65 +177,67 @@ class ProductDetails extends Component<Props> {
           </Swiper>
         </View>
 
-        <View>
-          <View style={{alignItems:'center', justifyContent:'center', marginTop:10}}>
-            <Image source={{uri: this.state.details.thumb}} style={{width: width/2, height: height/6}}/>
-          </View>
-
+        <ScrollView>
           <View>
-            <Text style={{fontSize: 25, textAlign:'center', color:'#000'}}>{this.state.details.heading_title}</Text>
-            <Text style={{fontSize: 22, textAlign:'center', color:'#000', fontWeight:'bold'}}>{this.state.details.discount_percentage}% Off</Text>
-          </View>
-
-          <View style={{width:width,
-            height: 60, alignItems:'center', justifyContent:'center'}}>
-            <View
-                  style={{backgroundColor:'#fdc82a', width:width-50,
-                  height: 60, alignItems:'center', justifyContent:'center',
-                borderRadius:50, borderColor:'transparent', borderWidth:1}}>
-              <Text style={{color:'#000', fontSize:25}}>{this.state.details.special_price}</Text>
-            </View>
-          </View>
-
-          <View style={{marginTop:20, marginBottom:20,flexDirection:'row',
-           justifyContent:'space-around'}}>
-            <View style={{borderRadius:10, borderColor:'gray', borderWidth:1,
-            width:width/4, height:40,alignItems:'center', justifyContent:'center'}}>
-              <Text style={{fontSize:20, color:'#000'}}>1 Kg </Text>
+            <View style={{alignItems:'center', justifyContent:'center', marginTop:10}}>
+              <Image source={{uri: this.state.details.thumb}}
+              style={{width: 100, height: 100}}/>
             </View>
 
-            <View style={{borderRadius:10, borderColor:'gray', borderWidth:1,width:width/4, height:40,alignItems:'center',
-            justifyContent:'center'}}>
-              <Text style={{fontSize:20, color:'#000'}}>500 gms </Text>
+            <View>
+              <Text style={{fontSize: Fonts.nextRegular, fontFamily:Fonts.base,textAlign:'center', color:'#000'}}>{this.state.details.heading_title}</Text>
+              <Text style={{fontSize: Fonts.mid,fontFamily:Fonts.base, textAlign:'center', color:'#000', fontWeight:'bold'}}>{this.state.details.discount_percentage}% Off</Text>
             </View>
 
-            <View style={{width:width/4, height:40,}}>
-              <TouchableOpacity style={{width:width/4.5, height:40,
-                alignItems:'center', backgroundColor:'#a9cf46',borderRadius:10, borderColor:'#a9cf46', borderWidth:1,
-                justifyContent:'center'}} onPress={() => this.props.navigation.navigate('Cart')}>
-                <Text style={{fontSize:20, color:'#fff'}}>ADD +</Text>
-              </TouchableOpacity>
+            <View style={{width:width,
+              height: 60, alignItems:'center', justifyContent:'center'}}>
+              <View
+                    style={{backgroundColor:'#fdc82a', width:width-50,
+                    height: 50, alignItems:'center', justifyContent:'center',
+                  borderRadius:50, borderColor:'transparent', borderWidth:1}}>
+                <Text style={{fontFamily:Fonts.base,color:'#000', fontSize:Fonts.nextRegular}}>{this.state.details.special_price}</Text>
+              </View>
+            </View>
+
+            <View style={{marginTop:20, marginBottom:20,flexDirection:'row',
+             justifyContent:'space-around'}}>
+              { this.state.size  ? <View style={{borderRadius:10, borderColor:'gray', borderWidth:1,
+              width:width/4, height:40,alignItems:'center', justifyContent:'center'}}>
+                <Text style={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base, color:'#000'}}>1 Kg </Text>
+              </View>:<View></View>}
+
+              { this.state.size ? <View style={{borderRadius:10, borderColor:'gray', borderWidth:1,width:width/4, height:40,alignItems:'center',
+              justifyContent:'center'}}>
+                <Text style={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base, color:'#000'}}>500 gms </Text>
+              </View>:<View></View>}
+
+              <View style={{width:width/4, height:40,}}>
+                <TouchableOpacity style={{width:width/4.5, height:40,
+                  alignItems:'center', backgroundColor:'#a9cf46',borderRadius:10, borderColor:'#a9cf46', borderWidth:1,
+                  justifyContent:'center'}} onPress={() => this.props.navigation.navigate('Cart')}>
+                  <Text style={{fontSize:Fonts.regular, fontFamily:Fonts.base, color:'#fff'}}>ADD +</Text>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+
+            <View style={{marginLeft:20, marginRight:20}}>
+              <Text style={{fontSize:Fonts.mid, color:'#525252'}}>
+                {this.state.details.description}
+              </Text>
+            </View>
+
+            <View style={{flexDirection:'row',margin:20,alignItems:'center' }}>
+              <Image source={require('../Images/bullets.png')} style={{width:10, height:10}}/>
+              <Text style={styles.specs}>  Virgin   </Text>
+              <Image source={require('../Images/bullets.png')} style={{width:10, height:10}}/>
+              <Text style={styles.specs}>  Unrefined   </Text>
+              <Image source={require('../Images/bullets.png')} style={{width:10, height:10}}/>
+              <Text style={styles.specs}>  Cold Pressed</Text>
             </View>
 
           </View>
-
-          <View style={{marginLeft:20, marginRight:20}}>
-            <Text style={{fontSize:16, color:'#525252'}}>
-              {this.state.details.description}
-            </Text>
-          </View>
-
-          <View style={{flexDirection:'row',margin:20,alignItems:'center' }}>
-            <Image source={require('../Images/bullets.png')} style={{width:10, height:10}}/>
-            <Text style={{fontSize:16,color:'#7d8a44'}}>  Virgin   </Text>
-            <Image source={require('../Images/bullets.png')} style={{width:10, height:10}}/>
-            <Text style={{fontSize:16,color:'#7d8a44'}}>  Unrefined   </Text>
-            <Image source={require('../Images/bullets.png')} style={{width:10, height:10}}/>
-            <Text style={{fontSize:16,color:'#7d8a44'}}>  Cold Pressed</Text>
-          </View>
-
-        </View>
-
+        </ScrollView>
 
 
       </View>
@@ -240,6 +250,11 @@ const styles = StyleSheet.create({
     flex:1,
     backgroundColor: '#fff',
     flexDirection: 'column',
+  },
+  specs: {
+    fontSize:Fonts.mid,
+    fontFamily:Fonts.base,
+    color:'#7d8a44'
   },
   welcome: {
     fontSize: 20,

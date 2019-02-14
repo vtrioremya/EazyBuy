@@ -14,6 +14,7 @@ var {height, width} = Dimensions.get('window');
 // import Share from 'react-native-share';
 import Api from '../Services/AppServices'
 import {getToken} from '../Services/lib'
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 
@@ -180,7 +181,8 @@ export default class DrawerScreen extends Component<Props> {
           <View style={styles.Image}>
             <TouchableOpacity onPress={this.editImage.bind(this)}>
               <Image source={{uri: this.state.account.profile_image}}
-                style={{width:100,height:100,borderColor:'#ffb013',borderWidth:1,borderRadius:50}}/>
+                style={{width:100,height:100,borderColor:'#ffb013',borderWidth:1,
+                borderRadius:50}}/>
             </TouchableOpacity>
           </View>
 
@@ -192,8 +194,8 @@ export default class DrawerScreen extends Component<Props> {
               </TouchableOpacity>
             </View>
 
-            <Text numberOfLines={1}>{this.state.account.telephone.length>0 ? this.state.account.telephone : 'Your Phone'}</Text>
-            <Text numberOfLines={1}>{this.state.account.email.length>0 ?this.state.account.email : 'Your email'}</Text>
+            <Text numberOfLines={1} style={{fontFamily:Fonts.base}}>{this.state.account.telephone.length>0 ? this.state.account.telephone : 'Your Phone'}</Text>
+            <Text numberOfLines={1} style={{fontFamily:Fonts.base}}>{this.state.account.email.length>0 ?this.state.account.email : 'Your email'}</Text>
           </View>
         </View> :
         <View style={styles.proImage}>
@@ -210,8 +212,8 @@ export default class DrawerScreen extends Component<Props> {
               </TouchableOpacity>
             </View>
 
-            <Text>Your Phone</Text>
-            <Text>Your email</Text>
+            <Text style={{fontFamily:Fonts.base}}>Your Phone</Text>
+            <Text style={{fontFamily:Fonts.base}}>Your email</Text>
           </View>
         </View>}
 
@@ -313,8 +315,9 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   menuItem:{
-    padding: 10,
-    flexDirection:'row'
+    padding: 5,
+    flexDirection:'row',
+    alignItems:'center',
   },
   textStyle: {
     marginTop:10,
@@ -322,7 +325,8 @@ const styles = StyleSheet.create({
      width:width/4,
   },
   text :{
-    fontSize:20,
+    fontSize:Fonts.input,
+    fontFamily:Fonts.base,
     color:'#000'
   },
   Image: {
@@ -333,7 +337,8 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   textSize: {
-    fontSize:19,
+    fontSize:17,
+    fontFamily:Fonts.base,
     marginLeft:10,
     color:'#000'
   }

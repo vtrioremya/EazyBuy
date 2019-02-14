@@ -11,6 +11,7 @@ import {Platform, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, A
 var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
 import CheckBox from 'react-native-check-box'
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 
@@ -109,7 +110,7 @@ export default class Checkout extends Component<Props> {
               }}
               isChecked={this.state.isChecked}
               leftText={"Cash on Delivery"}
-              leftTextStyle={{fontSize:20, color:'#000'}}
+              leftTextStyle={{fontSize:Fonts.nextRegular, fontFamily:Fonts.base,color:'#000'}}
               checkedImage={<Image source={require('../Images/radio-but-chk.png')}
               style={{width: 30, height:30}}/>}
               unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
@@ -125,7 +126,7 @@ export default class Checkout extends Component<Props> {
                 }}
                 isChecked={this.state.checked1}
                 leftText={"Card Payment"}
-                leftTextStyle={{fontSize:20, color:'#000'}}
+                leftTextStyle={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base, color:'#000'}}
                 checkedImage={<Image source={require('../Images/radio-but-chk.png')}
                 style={{width: 30, height:30}}/>}
                 unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
@@ -161,12 +162,14 @@ const styles = StyleSheet.create({
 
   },
   locationText :{
-    fontSize: 22, color:'#000'
+    fontSize: Fonts.mid, color:'#000',
+    fontFamily:Fonts.base,
 
   },
   address : {
-    fontSize: 22,
-    marginTop:10, color:'#000'
+    fontSize: Fonts.nextRegular,
+    marginTop:10, color:'#000',
+    fontFamily:Fonts.base,
   },
   change: {
     backgroundColor:'#fdc82a',
@@ -179,14 +182,16 @@ const styles = StyleSheet.create({
   },
   changeText: {
     color:'#fff',
-    fontSize:20
+    fontSize:Fonts.mid,
+    fontFamily:Fonts.base,
   },
   addressView: {
     width: width,
     marginTop:20
   },
   pay: {
-    fontSize: 20,
+    fontSize: Fonts.mid,
+    fontFamily:Fonts.base,
     color:'#000'
   },
   paymentMethod : {
@@ -206,7 +211,8 @@ const styles = StyleSheet.create({
     borderWidth:1
   },
   payText: {
-    fontSize:18,
+    fontSize:Fonts.mid,
+    fontFamily:Fonts.base,
     color:'#fff'
   }
 

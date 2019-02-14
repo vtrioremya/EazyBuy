@@ -13,6 +13,7 @@ import { NavigationActions, createStackNavigator } from 'react-navigation'
 import Api from '../Services/AppServices'
 import Loader from '../Components/Loader'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 export default class Login extends Component<Props> {
@@ -126,7 +127,8 @@ export default class Login extends Component<Props> {
           loading={this.state.loader} />
 
           <View>
-            <Text style={styles.textStyle}>Login with your Social Account?</Text>
+          <Text style={{fontFamily:'Helventica-Bold'}}>Login with your Social Account?</Text>
+            <Text >Login with your Social Account?</Text>
           </View>
 
           <View style={{flexDirection:'row', justifyContent:'space-between'}}>
@@ -199,10 +201,12 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color:'#000',
+    fontFamily:'Helventica',
     fontSize:22
   },
   textInputStyle : {
     width:width -100,
+    fontFamily:Fonts.base,
     fontSize:20,
     margin:10
   },
@@ -219,10 +223,12 @@ const styles = StyleSheet.create({
   },
   login : {
     color:'#fff',
+    fontFamily:Fonts.base,
     fontSize: 18,
   },
   forgotPassword: {
     color:'#aeaeae',
+    fontFamily:Fonts.base,
     fontSize:20
   },
   forgotView: {
@@ -230,6 +236,7 @@ const styles = StyleSheet.create({
   },
   account: {
     color:'#000',
+    fontFamily:Fonts.base,
     fontSize:22
   },
   accountView :{

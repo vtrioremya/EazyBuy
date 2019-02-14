@@ -13,6 +13,7 @@ var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
 import Api from '../Services/AppServices'
 import ModalDropdown from 'react-native-modal-dropdown';
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 
@@ -124,13 +125,13 @@ _dropdownList(index,value){
                        borderRadius:10,height:50,width:width/1.2,
                        borderColor:'transparent',
                        backgroundColor:'#d8d8d8',marginTop:10,width:width/1.2 }}
-                       dropdownTextStyle={{fontSize:18}}
+                       dropdownTextStyle={{fontSize:18,fontFamily: Fonts.base,}}
                        dropdownStyle={{width:width/1.2,borderColor:'gray', borderWidth:1, borderRadius:5, }}
                      >
 
           <View style={{alignItems:'center', width:width/1.2,marginLeft:5,marginRight:5,flexDirection:'row',justifyContent:'space-between'}}>
             <View style={{alignItems:'center',justifyContent:'space-between'}}>
-              <Text>{this.state.defaultValue}</Text>
+              <Text style={{fontFamily: Fonts.base,}}>{this.state.defaultValue}</Text>
             </View>
 
             <View style={{width:30,height:30, alignItems:'center',justifyContent:'center'}}>
@@ -171,12 +172,14 @@ const styles = StyleSheet.create({
   },
   sendText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: Fonts.input,
+    fontFamily: Fonts.base,
     textAlign:'center',
   },
   feedback: {
     borderWidth:1,
     borderRadius:10,
+    fontFamily: Fonts.base,
     borderColor:'transparent',
     // justifyContent:'center',
     backgroundColor:'#d8d8d8',

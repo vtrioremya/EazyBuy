@@ -15,6 +15,7 @@ import MaterialTabs from 'react-native-material-tabs';
 import ModalDropdown from 'react-native-modal-dropdown';
 import ToggleBox from 'react-native-show-hide-toggle-box'
 import Api from '../Services/AppServices'
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 
@@ -115,7 +116,7 @@ export class OrderHistory extends Component<Props> {
           </View>
 
           <View>
-            <Text style={{fontSize:20, color:'#000'}}>AED 15 </Text>
+            <Text style={{fontSize:Fonts.input, color:'#000',fontFamily:Fonts.base}}>AED 15 </Text>
           </View>
 
 
@@ -138,26 +139,26 @@ export class OrderHistory extends Component<Props> {
       <View style={styles.groceryOrder}>
 
         <View style={styles.plus}>
-            <Image source={require('../Images/plus.png')} style={{width:20, height:20}}/>
+            <Image source={require('../Images/plus.png')} style={{width:15, height:15}}/>
         </View>
         <View style={styles.groceryDet}>
               <Text style={styles.headerName}>Families Hypermarket</Text>
-              <Text style={{fontSize:16,marginBottom:5}}>16/04/2018</Text>
-              <Text style={{fontSize:16,}}>Total Amount</Text>
-              <Text style={{fontSize:20, color:'#000'}}>AED 15 </Text>
-              <Text style={{fontSize:20, color:'green'}}>Success </Text>
+              <Text style={{fontSize:Fonts.nextRegular,marginBottom:5,fontFamily:Fonts.base,}}>16/04/2018</Text>
+              <Text style={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base,}}>Total Amount</Text>
+              <Text style={{fontSize:Fonts.regular,fontFamily:Fonts.base, color:'#000'}}>AED 15 </Text>
+              <Text style={{fontSize:Fonts.regular,fontFamily:Fonts.base, color:'green'}}>Success </Text>
         </View>
 
         <View style={{flexDirection:'column',width:width/3,alignItems:'center',
           justifyContent:'space-around',marginTop:15}}>
             <View style={{width:width/3}}>
               <TouchableOpacity style={styles.deleteButton}>
-                <Text style={{color:'#fff',fontSize:17}}>DELETE</Text>
+                <Text style={{color:'#fff',fontSize:Fonts.input,fontFamily:Fonts.base}}>DELETE</Text>
               </TouchableOpacity>
             </View>
             <View style={{width:width/3,}}>
               <TouchableOpacity style={styles.reorderButton}>
-                <Text style={{color:'#fff',fontSize:17}}>RE-ORDER</Text>
+                <Text style={{color:'#fff',fontSize:Fonts.input,fontFamily:Fonts.base}}>RE-ORDER</Text>
               </TouchableOpacity>
             </View>
         </View>
@@ -173,7 +174,7 @@ export class OrderHistory extends Component<Props> {
           <ToggleBox label={lists} style={{backgroundColor: '#fff'}}>
             <View style={{ backgroundColor: '#fff' , }}>
             <View>
-              <Text style={{margin:10,fontSize:23,fontWeight:'bold', color:'#000'}}>Products</Text>
+              <Text style={{margin:10,fontSize:Fonts.regular,fontFamily:Fonts.base,fontWeight:'bold', color:'#000'}}>Products</Text>
             </View>
                 <FlatList data={this.state.orders}
                  renderItem={this.renderRowOrders.bind(this)}
@@ -298,7 +299,7 @@ export class ScheduleOrder extends Component<Props> {
 
           </View>
           <View>
-            <Text style={{fontSize:20, color:'#000'}}>AED 15 </Text>
+            <Text style={{fontSize:Fonts.input, color:'#000',fontFamily:Fonts.base}}>AED 15 </Text>
           </View>
 
 
@@ -317,21 +318,21 @@ export class ScheduleOrder extends Component<Props> {
 
       <View style={{flexDirection:'row'}}>
       <View style={styles.plus}>
-          <Image source={require('../Images/plus.png')} style={{width:20, height:20}}/>
+          <Image source={require('../Images/plus.png')} style={{width:15, height:15}}/>
       </View>
       <View style={styles.groceryDet}>
             <Text style={styles.headerName}>Families Hyper Market</Text>
-            <Text style={{fontSize:16,marginBottom:5}}>16/04/2018</Text>
-            <Text style={{fontSize:16,}}>Total Amount</Text>
-            <Text style={{fontSize:20, color:'#000'}}>AED 15 </Text>
-            <Text style={{fontSize:20, color:'green'}}>Success </Text>
+            <Text style={{fontSize:16,fontFamily:Fonts.base,marginBottom:5}}>16/04/2018</Text>
+            <Text style={{fontSize:16,fontFamily:Fonts.base}}>Total Amount</Text>
+            <Text style={{fontSize:20,fontFamily:Fonts.base, color:'#000'}}>AED 15 </Text>
+            <Text style={{fontSize:20,fontFamily:Fonts.base ,color:'green'}}>Success </Text>
       </View>
 
       <View style={{flexDirection:'column',width:width/3,alignItems:'center',
         justifyContent:'center',marginTop:15}}>
           <View style={{width:width/3}}>
             <TouchableOpacity style={styles.deleteButton}>
-              <Text style={{color:'#fff',fontSize:17}}>DELETE</Text>
+              <Text style={{color:'#fff',fontSize:17,fontFamily:Fonts.base}}>DELETE</Text>
             </TouchableOpacity>
           </View>
 
@@ -349,7 +350,8 @@ export class ScheduleOrder extends Component<Props> {
           <ToggleBox label={lists} style={{backgroundColor: '#fff'}}>
             <View style={{ backgroundColor: '#fff' , }}>
               <View>
-                <Text style={{margin:10,fontSize:23,fontWeight:'bold', color:'#000'}}>Products</Text>
+                <Text style={{margin:10,fontSize:23,fontFamily:Fonts.base,fontWeight:'bold',
+                 color:'#000'}}>Products</Text>
               </View>
                 <FlatList data={this.state.orders}
                  renderItem={this.renderRowOrders.bind(this)}
@@ -398,6 +400,7 @@ export default createMaterialTopTabNavigator({
         upperCaseLabel: false,
         labelStyle: {
           fontSize: 18,
+          fontFamily:Fonts.base,
           color:'#000',
 
         },
@@ -419,6 +422,7 @@ export default createMaterialTopTabNavigator({
         upperCaseLabel: false,
         labelStyle: {
           fontSize: 18,
+          fontFamily:Fonts.base,
           color:'#000',
 
         },
@@ -471,7 +475,8 @@ const styles = StyleSheet.create({
   },
   arabicText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: Fonts.input,
+    fontFamily:Fonts.base,
     textAlign:'center',
     alignItems:'center'
   },
@@ -520,12 +525,14 @@ const styles = StyleSheet.create({
   },
   ratandlocStyle: {
     margin:5,
-    fontSize:17,
+    fontSize:Fonts.regular,
+    fontFamily:Fonts.base,
     color:'#000'
   },
   headerName: {
-    fontSize:20,
-    color:'#000'
+    fontSize:Fonts.input,
+    color:'#000',
+    fontFamily:Fonts.base
   },
   searchView: {
     flexDirection:'row',
@@ -542,7 +549,8 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     alignItems:'center',
-    fontSize:18
+    fontSize:Fonts.input,
+    fontFamily:Fonts.base
   },
   plus :{
     alignItems:'center',

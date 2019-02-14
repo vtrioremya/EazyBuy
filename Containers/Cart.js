@@ -15,6 +15,8 @@ import MaterialTabs from 'react-native-material-tabs';
 import ModalDropdown from 'react-native-modal-dropdown';
 import ToggleBox from 'react-native-show-hide-toggle-box'
 import {connect} from 'react-redux'
+import Fonts from '../Themes/Fonts'
+
 type Props = {};
 
 class Cart extends Component<Props> {
@@ -156,18 +158,18 @@ class Cart extends Component<Props> {
 
               </View>
 
-              <Text style={{fontSize:16, color:'#000'}}>1 Kg </Text>
+              <Text style={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base, color:'#000'}}>1 Kg </Text>
 
 
               <View style={{flexDirection:'row', marginTop:5, justifyContent:'space-between'}}>
                 <View style={{flexDirection:'row',justifyContent:'center'}}>
-                  <Text style={{fontSize:14, color:'#000'}}>AED 15 </Text>
-                  <Text style={{fontSize:14}}>(17% Off)</Text>
+                  <Text style={{fontSize:Fonts.medium, fontFamily:Fonts.base,color:'#000'}}>AED 15 </Text>
+                  <Text style={{fontSize:Fonts.medium,fontFamily:Fonts.base}}>(17% Off)</Text>
                 </View>
 
                 <View style={{width:100, right:0}}>
                   <TouchableOpacity style={styles.openNowButton}>
-                    <Text style={{color:'#fff',fontSize:17}} numberOfLines={1}>1 Units X AED 15</Text>
+                    <Text style={{color:'#fff',fontSize:Fonts.mid,fontFamily:Fonts.base}} numberOfLines={1}>1 Units X AED 15</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -206,12 +208,13 @@ class Cart extends Component<Props> {
              backgroundColor: '#fff'}} arrowUpType='remove'>
 
 
-              <TextInput style={{borderColor:'#d3d3d3',borderWidth:1,borderRadius:10}} placeholder='Enter coupon code' value={this.state.coupon}
+              <TextInput style={{borderColor:'#d3d3d3',borderWidth:1,borderRadius:10,fontFamily:Fonts.base}}
+              placeholder='Enter coupon code' value={this.state.coupon}
               onChangeText={(coupon)=>this.setState({coupon})}/>
 
-              <TouchableOpacity style={{width:width/2.5, padding:8, alignItems:'center',
+              <TouchableOpacity style={{width:width/2.5, fontFamily:Fonts.base,padding:8, alignItems:'center',
                 backgroundColor:'#fdc82a', justifyContent:'center', marginTop:10, borderRadius:8}}>
-                <Text style={{color:'#fff', fontSize:18 }}>ADD</Text>
+                <Text style={{color:'#fff', fontSize:Fonts.regular,fontFamily:Fonts.base }}>ADD</Text>
               </TouchableOpacity>
             </View>
           </ToggleBox>
@@ -222,11 +225,11 @@ class Cart extends Component<Props> {
             <View style={{alignItems: 'center', marginBottom:20,
              backgroundColor: '#fff'}}>
 
-              <Text style={{fontSize:25, color:'#000'}}>105 Pts</Text>
-              <Text style={{fontSize:18, marginTop:10}}>as of 10/12/2018</Text>
+              <Text style={{fontSize:Fonts.input, fontFamily:Fonts.base,color:'#000'}}>105 Pts</Text>
+              <Text style={{fontSize:Fonts.nextRegular, fontFamily:Fonts.base,marginTop:10}}>as of 10/12/2018</Text>
               <TouchableOpacity style={{width:width/2.5, padding:8, alignItems:'center',
                 backgroundColor:'#fdc82a', justifyContent:'center', marginTop:10, borderRadius:8}}>
-                <Text style={{color:'#fff', fontSize:18 }}>REDEEM</Text>
+                <Text style={{color:'#fff', fontSize:Fonts.nextRegular,fontFamily:Fonts.base }}>REDEEM</Text>
               </TouchableOpacity>
 
               <View style={{borderTopWidth:1,borderColor:'#e5e5e5', marginTop:20, width:width}}>
@@ -251,38 +254,38 @@ class Cart extends Component<Props> {
         <View>
         <View style={{flexDirection:'column', justifyContent:'space-between', marginLeft:20, marginRight:20}}>
           <View style={{flexDirection:'row', justifyContent:'space-between',marginTop:10}}>
-            <Text style={{fontSize:16,color:'#000'}}>Item Total</Text>
-            <Text style={{fontSize:16,color:'#000'}}>AED 30</Text>
+            <Text style={{fontSize:Fonts.mid,fontFamily:Fonts.base,color:'#000'}}>Item Total</Text>
+            <Text style={{fontSize:Fonts.Maid,fontFamily:Fonts.base,color:'#000'}}>AED 30</Text>
           </View>
 
           <View style={{flexDirection:'row', justifyContent:'space-between',marginTop:10}}>
-            <Text style={{fontSize:16,color:'#000'}}>Service Fee</Text>
-            <Text style={{fontSize:16,color:'#000'}}>AED 00</Text>
+            <Text style={{fontSize:Fonts.mid,fontFamily:Fonts.base,color:'#000'}}>Service Fee</Text>
+            <Text style={{fontSize:Fonts.mid,fontFamily:Fonts.base,color:'#000'}}>AED 00</Text>
           </View>
 
           <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:10}}>
-            <Text style={{fontSize:16,color:'#000'}}>VAT</Text>
-            <Text style={{fontSize:16,color:'#000'}}>AEC 00</Text>
+            <Text style={{fontSize:Fonts.mid,fontFamily:Fonts.base,color:'#000'}}>VAT</Text>
+            <Text style={{fontSize:Fonts.mid,fontFamily:Fonts.base,color:'#000'}}>AEC 00</Text>
           </View>
         </View>
 
         <View style={{padding:20, flexDirection:'row', justifyContent:'space-between'}}>
-          <Text style={{fontSize:25,color:'#000', fontWeight:'bold'}}>Order Total</Text>
+          <Text style={{fontSize:20,color:'#000', fontWeight:'bold'}}>Order Total</Text>
           <View style={{alignItems:'flex-end', flexDirection:'column'}}>
-            <Text style={{fontSize:25,color:'#000', fontWeight:'bold'}}>AED 30</Text>
-            <Text style={{textDecorationLine: 'underline', color: '#7694ca', fontSize:16}}>Add an Item</Text>
+            <Text style={{fontSize:20,color:'#000', fontWeight:'bold'}}>AED 30</Text>
+            <Text style={{textDecorationLine: 'underline',fontFamily:Fonts.base, color: '#7694ca', fontSize:Fonts.mid}}>Add an Item</Text>
           </View>
         </View>
 
         <View style={{ marginLeft:20, marginRight:20, borderTopWidth:1, borderBottomWidth:1, borderColor:'#d6d6d6'}}>
-          <TextInput placeholder='Note to Merchant' placeholderTextColor='#8f8f8f' style={{fontSize:16}}/>
+          <TextInput placeholder='Note to Merchant' placeholderTextColor='#8f8f8f' style={{fontFamily:Fonts.base,fontSize:Fonts.mid}}/>
         </View>
 
         <View style={{ flexDirection:'row', marginTop:20, marginBottom:20}}>
           <View style={{width:width/2,alignItems:'center'}}>
             <TouchableOpacity style={{width:width/2.2, backgroundColor:'#39385a',borderRadius: width/3 /2,
               height:60, borderColor:'transparent', borderWidth:1,  justifyContent:'center'}}>
-              <Text style={{fontSize:18, color:'#fff', textAlign:'center'}}
+              <Text style={{fontFamily:Fonts.base,fontSize:Fonts.input, color:'#fff', textAlign:'center'}}
               onPress={()=> this.props.navigation.navigate('Checkout')}>ORDER NOW</Text>
             </TouchableOpacity>
           </View>
@@ -290,7 +293,7 @@ class Cart extends Component<Props> {
           <View style={{width:width/2,alignItems:'center'}}>
             <TouchableOpacity style={{width:width/2.2, backgroundColor:'#fdc82a', borderRadius: width/3 /2,
               height:60, borderColor:'transparent', borderWidth:1, justifyContent:'center'}}>
-              <Text style={{fontSize:18, color:'#fff', textAlign:'center'}}>SCHEDULE</Text>
+              <Text style={{fontSize:Fonts.input, fontFamily:Fonts.base,color:'#fff', textAlign:'center'}}>SCHEDULE</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -366,34 +369,42 @@ const styles = StyleSheet.create({
   },
   ratandlocStyle: {
     margin:5,
-    fontSize:15,
+    fontSize:Fonts.mid,
+    fontFamily:Fonts.base,
     color:'#000'
   },
   headerName: {
-    fontSize:20,
+    fontSize:Fonts.nextRegular,
+    fontFamily:Fonts.base,
     color:'#000'
   },
   textStyle: {
     alignItems:'center',
-    fontSize:18
+    fontSize:Fonts.mid,
+    fontFamily:Fonts.base
   },
   history: {
-    fontSize:25
+    fontSize:Fonts.input,
+    fontFamily:Fonts.base
   },
   points:{
-    fontSize:18,
-    color:'#000'
+    fontSize:Fonts.mid,
+    color:'#000',
+    fontFamily:Fonts.base
   },
   date: {
-    fontSize: 18,
-    color:'#9b9b9b'
+    fontSize: Fonts.mid,
+    color:'#9b9b9b',
+    fontFamily:Fonts.base
   },
   rate: {
-    fontSize:18,
+    fontSize:Fonts.mid,
+    fontFamily:Fonts.base,
     color:'#000'
   },
   name: {
-    fontSize: 18,
+    fontSize: Fonts.mid,
+    fontFamily:Fonts.base,
     color:'#9b9b9b'
   }
 });

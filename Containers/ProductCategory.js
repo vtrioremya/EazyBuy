@@ -12,6 +12,8 @@ import {Platform, StyleSheet, Text, View, FlatList, Alert, Image, Dimensions, Te
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
 import Api from '../Services/AppServices'
+import Fonts from '../Themes/Fonts'
+import Loader from '../Components/Loader'
 
 type Props = {};
 export default class ProductCategory extends Component<Props> {
@@ -20,6 +22,7 @@ export default class ProductCategory extends Component<Props> {
     super(props);
     this.state = {
       category: [],
+      deleteLoader:true,
       bannerImage: [],
       catName:''
     };
@@ -74,6 +77,7 @@ export default class ProductCategory extends Component<Props> {
 
         this.setState({
           category: fetchApiLogin,
+          deleteLoader:false,
         })
 
         var formData = new FormData();
@@ -115,7 +119,7 @@ export default class ProductCategory extends Component<Props> {
           onPress={this.productlist.bind(this, cat.category_id, cat.name)}>
           <Image source={{uri: cat.image}}
           style={{width: width/3.8, height:80}}/>
-          <Text style={{width:100, textAlign:'center', fontSize:12,
+          <Text numberOfLines={2} style={{width:100, textAlign:'center', fontSize:Fonts.verySmall,fontFamily:Fonts.base,
           color:'#000'}}>{cat.name}</Text>
         </TouchableOpacity>
       </View>
@@ -141,6 +145,8 @@ export default class ProductCategory extends Component<Props> {
     // console.log("store id",this.props.navigation.state.params.storeId)
     return (
       <View style={styles.container}>
+      <Loader
+        loading={this.state.deleteLoader} />
 
       <View style={styles.searchView}>
 
@@ -201,7 +207,8 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color:'#ababab',
-    fontSize:12
+    fontSize:Fonts.small,
+    fontFamily:Fonts.base
   },
   textInputStyle : {
     width:width -100,

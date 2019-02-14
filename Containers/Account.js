@@ -20,6 +20,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import SwitchToggle from 'react-native-switch-toggle';
 import PasswordInputText from 'react-native-hide-show-password-input';
 import Loader from '../Components/Loader'
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 
@@ -55,7 +56,8 @@ export default class Account extends Component<Props> {
       year:'YY',
       loader:true,
       token:null,
-      allSave:false
+      allSave:false,
+      cardNo:''
     }
   }
 
@@ -289,11 +291,7 @@ _dropdownListYear(id, value){
   })
 }
 
-
-
-
   render() {
-    console.log(this.props.navigation.state.params.settings)
     return (
 
         <KeyboardAvoidingView behavior={'padding'} style={{flex:1}}>
@@ -333,7 +331,7 @@ _dropdownListYear(id, value){
                     <TextInput
                       onChangeText={(email) => this.setState({email})}
                       editable={this.state.editable}
-                      style={{fontSize:18, color:'#6c6c6c', width:width/2.5}}
+                      style={{fontSize:Fonts.nextRegular,fontFamily: Fonts.base, color:'#6c6c6c', width:width/2.5}}
                       value={this.state.email}/>
                   </View>
 
@@ -342,7 +340,7 @@ _dropdownListYear(id, value){
                     onChangeText={(phone) => this.setState({phone})}
                     keyboardType='numeric'
                     maxLength={12}
-                    editable={this.state.editable} style={{fontSize:18, color:'#6c6c6c', width:width/2.5}}
+                    editable={this.state.editable} style={{fontFamily: Fonts.base,fontSize:Fonts.nextRegular, color:'#6c6c6c', width:width/2.5}}
                     value={this.state.phone}/>
                   </View>
 
@@ -438,7 +436,7 @@ _dropdownListYear(id, value){
                       onClick={this.cash.bind(this)}
                       isChecked={this.state.radioButton === 'value1'}
                       leftText={"Cash Payment"}
-                      leftTextStyle={{fontSize:20, color:'#000'}}
+                      leftTextStyle={{fontSize:Fonts.nextRegular,fontFamily: Fonts.base, color:'#000'}}
                       checkedImage={<Image source={require('../Images/radio-but-chk.png')}
                       style={{width: 30, height:30}}/>}
                       unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
@@ -450,7 +448,7 @@ _dropdownListYear(id, value){
                     onClick={this.card.bind(this)}
                     isChecked={this.state.radioButton === 'value2'}
                     leftText={"Card Payment"}
-                    leftTextStyle={{fontSize:20, color:'#000'}}
+                    leftTextStyle={{fontSize:Fonts.nextRegular, fontFamily: Fonts.base,color:'#000'}}
                     checkedImage={<Image source={require('../Images/radio-but-chk.png')}
                     style={{width: 30, height:30}}/>}
                     unCheckedImage={<Image source={require('../Images/radio-but-un-chk.png')}
@@ -479,6 +477,8 @@ _dropdownListYear(id, value){
                       <View>
                         <TextInput
                           placeholder='Enter your card number'
+                          style={{fontFamily: Fonts.base}}
+                          value={this.state.cardNo}
                         />
                       </View>
 
@@ -489,7 +489,7 @@ _dropdownListYear(id, value){
                       <View style={styles.expiryDate}>
                         <ModalDropdown options={['1(JAN)','2(FEB)','3(MAR)','4(APR)','5(MAY)','6(JUN)','7(JUL)','8(AUG)','9(SEPT)','10(OCT)','11(NOV)','12(DEC)']}
                           style={styles.month}
-                          dropdownTextStyle={{fontSize:18}}
+                          dropdownTextStyle={{fontSize:Fonts.nextRegular}}
                           dropdownStyle={styles.monthDropdown}
                         >
 
@@ -536,12 +536,13 @@ _dropdownListYear(id, value){
                       <View>
                         <TextInput
                           placeholder='Enter your cvv code'
+                          style={{fontFamily:Fonts.base}}
                         />
                       </View>
 
                       <View style={{alignItems:'center'}}>
                         <TouchableOpacity style={{backgroundColor:'#262050',padding:10, width:100, alignItems:'center'}}>
-                          <Text style={{color:'#fff'}}>Pay Now</Text>
+                          <Text style={{color:'#fff',fontFamily:Fonts.base}}>Pay Now</Text>
                         </TouchableOpacity>
                       </View>
 
@@ -550,10 +551,6 @@ _dropdownListYear(id, value){
 
                 {this.state.settingsClick && <View style={styles.addressTextArea}>
 
-
-
-
-
                 <View style={{backgroundColor:'#d3d3d3'}}>
                   <Text style={styles.textPay}>User Name</Text>
                 </View>
@@ -561,6 +558,7 @@ _dropdownListYear(id, value){
                 <View>
                   <TextInput
                     placeholder='Your email'
+                    style={{fontFamily:Fonts.base}}
                     value = {this.state.email}
                   />
                 </View>
@@ -571,6 +569,7 @@ _dropdownListYear(id, value){
 
                 <View style={{marginLeft:10,marginRight:10}}>
                   <PasswordInputText
+                    style={{fontFamily:Fonts.base}}
                     placeholder='Your password'
                     value={this.state.password}
                   />
@@ -585,13 +584,13 @@ _dropdownListYear(id, value){
                     style={styles.language}
                     defaultValue={this.state.value}
                     onSelect={(idx, value) => this.setState({value: value})}
-                    dropdownTextStyle={{fontSize:18}}
+                    dropdownTextStyle={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base}}
                     dropdownStyle={styles.languageDropdown}
                   >
 
                   <View style={styles.langText}>
                     <View>
-                      <Text style={{fontSize:18}}>Language</Text>
+                      <Text style={{fontSize:Fonts.regular,fontFamily:Fonts.base}}>{this.state.value}</Text>
                     </View>
 
                     <View style={styles.arrow}>
@@ -620,7 +619,7 @@ _dropdownListYear(id, value){
 
                 <View style={{alignItems:'center'}}>
                   <TouchableOpacity style={styles.applyButton} activeOpacity={0.5}>
-                    <Text style={{color:'#fff'}}>Apply</Text>
+                    <Text style={{color:'#fff',fontFamily:Fonts.base}}>Apply</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -673,7 +672,8 @@ const styles = StyleSheet.create({
      justifyContent:'space-around'
   },
   text :{
-    fontSize:23,
+    fontSize:Fonts.input,
+    fontFamily: Fonts.base,
     color:'#000',
 
   },
@@ -684,10 +684,12 @@ const styles = StyleSheet.create({
   editButton: {
     width:40,
     alignItems:'center',
+    top:10
     // backgroundColor:'black'
   },
   textSize: {
-    fontSize:19,
+    fontSize:Fonts.input,
+    fontFamily: Fonts.base,
     marginLeft:10,
     color:'#000'
   },
@@ -719,7 +721,8 @@ const styles = StyleSheet.create({
     padding:18
   },
   settingsText: {
-    fontSize:20,
+    fontSize:Fonts.nextRegular,
+    fontFamily: Fonts.base,
     color:'#000',
   },
   addressTextArea: {
@@ -738,7 +741,8 @@ const styles = StyleSheet.create({
   },
   lineText: {
     marginLeft:10,
-    fontSize:19,
+    fontSize:Fonts.input,
+    fontFamily: Fonts.base,
     color:'#000'
   },
   postLine: {
@@ -758,7 +762,8 @@ const styles = StyleSheet.create({
   },
   ratandlocStyle: {
     margin:5,
-    fontSize:17,
+    fontSize:Fonts.nextRegular,
+    fontFamily: Fonts.base,
     color:'#000'
   },
   expiryDate :{
@@ -777,14 +782,16 @@ const styles = StyleSheet.create({
     borderColor:'gray',
     borderWidth:1,
     borderRadius:5,
-    width:90
+    width:90,
+    fontFamily:Fonts.base
   },
   monthText: {
     width:70,
     marginLeft:5,
     marginRight:5,
     flexDirection:'row',
-    justifyContent:'space-between'
+    justifyContent:'space-between',
+    fontFamily:Fonts.base
   },
   arrow: {
     width:30,
@@ -793,7 +800,8 @@ const styles = StyleSheet.create({
   },
   textPay: {
     marginLeft:10,
-    fontSize:19,
+    fontSize:Fonts.input,
+    fontFamily: Fonts.base,
   },
   language: {
     padding:10
@@ -813,7 +821,8 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   username: {
-    fontSize: 18,
+    fontSize: Fonts.regular,
+    fontFamily: Fonts.base,
     color:'black',
     borderColor:'gray',
     borderWidth:1,

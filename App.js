@@ -10,7 +10,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { Provider } from "react-redux";
 import { createStore } from 'redux';
-import cartItems from './Reducer/cartItems';
+import reducer from './Reducer/index';
 import {Drawer} from './Navigation/navigators'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -21,7 +21,7 @@ const persistConfig = {
   storage,
 }
 
-const persistedReducer = persistReducer(persistConfig, cartItems)
+const persistedReducer = persistReducer(persistConfig, reducer)
 
 const store = createStore(persistedReducer);
 

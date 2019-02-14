@@ -172,7 +172,7 @@ export const Stack = createStackNavigator({
 }
 ,{
     // headerMode: 'screen',
-    initialRouteName: 'MyOrders',
+    initialRouteName: 'EazybuySplash',
     navigationOptions: ({ navigation }) => ({
     headerLeft: (
       <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
