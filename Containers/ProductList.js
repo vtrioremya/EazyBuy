@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 import Fonts from '../Themes/Fonts'
 import Loader from '../Components/Loader'
 import AlertMessage from '../Components/AlertMessage'
+import {getToken} from '../Services/lib'
 // import {addToCart} from '../Services/lib';
 
 
@@ -40,10 +41,7 @@ class ProductList extends Component<Props> {
       nothingtoDisplay:'noDisplay',
       subName: [],
       kg: [],
-      routes: [
-      { key: 'first', title: 'First' },
-      { key: 'second', title: 'Second' },
-    ],
+      sub_cat:[{key:'a'},{key:'b'}]
     };
     // this.loadUserItems=this.loadUserItems.bind(this);
 
@@ -215,6 +213,52 @@ class ProductList extends Component<Props> {
         ToastAndroid.show("Item added to cart", ToastAndroid.SHORT);
     }
 
+    renderRowSubCat(rowData, sectionID, rowID, highlightRow){
+      let subCat =rowData.item
+      let list = []
+
+
+      list.push(
+        <TouchableOpacity>
+          <View  style={{borderBottomWidth:2,borderColor:'yellow',justifyContent:'space-around', alignItems:'center', width:width/4}}>
+            <Text style={{fontFamily:Fonts.base}}>{subCat.name}</Text>
+
+          </View>
+        </TouchableOpacity>
+      );
+
+      return( <View>{list}</View>);
+
+    }
+    Render_FlatList_Sticky_header = () => {
+
+      var Sticky_header_View = (
+
+
+        <View style={styles.header_style}>
+
+
+        </View>
+
+      );
+        return Sticky_header_View;
+    }
+
+    async addFavorite(id){
+      try{
+        let token = getToken()
+        var formData = new FormData();
+        formData.append('token', token);
+        formData.append('product_id', id);
+        let favorites=  await Api.addFav(formData);
+        console.log(favorites)
+      }
+      catch(err){
+        console.log(err)
+      }
+    }
+
+
 
 
   renderRow(rowData, sectionID, rowID, highlightRow){
@@ -251,8 +295,12 @@ class ProductList extends Component<Props> {
         <View style={{ justifyContent:'center'}}>
           <Image source={{uri: grocery.image}}
           style={{width:width/4.5,height:height/9 ,borderRadius:10}} />
-          <Image source={require('../Images/fav.png')}
-          style={{width:20,height:20,position:'absolute',top:0}} />
+
+          <TouchableOpacity
+            onPress={this.addFavorite.bind(this,grocery.product_id)} style={{width:20,height:20,position:'absolute',top:0}}>
+              <Image source={require('../Images/fav.png')}
+              style={{width:20,height:20,position:'absolute',top:0}} />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.groceryDet}>
@@ -372,17 +420,13 @@ class ProductList extends Component<Props> {
           </View>
 
 
-        <View>
-          <MaterialTabs
-            items={['All Items','Foods']}
-            selectedIndex={this.state.selectedTab}
-            onChange={index => this.setState({ selectedTab: index })}
-            barColor='#fff'
-            indicatorColor='#eebd17'
-            activeTextColor='#484848'
-            inactiveTextColor='#a1a1a1'
-            uppercase={false}
-            textStyle={{fontSize:Fonts.mid}}
+        <View style={{flexDirection:'row'}}>
+          <View><Text>All Items</Text></View>
+          <FlatList
+            data={this.state.subCat}
+            ListFooterComponent={this.Render_FlatList_Sticky_header}
+            renderItem={this.renderRowSubCat.bind(this)}
+            horizontal={true}
           />
         </View>
 
@@ -504,6 +548,13 @@ const styles = StyleSheet.create({
     backgroundColor:'rgba(253,253,253,0.8)',
     width:width,
     height:70
+  },
+  header_style:{
+
+    width: width,
+    height:50,
+    backgroundColor: 'transparent',
+
   },
   textStyle: {
     alignItems:'center',

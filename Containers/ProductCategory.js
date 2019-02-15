@@ -82,16 +82,16 @@ export default class ProductCategory extends Component<Props> {
 
         var formData = new FormData();
         // formData.append('store_id', 44);
-        formData.append('store_id', this.props.navigation.state.params.storeId);
+        let storeId = this.props.navigation.state.params.storeId;
 
-        let fetchBanner = await Api.getCommonOffer(formData);
+        let fetchBanner = await Api.getPromotionsSlide(storeId);
 
         console.log(fetchBanner)
-        console.log(this.props.navigation.state.params.storeId)
+        // console.log(this.props.navigation.state.params.storeId)
 
 
          this.setState({
-           bannerImage: fetchBanner.offer_list
+           bannerImage: fetchBanner.slider
          })
 
   }
@@ -156,7 +156,7 @@ export default class ProductCategory extends Component<Props> {
 
         <View style={{width:'70%', alignItems:'center' }}>
           <TextInput
-            placeholder='Search for Products'
+            placeholder='Search for Products/categories'
             placeholderTextColor='#ababab'
             style={styles.textStyle}
           />

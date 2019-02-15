@@ -125,6 +125,30 @@ export default {
     }
   },
 
+  async getPromotionsSlide(storeId) {
+    try {
+      const response = await get(`/product/product/getofferslide&store_id=${storeId}`)
+      if (!response.error) {
+        return response;
+      }
+      return []
+    } catch (e) {
+      return []
+    }
+  },
+
+async getOfferBanner(formData) {
+  try {
+    const response = await post(`/account/wishlist/addfav`,FormData)
+    if (!response.error) {
+    return response;
+    }
+    return []
+  } catch (e) {
+    return []
+  }
+},
+
   async getAccount(token) {
     try {
       const response = await get(`/account/account/userdetails&token=${token}`)

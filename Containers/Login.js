@@ -127,8 +127,8 @@ export default class Login extends Component<Props> {
           loading={this.state.loader} />
 
           <View>
-          <Text style={{fontFamily:'Helventica-Bold'}}>Login with your Social Account?</Text>
-            <Text >Login with your Social Account?</Text>
+          <Text style={styles.textStyle}>Login with your Social Account?</Text>
+
           </View>
 
           <View style={{flexDirection:'row', justifyContent:'space-between'}}>

@@ -82,14 +82,7 @@ export const Tabs = createBottomTabNavigator({
   }
   }
 }
-
-
-
 })
-
-
-
-
 
 export const Stack = createStackNavigator({
   Tabs: {screen : Tabs},

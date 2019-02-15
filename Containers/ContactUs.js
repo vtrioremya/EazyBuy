@@ -72,7 +72,7 @@ export default class ContactUs extends Component<Props> {
 
   render() {
     return (
-      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+      <KeyboardAwareScrollView >
       <View >
         <View style={{width:width, alignItems:'center'}}>
           <Image source={require('../Images/logo-splash.png')} style={{width: 100, height: 100}}/>

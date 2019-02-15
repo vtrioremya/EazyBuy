@@ -34,8 +34,8 @@ export default class Location extends Component<Props> {
     super(props);
     this.state = {
       modalVisible: false,
-      latitude: null,
-      longitude: null,
+      latitude: 70.44,
+      longitude: -122.44,
       error:null,
     };
   }
@@ -87,12 +87,21 @@ export default class Location extends Component<Props> {
   componentDidMount(){
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log(position)
+        // console.warn(position)
         // let code
         this.setState({
           latitude: position.coords.latitude,
             longitude: position.coords.longitude,
         })
+
+        let myApiKey = 'AIzaSyBSj_BW8JKaiDHu_rjoZmc5EeHSg-aSM2M'
+        fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + this.state.latitude + ',' + this.state.longitude + '&key=' + myApiKey)
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.warn('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
+        })
+
+
       },
       (err) => console.log(err),
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 10000 }
@@ -142,18 +151,18 @@ export default class Location extends Component<Props> {
         <MapView
           style={{position:'absolute',top:0,left:0,right:0,bottom:0}}
           initialRegion={{
-            latitude: 10.0051627,
-            longitude: 76.3532081,
-            latitudeDelta: 1,
-            longitudeDelta: 1
+            latitude: this.state.latitude,
+            longitude: this.state.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
             }}
-          showsUserLocation={ true }
-          onRegionChange={(region)=>this.setState({region})}
-          onRegionChangeComplete={ region => this.setState({region}) }
+
         >
 
         <MapView.Marker
-           coordinate={{"latitude":10.0051627,"longitude":76.3532081}}
+           coordinate={{
+             "latitude":this.state.latitude,
+             "longitude":this.state.longitude}}
            title={"Your Location"}
          />
 

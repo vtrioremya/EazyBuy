@@ -38,7 +38,7 @@ export default class Account extends Component<Props> {
       address_2 :'',
       address_3 :'',
       postcode:'',
-      addressClick:false,
+      addressClick:true,
       paymentClick:false,
       settingsClick:false,
       editable: false,
@@ -87,26 +87,28 @@ export default class Account extends Component<Props> {
 
   async componentDidMount(){
 
-    if(this.props.navigation.state.params.settings == 'yes'){
-      this.setState({
-        addressClick:false,
-        settingsClick:true,
-        paymentClick:false,
-        bg: '#b3b3b3',
-        bgs: '#262050',
-        bga: '#b3b3b3'
-      })
-    }
-    else{
-      this.setState({
-        addressClick:true,
-        settingsClick:false,
-        paymentClick:false,
-        bg: '#b3b3b3',
-        bgs: '#b3b3b3',
-        bga: '#262050'
-      })
-    }
+    // if(this.props.navigation.state.params.settings == 'yes'){
+    //   this.setState({
+    //     loader:false,
+    //     addressClick:false,
+    //     settingsClick:true,
+    //     paymentClick:false,
+    //     bg: '#b3b3b3',
+    //     bgs: '#262050',
+    //     bga: '#b3b3b3'
+    //   })
+    // }
+    // else{
+    //   this.setState({
+    //     loader:false,
+    //     addressClick:true,
+    //     settingsClick:false,
+    //     paymentClick:false,
+    //     bg: '#b3b3b3',
+    //     bgs: '#b3b3b3',
+    //     bga: '#262050'
+    //   })
+    // }
     try{
       let token = await getToken()
       this.setState({
@@ -133,8 +135,9 @@ export default class Account extends Component<Props> {
   }
   catch(err){
     console.log(err)
-    this.props.navigation.navigate('Login')
     this.setState({loader:false})
+    this.props.navigation.navigate('Login')
+
   }
 }
 
