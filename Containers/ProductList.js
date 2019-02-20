@@ -241,8 +241,8 @@ console.log(fetchApiLogin)
 
 
       list.push(
-        <TouchableOpacity>
-          <View  style={{borderBottomWidth:2,borderColor:'yellow',justifyContent:'space-around', alignItems:'center', width:width/2.5}}>
+        <TouchableOpacity >
+          <View  style={{marginLeft:5, marginRight:5,borderBottomWidth:2,borderColor:'#d3d3d3',justifyContent:'space-around', alignItems:'center', width:width/2.5}}>
             <Text style={{fontFamily:Fonts.base}}>{subCat.name}</Text>
 
           </View>
@@ -252,6 +252,37 @@ console.log(fetchApiLogin)
       return( <View>{list}</View>);
 
     }
+
+    ItemSeparatorComponent= () => {
+      var Sticky_header_View = (
+
+
+        <View style={{borderWidth: 0.5,
+        borderColor:'#d3d3d3',
+        marginLeft:10,
+        marginRight:10,}}>
+
+
+        </View>
+
+      );
+        return Sticky_header_View;
+    }
+
+    Render_FlatList_Sticky_header_cat = () => {
+
+      var Sticky_header_View = (
+
+
+        <View style={styles.header_stylecat}>
+
+
+        </View>
+
+      );
+        return Sticky_header_View;
+    }
+
     Render_FlatList_Sticky_header = () => {
 
       var Sticky_header_View = (
@@ -265,6 +296,7 @@ console.log(fetchApiLogin)
       );
         return Sticky_header_View;
     }
+
 
     async addFavorite(id){
       try{
@@ -375,6 +407,12 @@ console.log(fetchApiLogin)
           <View>
             <View style={{flexDirection:'row', justifyContent:'space-between',}}>
               <Text style={styles.headerName}>{grocery.name}</Text>
+              <TouchableOpacity onPress={()=>this.props.navigation.navigate('Comparison')}>
+                  <View>
+                    <Text style={{color:'#000', fontSize:Fonts.mid,  fontFamily:Fonts.base}} >
+                    Compare Price</Text>
+                  </View>
+              </TouchableOpacity>
             </View>
             <View style={{flexDirection:'row'}}>
               <Text style={{fontSize:Fonts.verySmall, color:'#000', fontFamily:Fonts.base}}>AED {grocery.price} </Text>
@@ -442,14 +480,7 @@ console.log(fetchApiLogin)
         </View>
         </TouchableOpacity>
 
-        <View style={{width:width,backgroundColor:'#d3d3d3', alignItems:'flex-end',}}>
-          <TouchableOpacity onPress={()=>this.props.navigation.navigate('Comparison')}>
-              <View style={{ marginRight:10}}>
-                <Text style={{color:'#000', fontSize:Fonts.mid, fontWeight:'bold', fontFamily:Fonts.base}} >
-                Compare Price</Text>
-              </View>
-          </TouchableOpacity>
-        </View>
+
       </View>
     );
     return (<View>{list}</View>)
@@ -485,13 +516,18 @@ console.log(fetchApiLogin)
 
 
         <View style={{flexDirection:'row'}}>
-          <View><Text>All Items</Text></View>
+          <View style={{marginLeft:5, marginRight:5}}><Text style={{borderBottomWidth:2, borderColor:'#eebd17'}}>All Items</Text></View>
+          <View style={{flex:1}}>
           <FlatList
             data={this.state.subCat}
-            ListFooterComponent={this.Render_FlatList_Sticky_header}
+            ListFooterComponent={this.Render_FlatList_Sticky_header_cat}
             renderItem={this.renderRowSubCat.bind(this)}
             horizontal={true}
+            getItemLayout={(data, index) => (
+  {length: this.state.subCat.length, offset: this.state.subCat.length * index, index}
+)}
           />
+          </View>
         </View>
 
         {(this.state.nothingtoDisplay=='true')?
@@ -501,10 +537,12 @@ console.log(fetchApiLogin)
             </View>
         ]:[
 
-        <View style={{width:width,marginBottom:40}}>
+        <View style={{width:width,height:height/1.05}}>
 
              <FlatList data={this.state.groceries}
+             ItemSeparatorComponent={this.ItemSeparatorComponent}
               renderItem={this.renderRow.bind(this)}
+              ListFooterComponent={this.Render_FlatList_Sticky_header}
             />
 
         </View>
@@ -616,9 +654,14 @@ const styles = StyleSheet.create({
   header_style:{
 
     width: width,
-    height:50,
+    height:150,
     backgroundColor: 'transparent',
 
+  },
+  header_stylecat:{
+    width: width,
+    height:10,
+    backgroundColor: 'transparent',
   },
   textStyle: {
     alignItems:'center',

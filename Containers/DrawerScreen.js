@@ -188,10 +188,9 @@ export default class DrawerScreen extends Component<Props> {
 
           <View style={styles.textStyle}>
             <View style={{flexDirection:'row',marginBottom:5,}}>
+            <TouchableOpacity onPress={this.editImage.bind(this)}>
               <Text numberOfLines={1} style={styles.text}>{this.state.account.firstname.length>0 ? this.state.account.firstname+' '+ this.state.account.lastname: 'Your name'}</Text>
-              <TouchableOpacity style={styles.editButton} onPress={this.editImage.bind(this)}>
-                <Image style={{width:30, height:30}} source={require('../Images/edit.png')}/>
-              </TouchableOpacity>
+            </TouchableOpacity>
             </View>
 
             <Text numberOfLines={1} style={{fontFamily:Fonts.base}}>{this.state.account.telephone.length>0 ? this.state.account.telephone : 'Your Phone'}</Text>
@@ -200,16 +199,17 @@ export default class DrawerScreen extends Component<Props> {
         </View> :
         <View style={styles.proImage}>
           <View style={styles.Image}>
+          <TouchableOpacity onPress={this.navigateToScreen('Account')}>
             <Image source={require('../Images/blank_profile_pic.png')}
             style={{width:100,height:100,borderColor:'#ffb013',borderWidth:1,borderRadius:50}}/>
+          </TouchableOpacity>
           </View>
 
           <View style={styles.textStyle}>
             <View style={{flexDirection:'row',marginBottom:5}}>
+            <TouchableOpacity onPress={this.navigateToScreen('Account')}>
               <Text style={styles.text}>Your name</Text>
-              <TouchableOpacity style={styles.editButton} onPress={this.navigateToScreen('Accounts')}>
-                <Image style={{width:30, height:30}} source={require('../Images/edit.png')}/>
-              </TouchableOpacity>
+            </TouchableOpacity>
             </View>
 
             <Text style={{fontFamily:Fonts.base}}>Your Phone</Text>

@@ -141,6 +141,9 @@ export default class Account extends Component<Props> {
   }
 }
 
+ shouldComponentUpdate(nextProps, nextState, nextContext){
+   return true;
+ }
 
 
 
@@ -297,7 +300,7 @@ _dropdownListYear(id, value){
   render() {
     return (
 
-        <KeyboardAvoidingView behavior={'padding'} style={{flex:1}}>
+        <KeyboardAvoidingView behavior={'padding'} style={{flex:1}} keyboardVerticalOffset={-500}>
           <ScrollView>
             <View style={styles.container}>
 
