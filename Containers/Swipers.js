@@ -12,6 +12,7 @@ var {height, width} = Dimensions.get('window');
 import Swiper from 'react-native-swiper';
 import WelcomeText from '../Components/WelcomeText'
 import Api from '../Services/AppServices'
+import OfflineNotice from '../Components/OfflineNotice'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -45,17 +46,17 @@ export default class Swipers extends Component<Props> {
       var content_wel1 = 2
 
       let welcome1 = await Api.getEazybuySplash(lang,content_wel1);
-      console.log(welcome1)
+
 
       var content_wel2 = 3
 
       let welcome2 = await Api.getEazybuySplash(lang,content_wel2);
-      console.log(welcome2)
+
 
       var content_wel3 = 4
 
       let welcome3 = await Api.getEazybuySplash(lang,content_wel3);
-      console.log(welcome3)
+
 
       this.setState({
         welcome1_title: welcome1.content.description,
@@ -75,10 +76,10 @@ export default class Swipers extends Component<Props> {
   }
 
   render() {
-    console.log("language",this.props.navigation.state.params.lang)
+    
     return (
       <View style={styles.container}>
-
+      <OfflineNotice />
         <Swiper style={{width:width}}
                 showsButtons={true}
                 dot= {

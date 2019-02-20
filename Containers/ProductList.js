@@ -33,6 +33,8 @@ class ProductList extends Component<Props> {
 
     this.state = {
       index:0,
+      count:0,
+      favImage:'',
       selectedTab: 0,
       deleteLoader:true,
       groceries: [],
@@ -77,6 +79,27 @@ class ProductList extends Component<Props> {
       )
     }
     }
+    async shouldUpdateComponent(){
+      var formData = new FormData();
+      formData.append('category_id', catId);
+
+      let fetchApiLogin = await Api.getProducts(formData);
+console.log(fetchApiLogin)
+        if(fetchApiLogin.length == 0 || fetchApiLogin.length == null){
+          this.setState({
+            groceries: fetchApiLogin,
+            deleteLoader:false,
+            nothingtoDisplay:'true'
+          })
+        }
+        else{
+          this.setState({
+            groceries: fetchApiLogin,
+            deleteLoader:false,
+            nothingtoDisplay:'false'
+          })
+        }
+    }
 
     async componentDidMount(){
       const { navigation } = this.props;
@@ -86,11 +109,11 @@ class ProductList extends Component<Props> {
       //gms and kg fontSize
 
       // let fetchBanner = await Api.getCommonOffer();
-      // console.log("API kg and gms....", fetchBanner)
+
 
       //sub categories api
       let subCategory = await Api.getSubCategory(catId);
-      // console.log("sub cat....", subCategory)
+
       this.setState({
         subCat: subCategory.categories,
 
@@ -105,13 +128,13 @@ class ProductList extends Component<Props> {
       this.setState({
         subName: subNames
       })
-      console.log("SUB CAT ",this.state.subName)
+
       //list api
       var formData = new FormData();
       formData.append('category_id', catId);
 
       let fetchApiLogin = await Api.getProducts(formData);
-      // console.log("PROD LIST....", fetchApiLogin)
+console.log(fetchApiLogin)
         if(fetchApiLogin.length == 0 || fetchApiLogin.length == null){
           this.setState({
             groceries: fetchApiLogin,
@@ -163,13 +186,13 @@ class ProductList extends Component<Props> {
 
     productdetail(prodId){
       // Alert.alert("splash");
-      this.props.navigation.navigate('ProductDetails',{prodId:prodId})
+      this.props.navigation.navigate('ProductDetails',{prodId:prodId, storeId:this.props.navigation.state.params.storeId})
     }
 
 
 
     // updateCart = (grocery) => {
-    //   console.log("carttt", grocery)
+
     //   this.addItemToCart()
       // var cart_items = [{
       //   "product_id": "56",
@@ -183,7 +206,7 @@ class ProductList extends Component<Props> {
       //
       // }]
       // this.props.counter.push(cart_items)
-      // console.log("cart items",this.props.cartItems)
+
 
     //   this.props.updateCart({name:'ahokd'})
       // AsyncStorage.setItem
@@ -201,8 +224,7 @@ class ProductList extends Component<Props> {
     // }
 
     _dropdownList(index,value){
-        console.log(value)
-        console.log(index)
+
         this.setState({
           weightValue: value
         })
@@ -220,7 +242,7 @@ class ProductList extends Component<Props> {
 
       list.push(
         <TouchableOpacity>
-          <View  style={{borderBottomWidth:2,borderColor:'yellow',justifyContent:'space-around', alignItems:'center', width:width/4}}>
+          <View  style={{borderBottomWidth:2,borderColor:'yellow',justifyContent:'space-around', alignItems:'center', width:width/2.5}}>
             <Text style={{fontFamily:Fonts.base}}>{subCat.name}</Text>
 
           </View>
@@ -246,25 +268,60 @@ class ProductList extends Component<Props> {
 
     async addFavorite(id){
       try{
-        let token = getToken()
+        let token = await getToken()
+
         var formData = new FormData();
         formData.append('token', token);
         formData.append('product_id', id);
+
+
         let favorites=  await Api.addFav(formData);
-        console.log(favorites)
+        // console.log(favorites)
+        if(favorites.status == 'success'){
+
+          this.setState({
+            favImage: require('../Images/fav.png')
+          })
+          Alert.alert(favorites.message)
+        }
+        else{
+          this.props.navigation.navigate('Login')
+        }
       }
       catch(err){
         console.log(err)
       }
     }
 
+    removeFavorite(){
+
+    }
+
+    decreaseCounter(rowID, rowData){
+      console.log(rowID)
+      console.log(rowData)
+
+      this.setState({
+          count : this.state.count- 1
+        },()=>{
+          if(this.state.count <= 1){
+            this.setState({
+              count : 1
+            })
+          }
+        },()=>{
+          this.setState({
+            groceries:new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(array)
+          })
+        })
+    }
 
 
 
   renderRow(rowData, sectionID, rowID, highlightRow){
-    // console.log("render cart",this.props.addItemToCart(rowData.item))
+
     let grocery =rowData.item
-    // console.log("options",grocery.options)
+
 
     var weights = grocery.options
     var weightName = []
@@ -282,10 +339,17 @@ class ProductList extends Component<Props> {
       weightResult.push(object)
 
     })
+    if(grocery.wishlist == 0){
+      this.setState({
+        favImage: require('../Images/heart.png')
+      })
+    }
+    else{
+      this.setState({
+        favImage: require('../Images/fav.png')
+      })
+    }
 
-    // console.log("weightName",weightName)
-    // console.log(weightId)
-    // console.log(weightResult)
     let list = []
 
 
@@ -296,11 +360,15 @@ class ProductList extends Component<Props> {
           <Image source={{uri: grocery.image}}
           style={{width:width/4.5,height:height/9 ,borderRadius:10}} />
 
-          <TouchableOpacity
+          {grocery.wishlist == 0 ? <TouchableOpacity
             onPress={this.addFavorite.bind(this,grocery.product_id)} style={{width:20,height:20,position:'absolute',top:0}}>
-              <Image source={require('../Images/fav.png')}
+              <Image source={this.state.favImage}
               style={{width:20,height:20,position:'absolute',top:0}} />
-          </TouchableOpacity>
+          </TouchableOpacity>: <TouchableOpacity
+            onPress={this.removeFavorite.bind(this,grocery.product_id)} style={{width:20,height:20,position:'absolute',top:0}}>
+              <Image source={this.state.favImage}
+              style={{width:20,height:20,position:'absolute',top:0}} />
+          </TouchableOpacity>}
         </View>
 
         <View style={styles.groceryDet}>
@@ -344,14 +412,14 @@ class ProductList extends Component<Props> {
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
 
                 <TouchableOpacity style={{width:40, alignItems:'center',justifyContent:'center'}}
-              onPress={() => this.props.decreaseCounter()}>
+              onPress={this.decreaseCounter.bind(this,rowID,grocery)}>
                   <Image source={require('../Images/minus.png')}
                     style={{width:15,height:15}} />
                 </TouchableOpacity>
 
                 <View style={{alignItems:'center',width:25, borderColor:'gray',
                 borderWidth:0.5, borderRadius:5, justifyContent:'center'}}>
-                  <Text style={styles.ratandlocStyle}>{this.props.counter}</Text>
+                  <Text style={styles.ratandlocStyle}>{this.state.count}</Text>
                 </View>
 
                 <TouchableOpacity style={{width:40,  alignItems:'center',justifyContent:'center'}}
@@ -390,11 +458,7 @@ class ProductList extends Component<Props> {
 
   render() {
     const { navigation } = this.props;
-    // console.log("CAT ID",navigation.state.params.catId)
-    console.log("REDUX PROPS",this.props)
-    // console.log("REDUX cart length",this.props.cart.length)
 
-    // this.props.items && this.props.items.length > 0 ? console.log(this.props.items[0].type) : ''
 
 
     return (
@@ -567,36 +631,21 @@ const styles = StyleSheet.create({
 //   items: state.counter,
 // })
 
-// const mapStateToProps = (state) => {
-//   return {
-//     cartItems: state
-//   }
-// }
-//
-// const mapDispatchToProps = (dispatch)=> {
-//     return {
-//       addItemToCart : (products) => dispatch({
-//         type: 'ADD_TO_CART',
-//          payload: products
-//       })
-//     }
-//   }
-
-function mapStateToProps(state){
+const mapStateToProps = (state) => {
   return {
-    counter : state.counter
+    cartItems: state
   }
 }
 
-function mapDispatchToProps(dispatch){
-  return {
-    increaseCounter : () => dispatch({
-      type: 'INCREASE_COUNTER'
-    }),
-    decreaseCounter : () => dispatch({
-      type: 'DECREASE_COUNTER'
-    })
+const mapDispatchToProps = (dispatch)=> {
+    return {
+      addItemToCart : (products) => dispatch({
+        type: 'ADD_TO_CART',
+         payload: products
+      })
+    }
   }
-}
+
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductList)

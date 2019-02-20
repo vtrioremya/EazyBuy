@@ -48,7 +48,7 @@ export default {
   async getSubCategory(catId) {
     try {
       const response = await get(`/product/category&path=${catId}`)
-      console.log("service sub cat ",response)
+
       if (response.status == 'success') {
         return response;
         // const data = omit(response, 'error', 'message')
@@ -65,7 +65,7 @@ export default {
     try {
       const response = await post(`/product/product/getproductlist`, formData)
       if (!response.error) {
-        console.log(response)
+
         const data = response.product_list
         return Object.keys(data).map(key => data[key])
       }
@@ -137,13 +137,12 @@ export default {
     }
   },
 
-async getOfferBanner(formData) {
+async addFav(formData) {
   try {
-    const response = await post(`/account/wishlist/addfav`,FormData)
-    if (!response.error) {
-    return response;
-    }
-    return []
+    const response = await post(`/account/wishlist/addfav`,formData)
+    
+      return response;
+
   } catch (e) {
     return []
   }
@@ -152,7 +151,7 @@ async getOfferBanner(formData) {
   async getAccount(token) {
     try {
       const response = await get(`/account/account/userdetails&token=${token}`)
-      // console.log(response)
+
       if (!response.error) {
         // const data = omit(response, 'error', 'message')
         // return Object.keys(data).map(key => data[key])
@@ -166,7 +165,7 @@ async getOfferBanner(formData) {
   async getOrders(token) {
     try {
       const response = await get(`/account/order/index&token=${token}`)
-      // console.log(response)
+
       if (!response.error) {
         // const data = omit(response, 'error', 'message')
         // return Object.keys(data).map(key => data[key])
@@ -204,7 +203,7 @@ async getOfferBanner(formData) {
   async getEazybuySplash(lang,cont) {
     try {
       const response = await get(`/account/web&language_id=${lang}&content_id=${cont}`)
-      // console.log(response)
+
       if (!response.error) {
         // const data = omit(response, 'error', 'message')
         // return Object.keys(data).map(key => data[key])
@@ -218,7 +217,7 @@ async getOfferBanner(formData) {
   async logout(formdata) {
     try {
       const response = await post(`/account/logout`,formdata)
-      console.log("logout",response)
+
       return response;
       // if (!response.error) {
       //   return response
@@ -232,7 +231,7 @@ async getOfferBanner(formData) {
   async addAddress(formdata) {
     try {
       const response = await post(`/account/account/addAddress`,formdata)
-      console.log("addAddress",response)
+
       return response;
       // if (!response.error) {
       //   return response
@@ -246,7 +245,7 @@ async getOfferBanner(formData) {
   async suggest(formdata) {
     try {
       const response = await post(`/product/product/suggestProduct`,formdata)
-      // console.log("suggest",response)
+
       return response;
       // if (!response.error) {
       //   return response
@@ -260,7 +259,7 @@ async getOfferBanner(formData) {
   async listAddress(token) {
     try {
       const response = await post(`/account/account/listAddress&token=${token}`)
-      // console.log("suggest",response)
+
       return response;
       // if (!response.error) {
       //   return response

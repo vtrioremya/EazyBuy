@@ -73,7 +73,7 @@ export default class ProductCategory extends Component<Props> {
   async componentDidMount(){
 
     let fetchApiLogin = await Api.getCategory();
-    // console.log("CATEGORY....", fetchApiLogin)
+
 
         this.setState({
           category: fetchApiLogin,
@@ -86,8 +86,7 @@ export default class ProductCategory extends Component<Props> {
 
         let fetchBanner = await Api.getPromotionsSlide(storeId);
 
-        console.log(fetchBanner)
-        // console.log(this.props.navigation.state.params.storeId)
+        
 
 
          this.setState({
@@ -101,13 +100,13 @@ export default class ProductCategory extends Component<Props> {
   }
 
   productlist(catId, catName) {
-    // console.log("catId",catId)
+
     // Alert.alert("splash");
-    this.props.navigation.navigate('ProductList', {catId:catId, catName: catName})
+    this.props.navigation.navigate('ProductList', {catId:catId, catName: catName, storeId:this.props.navigation.state.params.storeId})
   }
 
   _renderRow(rowData, sectionID, rowID, highlightRow){
-    // console.log("render", rowData)
+
     let list = []
     let i = 0
     let cat = rowData.item
@@ -142,7 +141,7 @@ export default class ProductCategory extends Component<Props> {
 
 
   render() {
-    // console.log("store id",this.props.navigation.state.params.storeId)
+
     return (
       <View style={styles.container}>
       <Loader

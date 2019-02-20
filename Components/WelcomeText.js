@@ -89,9 +89,9 @@ const styles = StyleSheet.create({
     height: height/1.5
   },
   qualityImage: {
-    width:width/1.8,
+    width:width/1.6,
     height:height/3,
-    borderRadius:width/1.8 /2,
+    borderRadius:width/1.6 /2,
     borderWidth:1,
     margin:5
   },

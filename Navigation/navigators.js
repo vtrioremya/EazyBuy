@@ -83,8 +83,17 @@ export const Tabs = createBottomTabNavigator({
   }
 }
 })
+export const HomeStack= createStackNavigator({
+
+
+  Home:{screen:HomeScreen,navigationOptions:{header:null}},
+
+
+})
+
 
 export const Stack = createStackNavigator({
+  Home: {screen:HomeStack},
   Tabs: {screen : Tabs},
   Splash: {screen: Splash,
     navigationOptions: {

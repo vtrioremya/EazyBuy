@@ -34,10 +34,7 @@ class ProductDetails extends Component<Props> {
       loader:true,
       size: null,
       sliderImages:[],
-      routes: [
-      { key: 'first', title: 'First' },
-      { key: 'second', title: 'Second' },
-    ],
+      bannerImage:[]
     };
   }
 
@@ -73,12 +70,19 @@ class ProductDetails extends Component<Props> {
 
     async componentDidMount(){
 
-      // console.log("details screen")
-      // formData.append('store_id', 7);
+
+      var storeId = this.props.navigation.state.params.storeId;
+
+      let slider = await Api.getPromotionsSlide(storeId);
+
+      this.setState({
+        bannerImage: slider.slider
+      })
+
       var prodId = this.props.navigation.state.params.prodId
 
       let fetchApiLogin = await Api.getProductDetails(prodId);
-      console.log("API details....", fetchApiLogin)
+
       this.setState({
         details : fetchApiLogin.products,
         loader:false,
@@ -137,42 +141,25 @@ class ProductDetails extends Component<Props> {
 
 
   render() {
-    // console.log(this.props.navigation.state.params.prodId)
+
 
     return (
       <View style={styles.container}>
       <Loader
         loading={this.state.loader} />
-        <View style={{width:width,height:150}}>
-          <Swiper style={{width:width,height:150}}
+        <View style={{width:width,height:200}}>
+          <Swiper style={{width:width,height:200}}
                   dotColor='#cfc8c1'
+                  loop={false}
                   activeDotColor='#ffb013'>
-            <View>
-              <Image  source={require('../Images/product-banner.jpg')}
-              style={{width:width,height:150}}/>
-            </View>
 
-            <View>
-              <Image  source={require('../Images/product-banner.jpg')}
-              style={{width:width,height:150}}/>
-            </View>
-
-            <View>
-              <Image  source={require('../Images/product-banner.jpg')}
-              style={{width:width,height:150}}/>
-            </View>
-
-            <View>
-              <Image  source={require('../Images/product-banner.jpg')} style={{width:width,height:150}}/>
-            </View>
-
-            <View>
-                <Image  source={require('../Images/product-banner.jpg')} style={{width:width,height:150}}/>
-            </View>
-
-            <View>
-              <Image  source={require('../Images/product-banner.jpg')} style={{width:width,height:150}}/>
-            </View>
+                  {this.state.bannerImage.map((image)=>{
+                    return(
+                      <View>
+                        <Image  source={{uri: image.image}} style={{width:width,height:150}}/>
+                      </View>
+                    )
+                  })}
 
           </Swiper>
         </View>
