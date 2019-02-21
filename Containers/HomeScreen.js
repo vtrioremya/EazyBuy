@@ -22,6 +22,7 @@ import Api from '../Services/AppServices'
 import {getToken} from '../Services/lib'
 import Fonts from '../Themes/Fonts'
 import { Rating } from 'react-native-ratings';
+import RNGooglePlaces from 'react-native-google-places';
 
 import { connect } from 'react-redux';
 
@@ -47,11 +48,11 @@ class HomeScreen extends Component<Props> {
     };
   }
 
-  static navigationOptions =  {
-    headerLeft: (
-      <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
-        )
-  }
+  // static navigationOptions =  {
+  //   headerLeft: (
+  //     <NavigationBar googlePlaces ={} toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+  //       )
+  // }
 
 
   async componentDidMount(){

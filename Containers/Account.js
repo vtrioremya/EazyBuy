@@ -28,6 +28,7 @@ export default class Account extends Component<Props> {
 
   constructor(props){
     super(props);
+    this.uploadPhoto=this.uploadPhoto.bind(this)
     this.state={
       firstname: 'Your name',
       lastname: '',
@@ -186,25 +187,46 @@ export default class Account extends Component<Props> {
            compressImageMaxHeight: 480,
            compressImageQuality: 0.75,
            cropping: true
-       }).then(image => {
+       }).then(async(image) => {
            console.log(image);
            let photo = {
                uri: image.path,
                type: 'image/jpeg',
                name: 'photo.jpg',
            };
-           this.setState({
-               profile_pic_new: image.path,
-               profile_pic: image.path,
-               url: photo
-           })
+           console.log(image.path)
 
-              // let imageUpload = await uploadPhoto(this.state.profile_pic_new,this.state.token)
-              // console.log("uploaded", imageUpload)
+           let token = await getToken()
+           var formData = new FormData()
+           formData.append('file',image.path)
+           formData.append('token',token)
+
+
+           let imageUpload = await Api.uploadPhoto(formData)
+           console.log("uploaded", imageUpload)
+             ToastAndroid.show(imageUpload.message, ToastAndroid.SHORT);
+           // this.setState({
+           //     profile_pic_new: image.path,
+           //     profile_pic: image.path,
+           //     url: photo
+           // })
 
        });
+       // this.setState({
+       //     profile_pic_new: image.path,
+       //     profile_pic: image.path,
+       //     url: photo
+       // })
 
 
+
+
+}
+
+async uploadPhoto(profile_pic_new){
+  Alert.alert("uploadPhoto")
+  let imageUpload = await uploadPhoto(profile_pic_new,this.state.token)
+  console.log("uploaded", imageUpload)
 
 }
 

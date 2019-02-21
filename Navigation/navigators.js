@@ -26,7 +26,7 @@ import DefaultBar from '../Components/DefaultBar'
 import CounterApp from '../Containers/CounterApp'
 import Offers from '../Containers/Offers'
 import SuggestProduct from '../Containers/SuggestProduct'
-
+import RNGooglePlaces from 'react-native-google-places';
 import {Image, View, Text, TouchableOpacity, Dimensions, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
 
@@ -177,7 +177,17 @@ export const Stack = createStackNavigator({
     initialRouteName: 'EazybuySplash',
     navigationOptions: ({ navigation }) => ({
     headerLeft: (
-      <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+      <NavigationBar
+        googlePlaces={() => {
+          RNGooglePlaces.openPlacePickerModal()
+          .then((place) => {
+              console.log(place);
+              // place represents user's selection from the
+              // suggestions and it is a simplified Google Place object.
+          })
+          .catch(error => console.log(error.message));  // error is a Javascript Error object
+        }}
+       toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
         )
     })
 })

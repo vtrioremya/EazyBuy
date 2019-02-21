@@ -338,7 +338,7 @@ export class ScheduleOrder extends Component<Props> {
 
       </View>
       </View>
-    )
+    );
     // console.log(grocery.key)
 
     list.push(

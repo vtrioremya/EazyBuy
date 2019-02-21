@@ -1,4 +1,5 @@
 import { get, post, remove } from './index'
+import { AsyncStorage,Platform } from 'react-native'
 export default {
 
   async register(sendData) {
@@ -140,7 +141,7 @@ export default {
 async addFav(formData) {
   try {
     const response = await post(`/account/wishlist/addfav`,formData)
-    
+
       return response;
 
   } catch (e) {
@@ -348,7 +349,14 @@ async addFav(formData) {
 
   async uploadPhoto(data) {
     try {
-      return await post(`/photo`, data)
+      if(Platform.OS=='ios'){
+        return await post(`/common/filemanager/profile_imageupload_ios`, data)
+
+      }else{
+          return await post(`/common/filemanager/profile_imageupload`,data)
+
+      }
+      // return null;
     } catch (e) {
       console.log(e)
     }

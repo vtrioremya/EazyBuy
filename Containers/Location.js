@@ -11,6 +11,7 @@ import {Platform,Geolocation,TouchableHighlight, Modal, StyleSheet, Text, View,I
 import MapView from 'react-native-maps';
 import { NavigationActions } from 'react-navigation'
 import Fonts from '../Themes/Fonts'
+import RNGooglePlaces from 'react-native-google-places';
 
 var {height, width} = Dimensions.get('window');
 
@@ -37,6 +38,10 @@ export default class Location extends Component<Props> {
       latitude: 70.44,
       longitude: -122.44,
       error:null,
+      fullAddress:[],
+      address1_flat:'',
+      address_building:'',
+      searchText:'Enter Delivery Address'
     };
   }
 
@@ -73,11 +78,11 @@ export default class Location extends Component<Props> {
 
   async confirm(){
     this.setModalVisible(!this.state.modalVisible);
-    this.props.navigation.navigate('HomeScreen');
+    this.props.navigation.navigate('HomeScreen',{location: this.state.fullAddress});
     // var formData = new FormData();
-    // formData.append('email', this.state.email);
-    // formData.append('password', this.state.password);
-    // formData.append('email', 'remya1@vtrio.com');
+    // formData.append('building', this.state.address_building);
+    // formData.append('floor', this.state.address1_flat);
+    // formData.append('token', token);
     // formData.append('password', 'remya1238');
     //
     // let addAddress = await Api.addAddress(formData);
@@ -87,18 +92,40 @@ export default class Location extends Component<Props> {
   componentDidMount(){
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // console.warn(position)
+        console.warn(position)
         // let code
         this.setState({
           latitude: position.coords.latitude,
             longitude: position.coords.longitude,
         })
 
-        let myApiKey = 'AIzaSyBSj_BW8JKaiDHu_rjoZmc5EeHSg-aSM2M'
+        let myApiKey = 'AIzaSyCT-Ng25cV4_wjv3hiCsvYkLUpeFflrbGg'
         fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + this.state.latitude + ',' + this.state.longitude + '&key=' + myApiKey)
           .then((response) => response.json())
           .then((responseJson) => {
             console.warn('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
+            console.log('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
+            var result = responseJson.results
+            console.log(result.results)
+            var addresses = result.map((address)=>{
+              console.log(address.formatted_address)
+              return address.formatted_address;
+            })
+            console.log("hai last",addresses)
+
+            console.log(result[0].address_components)
+
+            var flat = result[0].address_components
+            var building = result[1].address_components
+            console.log(flat[0].long_name)
+            console.log(flat[1].long_name)
+            console.log(flat[2].long_name)
+
+            this.setState({
+              fullAddress: addresses[1] ,
+              address1_flat : flat[0].long_name + ','+ flat[1].long_name,
+              address_building : building[0].long_name + ','+ building[1].long_name
+            })
         })
 
 
@@ -139,11 +166,18 @@ export default class Location extends Component<Props> {
           </View>
 
           <View style={{width:'70%', alignItems:'center' }}>
-            <TextInput
-              placeholder='Enter Delivery Address'
-              placeholderTextColor='#000'
-              style={styles.textStyle}
-            />
+            <Text style={styles.textStyle} onPress={() => {
+              RNGooglePlaces.openPlacePickerModal()
+              .then((place) => {
+                  console.log(place);
+                  // place represents user's selection from the
+                  // suggestions and it is a simplified Google Place object.
+              })
+              .catch(error => console.log(error.message));  // error is a Javascript Error object
+
+            }}>
+              {this.state.searchText}
+            </Text>
           </View>
 
         </View>
@@ -193,13 +227,16 @@ export default class Location extends Component<Props> {
             <View style={styles.modalView}>
               <View style={{width:width/2,  justifyContent:'center'}}>
                 <TextInput placeholder='Selected Location'
-                           placeholderTextColor='#000'
+                           placeholderTextColor='#d3d3d3'
+                           value={this.state.fullAddress}
                            style={styles.selectedLocationStyle}/>
                 <TextInput placeholder='Flat/Villa No.'
-                           placeholderTextColor='#000'
+                           placeholderTextColor='#d3d3d3'
+                           value={this.state.address1_flat}
                            style={styles.selectedLocationStyle}/>
                 <TextInput placeholder='Building Name/Number'
-                           placeholderTextColor='#000'
+                           placeholderTextColor='#d3d3d3'
+                           value={this.state.address_building}
                            style={styles.selectedLocationStyle}/>
 
                 <TouchableOpacity style={styles.saveButton}
