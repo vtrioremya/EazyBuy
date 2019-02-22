@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import {Platform, TextInput, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert} from 'react-native';
+import {Platform,ToastAndroid, TextInput, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
 import Api from '../Services/AppServices'
@@ -58,7 +58,7 @@ export default class ContactUs extends Component<Props> {
     let feedback = await Api.sendFeedback(formData);
     console.log("feedback",feedback)
     if(feedback.status == "success"){
-      Alert.alert(feedback.message)
+      ToastAndroid.show(feedback.message, ToastAndroid.SHORT);
     }
     else {
       Alert.alert(feedback.message)

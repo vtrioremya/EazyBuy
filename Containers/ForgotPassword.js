@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
+import {Platform, ToastAndroid,StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
 import Api from '../Services/AppServices'
@@ -66,9 +66,10 @@ export default class ForgotPassword extends Component<Props> {
   }
 
   async send(){
-    
+
     if(!this.state.email){
-      Alert.alert("Email should not be blank.")
+      ToastAndroid.show("Email should not be blank.", ToastAndroid.SHORT);
+      // Alert.alert("Email should not be blank.")
       return;
     }
 
@@ -81,12 +82,15 @@ export default class ForgotPassword extends Component<Props> {
       if(fetchApiLogin.status == 'success'){
 
         this.props.navigation.navigate('Login');
-        Alert.alert(fetchApiLogin.message);
+        ToastAndroid.show(fetchApiLogin.message, ToastAndroid.SHORT);
+        // Alert.alert(fetchApiLogin.message);
       }
       else if(fetchApiLogin.status == 'fail'){
-        Alert.alert(fetchApiLogin.message);
+        // Alert.alert(fetchApiLogin.message);
+        ToastAndroid.show(fetchApiLogin.message, ToastAndroid.SHORT);
       }
-      Alert.alert(fetchApiLogin.message);
+      // Alert.alert(fetchApiLogin.message);
+      ToastAndroid.show(fetchApiLogin.message, ToastAndroid.SHORT);
   }
 
 

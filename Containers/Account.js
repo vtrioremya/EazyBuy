@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform,ScrollView, KeyboardAvoidingView, AsyncStorage,Alert, FlatList, Text, View, TextInput, StyleSheet,
+import {Platform,ScrollView, ToastAndroid,KeyboardAvoidingView, AsyncStorage,Alert, FlatList, Text, View, TextInput, StyleSheet,
   Image, Dimensions, TouchableOpacity} from 'react-native';
 import { NavigationActions } from 'react-navigation';
 var {height, width} = Dimensions.get('window');
@@ -84,10 +84,13 @@ export default class Account extends Component<Props> {
 
   }
 
+  componentDidMount(){
+     this.retrieveCurrentUser();
+  }
 
 
-  async componentDidMount(){
-
+   componentDidMount(){
+      this.retrieveCurrentUser();
     // if(this.props.navigation.state.params.settings == 'yes'){
     //   this.setState({
     //     loader:false,
@@ -110,7 +113,13 @@ export default class Account extends Component<Props> {
     //     bga: '#262050'
     //   })
     // }
+
+}
+async retrieveCurrentUser(token){
+
     try{
+      // Alert.alert("hai")
+      console.log('hai')
       let token = await getToken()
       this.setState({
         token: token
@@ -142,13 +151,17 @@ export default class Account extends Component<Props> {
   }
 }
 
- shouldComponentUpdate(nextProps, nextState, nextContext){
-   return true;
+ // shouldComponentUpdate(nextProps, nextState, nextContext){
+ //   return true;
+ // }
+
+ componentWillReceiveProps(nextProps) {
+   if (nextProps.navigation.state.params.token) {
+     this.retrieveCurrentUser(this.props.navigation.state.params.token);
+   }
  }
 
-
-
-  async save(){
+  async saveAll(){
     console.log("save address click")
     var formData = new FormData();
     formData.append('token', '9bd316e1a9e455efac6a0bd9166779');
@@ -163,7 +176,7 @@ export default class Account extends Component<Props> {
     let addressApi = await Api.saveAddress(formData);
     console.log("response address",addressApi)
 
-      Alert.alert(addressApi.message)
+     ToastAndroid.show(addressApi.message, ToastAndroid.SHORT);
 
       let token = await getToken()
       let accountDetails = await Api.getAccount(token);
@@ -334,14 +347,14 @@ _dropdownListYear(id, value){
                 <View style={styles.Image}>
                   <TouchableOpacity onPress={this.addPhoto}>
                     { (this.state.profile_pic) ? <Image source={{uri: this.state.profile_pic}}
-                    style={{width:width/3,height:height/5.5,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/> :
+                    style={{width:width/3.5,height:height/6,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/> :
                     <Image source={require('../Images/blank_profile_pic.png')}
-                    style={{width:width/3,height:height/5.5,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>}
+                    style={{width:width/3.5,height:height/6,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>}
                   </TouchableOpacity>
                 </View>
 
                 <View style={styles.textStyle}>
-                  <View style={{flexDirection:'row',justifyContent:'space-around', width:width/2.5}}>
+                  <View style={{flexDirection:'row', width:width/2.2}}>
                     <TextInput autoFocus={this.state.autoFocus}
                           maxLength={10}
                           editable={this.state.editable}
@@ -448,11 +461,7 @@ _dropdownListYear(id, value){
                              value={this.state.postcode}/>
                 </View>
 
-                <View style={{alignItems:'center'}}>
-                  <TouchableOpacity style={styles.saveButton} onPress={this.save.bind(this)}>
-                    <Text style={{color:'#fff'}}>Save</Text>
-                  </TouchableOpacity>
-                </View>
+
 
               </View>}
 
@@ -661,7 +670,7 @@ _dropdownListYear(id, value){
             </ScrollView>
             {this.state.allSave && <View style={{flexDirection:'row',height:50,bottom:0, position:'absolute'}}>
               <TouchableOpacity style={{backgroundColor:
-              '#262050',width:width/2, alignItems:'center',justifyContent:'center'}}>
+              '#262050',width:width/2, alignItems:'center',justifyContent:'center'}} onPress={this.saveAll.bind(this)}>
                 <Text style={{color:'#fff'}}>Save all</Text>
               </TouchableOpacity>
 
@@ -697,7 +706,8 @@ const styles = StyleSheet.create({
   textStyle: {
     // marginTop:10,
     flexDirection:'column',
-     justifyContent:'space-around'
+    // backgroundColor:'red'
+     // justifyContent:'space-around'
   },
   text :{
     fontSize:Fonts.input,
@@ -706,7 +716,8 @@ const styles = StyleSheet.create({
 
   },
   Image: {
-    width: width/2.5,
+    width: width/3,
+    // backgroundColor:'red',
     alignItems:'center',justifyContent:'center'
   },
   editButton: {

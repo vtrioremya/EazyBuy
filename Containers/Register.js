@@ -13,18 +13,43 @@ import { NavigationActions, createStackNavigator } from 'react-navigation'
 import EmailValidation from '../Components/EmailValidation'
 import Api from '../Services/AppServices'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import CountryPicker, {
+  getAllCountries
+} from 'react-native-country-picker-modal'
+
+const countryC = ["AF","AL","DZ","AS","AD","AO","AI","AQ","AG","AR","AM","AW","AU","AT","AZ","BS","BH","BD","BB","BY","BE","BZ","BJ","BM","BT","BO","BA","BW","BV","BR","IO","VG","BN","BG","BF","BI","KH","CM","CA","CV","KY","CF","TD","CL","CN","CX","CC","CO","KM","CK","CR","HR","CU","CW","CY","CZ","CD","DK","DJ","DM","DO","EC","EG","SV","GQ","ER","EE","ET","FK","FO","FJ","FI","FR","GF","PF","TF","GA","GM","GE","DE","GH","GI","GR","GL","GD","GP","GU","GT","GG","GN","GW","GY","HT","HM","HN","HK","HU","IS","IN","ID","IR","IQ","IE","IM","IL","IT","CI","JM","JP","JE","JO","KZ","KE","KI","XK","KW","KG","LA","LV","LB","LS","LR","LY","LI","LT","LU","MO","MK","MG","MW","MY","MV","ML","MT","MH","MQ","MR","MU","YT","MX","FM","MD","MC","MN","ME","MS","MA","MZ","MM","NA","NR","NP","NL","NC","NZ","NI","NE","NG","NU","NF","KP","MP","NO","OM","PK","PW","PS","PA","PG","PY","PE","PH","PN","PL","PT","PR","QA","CG","RO","RU","RW","RE","BL","KN","LC","MF","PM","VC","WS","SM","SA","SN","RS","SC","SL","SG","SX","SK","SI","SB","SO","ZA","GS","KR","SS","ES","LK","SD","SR","SJ","SZ","SE","CH","SY","ST","TW","TJ","TZ","TH","TL","TG","TK","TO","TT","TN","TR","TM","TC","TV","UG","UA","AE","GB","US","UM","VI","UY","UZ","VU","VA","VE","VN","WF","EH","YE","ZM","ZW","AX"]
+
 
 type Props = {};
 export default class Register extends Component<Props> {
   constructor(props){
     super(props);
+
+    //country code
+    const userCountryData = getAllCountries()
+    .filter(country => countryC.includes(country.cca2))
+    .pop()
+    let callingCode = null
+    // let cca2 = userLocaleCountryCode
+    // if (!cca2 || !userCountryData) {
+      cca2 = 'AE'
+    //   callingCode = '1'
+    // } else {
+      callingCode = userCountryData.callingCode
+    // }
+
     this.state = {
       email: '',
       fName: '',
+      countries: countryC,
+      value:'United Arab Emirates',
       lName:'',
       password: '',
       confirm: '',
-      errorEmail:''
+      errorEmail:'',
+      printall: userCountryData,
+      cca2,
+      callingCode
     }
   }
 
@@ -82,9 +107,10 @@ export default class Register extends Component<Props> {
       formData.append('password', this.state.password);
       formData.append('telephone', this.state.mobile);
       formData.append('confirm', this.state.confirm);
+      formData.append('nationality', this.state.value);
       formData.append('agree', '1');
 
-      // console.log(formData)
+      console.log(formData)
 
       let fetchApiLogin = await Api.register(formData);
       // console.log("API RESULT....", fetchApiLogin)
@@ -111,6 +137,8 @@ export default class Register extends Component<Props> {
 
 
   render() {
+    // console.log("userCountryData",this.state.countries)
+    // console.log("COUNTRY",countryC)
     return (
         <KeyboardAwareScrollView>
       <View style={styles.container}>
@@ -184,9 +212,22 @@ export default class Register extends Component<Props> {
         underlineColorAndroid= '#cccccc'
         />
 
+        <View style={{flexDirection:'row', borderBottomWidth:1, borderColor:'#d3d3d3' ,alignItems:'center', margin:10,width:width/1.19 }}>
+          <Text style={{fontSize:20,marginRight:5, color:'#000'}}> {this.state.value}</Text>
+          <CountryPicker
+            countryList={this.state.countries}
+            onChange={value => {
+              this.setState({ value:value.name,cca2: value.cca2, callingCode: value.callingCode })
+            }}
+            cca2={this.state.cca2}
+            translation="eng"
+          />
+        </View>
+
         <View style={{flexDirection:'row'}}>
           <TextInput
             placeholder = 'Select'
+            value='+971'
             placeholderTextColor = '#ababab'
             style={styles.textInputStyle3}
             underlineColorAndroid= '#cccccc'
@@ -241,7 +282,8 @@ const styles = StyleSheet.create({
   textInputStyle3 : {
     width:width/3.5,
     fontSize:20,
-    margin:10
+    margin:10,
+    color:'#000'
   },
   textInputStyle4 : {
     width:width/2,

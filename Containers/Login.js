@@ -99,14 +99,16 @@ export default class Login extends Component<Props> {
         AsyncStorage.setItem('user_object', JSON.stringify(user_object));
 
         this.props.navigation.navigate('HomeScreen');
-        // Alert.alert(fetchApiLogin.message);
         ToastAndroid.show(fetchApiLogin.message, ToastAndroid.SHORT);
+        // Alert.alert(fetchApiLogin.message);
+
       }
       else if(fetchApiLogin.status == 'error'){
         this.setState({
           loader: false
         })
-        Alert.alert(fetchApiLogin.message);
+        // Alert.alert(fetchApiLogin.message);
+        ToastAndroid.show(fetchApiLogin.message, ToastAndroid.SHORT);
       }
 
   }

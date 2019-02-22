@@ -86,7 +86,7 @@ export default class ProductCategory extends Component<Props> {
 
         let fetchBanner = await Api.getPromotionsSlide(storeId);
 
-        
+
 
 
          this.setState({

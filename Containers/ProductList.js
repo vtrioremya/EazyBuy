@@ -314,7 +314,8 @@ console.log(fetchApiLogin)
           this.setState({
             favImage: require('../Images/fav.png')
           })
-          Alert.alert(favorites.message)
+          ToastAndroid.show(favorites.message, ToastAndroid.SHORT);
+          // Alert.alert(favorites.message)
         }
         else{
           this.props.navigation.navigate('Login')
@@ -409,7 +410,7 @@ console.log(fetchApiLogin)
               <Text style={styles.headerName}>{grocery.name}</Text>
               <TouchableOpacity onPress={()=>this.props.navigation.navigate('Comparison')}>
                   <View>
-                    <Text style={{color:'#000', fontSize:Fonts.mid,  fontFamily:Fonts.base}} >
+                    <Text style={{textDecorationLine: 'underline',color:'#7694ca', fontSize:Fonts.mid,  fontFamily:Fonts.base}} >
                     Compare Price</Text>
                   </View>
               </TouchableOpacity>

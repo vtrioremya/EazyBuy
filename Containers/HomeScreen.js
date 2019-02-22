@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform,TouchableHighlight,Modal,AsyncStorage, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
+import {Platform,ToastAndroid,TouchableHighlight,Modal,AsyncStorage, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, DrawerActions } from 'react-navigation'
 import Swiper from 'react-native-swiper';
@@ -147,7 +147,8 @@ class HomeScreen extends Component<Props> {
       console.log(formData)
       let rating = await Api.addStoreRating(formData)
       console.log("rating api", rating.message)
-      Alert.alert(rating.message)
+      ToastAndroid.show(rating.message, ToastAndroid.SHORT);
+      // Alert.alert(rating.message)
     // }
     // catch(e){
     //   this.props.navigation.navigate('Login')
