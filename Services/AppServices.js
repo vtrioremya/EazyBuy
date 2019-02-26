@@ -76,9 +76,9 @@ export default {
     }
   },
 
-  async getGroceries() {
+  async getGroceries(formData) {
     try {
-      const response = await post(`/module/store/groceries`)
+      const response = await post(`/module/store/groceries`,formData)
       if (!response.error) {
         const data = response.restaurants
         return Object.keys(data).map(key => data[key])

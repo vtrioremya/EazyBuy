@@ -227,7 +227,7 @@ export default class DrawerScreen extends Component<Props> {
             </View>]:[]}
             <View style={styles.menuItem}>
               <Image source={require('../Images/search.png')} style={{width:30, height:30}} />
-              <Text style={styles.textSize} onPress={this.navigateToScreen('HomeScreen')}>
+              <Text style={styles.textSize} onPress={this.navigateToScreen('Home')}>
                 Browse All
               </Text>
             </View>

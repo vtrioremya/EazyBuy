@@ -48,11 +48,12 @@ class HomeScreen extends Component<Props> {
     };
   }
 
-  // static navigationOptions =  {
-  //   headerLeft: (
-  //     <NavigationBar googlePlaces ={} toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
-  //       )
-  // }
+  // static navigationOptions = ({ navigation }) => ({
+  //
+  //   headerLeft:(
+  //     <NavigationBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+  // )
+  // })
 
 
   async componentDidMount(){
@@ -83,9 +84,15 @@ class HomeScreen extends Component<Props> {
       })
 
 
+      let lat = (this.props.navigation.state.params.latitude) ? this.props.navigation.state.params.latitude : null
+      let longt = this.props.navigation.state.params.longitude ? this.props.navigation.state.params.longitude : null
 
-      let fetchApiLogin = await Api.getGroceries();
-      console.log("API Stores....", fetchApiLogin)
+      var formData = new FormData();
+      formData.append('lat', lat);
+      formData.append('longt', longt);
+
+      let fetchApiLogin = await Api.getGroceries(formData);
+
       if(fetchApiLogin.length == 0 || fetchApiLogin.length == null){
         this.setState({
           groceries:fetchApiLogin,
@@ -100,6 +107,10 @@ class HomeScreen extends Component<Props> {
            nothingtoDisplay:true
          })
        }
+
+       this.setState({
+         deleteLoader:false,
+       })
 
 
   }
@@ -257,6 +268,7 @@ class HomeScreen extends Component<Props> {
 
 
   render() {
+    
 
     return (
       <View style={styles.container}>

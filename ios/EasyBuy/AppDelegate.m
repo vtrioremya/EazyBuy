@@ -4,16 +4,21 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+@import GooglePlaces;
+@import GoogleMaps;
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSPlacesClient provideAPIKey:@"AIzaSyCM-nOx4AnDMgwckENzO8WbpVYSw4ZBxdc"];
+  [GMSServices provideAPIKey:@"AIzaSyCM-nOx4AnDMgwckENzO8WbpVYSw4ZBxdc"];
+  
   NSURL *jsCodeLocation;
 
   #ifdef DEBUG

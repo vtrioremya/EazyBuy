@@ -187,7 +187,7 @@ class Cart extends Component<Props> {
   render() {
     // console.log("cart item length",this.props.cartItems.length)
     console.log("REDUX PROPS",this.props)
-    // console.log("REDUX cart",this.props.cartItems)
+    console.log("REDUX cart",this.props.cartItems)
     return (
       <ScrollView>
       <View style={styles.container}>

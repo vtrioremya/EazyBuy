@@ -78,7 +78,11 @@ export default class Location extends Component<Props> {
 
   async confirm(){
     this.setModalVisible(!this.state.modalVisible);
-    this.props.navigation.navigate('HomeScreen',{location: this.state.fullAddress});
+    this.props.navigation.navigate('Home',
+    {
+      location: this.state.fullAddress,
+      latitude: this.state.latitude,
+      longitude:this.state.longitude});
     // var formData = new FormData();
     // formData.append('building', this.state.address_building);
     // formData.append('floor', this.state.address1_flat);
@@ -92,7 +96,7 @@ export default class Location extends Component<Props> {
   componentDidMount(){
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.warn(position)
+        // console.warn(position)
         // let code
         this.setState({
           latitude: position.coords.latitude,
@@ -104,22 +108,22 @@ export default class Location extends Component<Props> {
           .then((response) => response.json())
           .then((responseJson) => {
             console.warn('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
-            console.log('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
+            // console.log('ADDRESS GEOCODE is BACK!! => ' + JSON.stringify(responseJson));
             var result = responseJson.results
-            console.log(result.results)
+            // console.log(result.results)
             var addresses = result.map((address)=>{
-              console.log(address.formatted_address)
+              // console.log(address.formatted_address)
               return address.formatted_address;
             })
-            console.log("hai last",addresses)
+            // console.log("hai last",addresses)
 
-            console.log(result[0].address_components)
+            // console.log(result[0].address_components)
 
             var flat = result[0].address_components
             var building = result[1].address_components
-            console.log(flat[0].long_name)
-            console.log(flat[1].long_name)
-            console.log(flat[2].long_name)
+            // console.log(flat[0].long_name)
+            // console.log(flat[1].long_name)
+            // console.log(flat[2].long_name)
 
             this.setState({
               fullAddress: addresses[1] ,
@@ -156,6 +160,7 @@ export default class Location extends Component<Props> {
 
 
   render() {
+    console.log(this.state.latitude)
     return (
       <View style={styles.container}>
 
@@ -169,7 +174,7 @@ export default class Location extends Component<Props> {
             <Text style={styles.textStyle} onPress={() => {
               RNGooglePlaces.openPlacePickerModal()
               .then((place) => {
-                  console.log(place);
+                  // console.log(place);
                   // place represents user's selection from the
                   // suggestions and it is a simplified Google Place object.
               })

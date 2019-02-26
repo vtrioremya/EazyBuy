@@ -33,6 +33,7 @@ var {height, width} = Dimensions.get('window');
 
 export const Tabs = createBottomTabNavigator({
   HomeScreen : {screen: HomeScreen,
+
     navigationOptions: {
       tabBarLabel: 'Home',
       tabBarIcon: (
@@ -63,6 +64,7 @@ export const Tabs = createBottomTabNavigator({
     }
   },
 },{
+
   navigationOptions: ({ navigation }) => {
   const routeParams = navigation.state.params;
 
@@ -73,10 +75,10 @@ export const Tabs = createBottomTabNavigator({
     activeTintColor: '#e91e63',
     inactiveTintColor:'#fff',
     labelStyle: {
-      fontSize: 18,
+      // fontSize: 18,
     },
     style: {
-      height:75,
+      // height:75,
       backgroundColor: '#2f2c49',
     },
   }
@@ -86,96 +88,18 @@ export const Tabs = createBottomTabNavigator({
 export const HomeStack= createStackNavigator({
 
 
-  Home:{screen:HomeScreen,navigationOptions:{header:null}},
+  Home:{screen:HomeScreen,navigationOptions:{header:null}
+
+  },
 
 
 })
 
 
 export const Stack = createStackNavigator({
-  Home: {screen:HomeStack},
-  Tabs: {screen : Tabs},
-  Splash: {screen: Splash,
-    navigationOptions: {
-      drawerLockMode: 'locked-closed'
-    }
-  },
-  Swipers: {screen: Swipers},
-  CounterApp: {screen: CounterApp},
-  Location: {screen: Location},
-  Login: {screen: Login},
-  Register: {screen: Register},
-  ForgotPassword: {screen: ForgotPassword},
-  ProductCategory: {screen: ProductCategory},
-  ProductList: {screen: ProductList},
-  ProductDetails: {screen: ProductDetails},
-  MyOrders: {screen: MyOrders,
+  Home: {screen:HomeStack,
     navigationOptions: ({ navigation }) => ({
-      headerTitle:'ORDERS',
-      headerStyle:{
-        backgroundColor:'#39385a'
-      },
-        headerLeft: (
-          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
-            ),
-    })
-  },
-  EazybuySplash: {screen: EazybuySplash},
-  Cart: {screen: Cart},
-  Checkout: {screen: Checkout},
-  Account :{screen: Account,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle:'ACCOUNT',
-      headerStyle:{
-        backgroundColor:'#39385a'
-      },
-        headerLeft: (
-          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
-            ),
-    })
-  },
-  PurchaseSuccess :{screen: PurchaseSuccess},
-  Comparison :{screen: Comparison},
-  Offers :{screen: Offers,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle:'OFFERS',
-      headerTintColor: '#fff',
-      headerStyle:{
-        backgroundColor:'#39385a'
-      },
-        headerLeft: (
-          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
-            ),
-    })},
-  SuggestProduct :{screen: SuggestProduct,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle:'SUGGEST A PRODUCT',
-      headerTintColor: '#fff',
-      headerStyle:{
-        backgroundColor:'#39385a'
-      },
-        headerLeft: (
-          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
-            ),
-    })},
-  ContactUs :{screen: ContactUs,
-    navigationOptions: ({ navigation }) => ({
-      headerTitle:'CONTACT US',
-      headerTintColor: '#fff',
-      headerStyle:{
-        backgroundColor:'#39385a',
-      },
-        headerLeft: (
-          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
-            ),
-    })
-  },
-
-}
-,{
-    // headerMode: 'screen',
-    initialRouteName: 'EazybuySplash',
-    navigationOptions: ({ navigation }) => ({
+      headerTile: 'dfhj',
     headerLeft: (
       <NavigationBar
         googlePlaces={() => {
@@ -190,6 +114,91 @@ export const Stack = createStackNavigator({
        toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
         )
     })
+  },
+  Tabs: {screen : Tabs},
+  Splash: {screen: Splash,
+    navigationOptions: {
+      drawerLockMode: 'locked-closed'
+    }
+  },
+  Swipers: {screen: Swipers},
+  CounterApp: {screen: CounterApp},
+  Location: {screen: Location},
+  Login: {screen: Login},
+  Register: {screen: Register},
+  ForgotPassword: {screen: ForgotPassword},
+  ProductCategory: {screen: ProductCategory,navigationOptions:{header:null}},
+  ProductList: {screen: ProductList},
+  ProductDetails: {screen: ProductDetails},
+  MyOrders: {screen: MyOrders,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'My Orders',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+      headerTintColor: '#fff',
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })
+  },
+  EazybuySplash: {screen: EazybuySplash},
+  Cart: {screen: Cart},
+  Checkout: {screen: Checkout},
+  Account :{screen: Account,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'Account',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+      headerTintColor: '#fff',
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })
+  },
+  PurchaseSuccess :{screen: PurchaseSuccess},
+  Comparison :{screen: Comparison},
+  Offers :{screen: Offers,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'Offers',
+      headerTintColor: '#fff',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })},
+  SuggestProduct :{screen: SuggestProduct,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'Suggest A Product',
+      headerTintColor: '#fff',
+      headerStyle:{
+        backgroundColor:'#39385a'
+      },
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })},
+  ContactUs :{screen: ContactUs,
+    navigationOptions: ({ navigation }) => ({
+      headerTitle:'Contact Us',
+      headerTintColor: '#fff',
+      headerStyle:{
+        backgroundColor:'#39385a',
+      },
+        headerLeft: (
+          <DefaultBar toggleDrawer={() => {navigation.dispatch(DrawerActions.toggleDrawer())} }/>
+            ),
+    })
+  },
+
+}
+,{
+    // headerMode: 'screen',
+    initialRouteName: 'EazybuySplash',
+    headerMode: 'screen',
 })
 
 export const Drawer = createDrawerNavigator({

@@ -25,7 +25,7 @@ export default class EazybuySplash extends Component<Props> {
 
   constructor(props){
     super(props);
-    
+
     this.state = {
 
     };
@@ -56,9 +56,14 @@ export default class EazybuySplash extends Component<Props> {
           <Image source={require('../Images/logo-splash.png')}
           style={{width: 150, height: 150}}/>
 
+          <View>
+            <Text>Version 12.0</Text>
+          </View>
+
           <View style={styles.english}>
             <Text style={styles.englishText}>EVERYDAY YOU GET OUR BEST</Text>
           </View>
+
 
             <Image source={require('../Images/splash-bot-img.jpg')} style={{resizeMode: 'stretch',width:width, height:height/1.9}}/>
         </View>
