@@ -28,47 +28,50 @@ export default class ProductCategory extends Component<Props> {
     };
   }
 
-  static navigationOptions = {
-    headerStyle: {
-      backgroundColor: '#39385a',
-    },
-    headerLeft: (
-      <View style={{flex:1,flexDirection: 'row'}}>
-
-        <View style={{width: 50, height: 50, justifyContent:'center'}}>
-          <TouchableOpacity >
-            <Image source={require('../Images/hamp.png')}
-            style={{marginLeft:10,width:25,height:25}}/>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{width: width/1.2, height: 50, flexDirection:'row'}}>
-
-          <View style={{width: 21, height: 50,alignItems:'center',justifyContent:'center'}}>
-            <Image source={require('../Images/map-1.png')} style={{width:21,height:30}}/>
-          </View>
-
-          <View style={{width: width/2, height: 50, flexDirection:'row'}} >
-            <TextInput placeholder='Sample Address, Address Feild 1, Feild 2'
-            placeholderTextColor= '#fff'
-            style={{width:width/1.5, fontSize:12, color:'#fff'}}/>
-            <TouchableOpacity style={{width:20, height:50, justifyContent:'center', alignItems:'center'}}>
-              <Image source={require('../Images/drop-down-arrow.png')} style={{width:12, height:12}}/>
-            </TouchableOpacity>
-          </View>
-
-        </View>
-
-      </View>
-    ),
-    headerRight: (
-      <View style={{marginRight:5}}>
-      <TouchableOpacity>
-        <Image source={require('../Images/cart.png')} style={{width:30, height:30}} />
-      </TouchableOpacity>
-      </View>
-    )
-  }
+//   static navigationOptions = ({ navigation }) => {
+//       const { params = {} } = navigation.state;
+//       return {
+//     headerStyle: {
+//       backgroundColor: '#39385a',
+//     },
+//     headerLeft: (
+//       <View style={{flex:1,flexDirection: 'row'}}>
+//
+//         <View style={{width: 50, height: 50, justifyContent:'center'}}>
+//           <TouchableOpacity >
+//             <Image source={require('../Images/hamp.png')}
+//             style={{marginLeft:10,width:25,height:25}}/>
+//           </TouchableOpacity>
+//         </View>
+//
+//         <View style={{width: width/1.2, height: 50, flexDirection:'row'}}>
+//
+//           <View style={{width: 21, height: 50,alignItems:'center',justifyContent:'center'}}>
+//             <Image source={require('../Images/map-1.png')} style={{width:21,height:30}}/>
+//           </View>
+//
+//           <View style={{width: width/2, height: 50, flexDirection:'row'}} >
+//             <TextInput placeholder='Sample Address, Address Feild 1, Feild 2'
+//             placeholderTextColor= '#fff'
+//             style={{width:width/1.5, fontSize:12, color:'#fff'}}/>
+//             <TouchableOpacity style={{width:20, height:50, justifyContent:'center', alignItems:'center'}}>
+//               <Image source={require('../Images/drop-down-arrow.png')} style={{width:12, height:12}}/>
+//             </TouchableOpacity>
+//           </View>
+//
+//         </View>
+//
+//       </View>
+//     ),
+//     headerRight: (
+//       <View style={{marginRight:5}}>
+//       <TouchableOpacity onPress={()=> params.cartButton()}>
+//         <Image source={require('../Images/cart.png')} style={{width:30, height:30}} />
+//       </TouchableOpacity>
+//       </View>
+//     )
+//   }
+// }
 
   async componentDidMount(){
 
@@ -88,11 +91,26 @@ export default class ProductCategory extends Component<Props> {
 
 
 
-
+ console.log(fetchBanner)
          this.setState({
            bannerImage: fetchBanner.slider
          })
 
+         this.props.navigation.setParams({
+             cartButton: this.cartButton.bind(this),
+         });
+  }
+
+  cartButton(){
+    this.props.navigation.dispatch({
+             type: NavigationActions.NAVIGATE,
+             routeName: 'Cart',
+             action: {
+               type: NavigationActions.RESET,
+               index: 0,
+               actions: [{type: NavigationActions.NAVIGATE, routeName: 'Cart'}]
+             }
+           })
   }
 
   login(){

@@ -199,19 +199,21 @@ async retrieveCurrentUser(token){
            compressImageMaxWidth: 640,
            compressImageMaxHeight: 480,
            compressImageQuality: 0.75,
-           cropping: true
+           cropping: true,
+           includeBase64:true
        }).then(async(image) => {
            console.log(image);
            let photo = {
                uri: image.path,
                type: 'image/jpeg',
                name: 'photo.jpg',
+               data: image.data
            };
-           console.log(image.path)
+           console.log(image.data)
 
            let token = await getToken()
            var formData = new FormData()
-           formData.append('file',image.path)
+           // formData.append('file',image.data)
            formData.append('token',token)
 
 
@@ -654,11 +656,7 @@ _dropdownListYear(id, value){
                     />
                 </View>
 
-                <View style={{alignItems:'center'}}>
-                  <TouchableOpacity style={styles.applyButton} activeOpacity={0.5}>
-                    <Text style={{color:'#fff',fontFamily:Fonts.base}}>Apply</Text>
-                  </TouchableOpacity>
-                </View>
+
 
 
               </View>}

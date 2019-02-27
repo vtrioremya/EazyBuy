@@ -230,9 +230,24 @@ console.log(fetchApiLogin)
         })
     }
 
-    addItemToCart(){
+    addItemToCart(grocery){
+      // var cart_item = grocery
         // let response1 = await addToCart(data)
+        // console.log(grocery)
+        // let cart_items = [{
+        //   "product_id": "503",
+        //   "quantity": "1",
+        //   "option": {
+        //     "product_option_id": "232",
+        //     "product_option_value_id": "28" ,
+        //     "side_dish":"item side dish",
+        //     "size":"M",
+        //     "special_request":"customer request"
+        // }]
+        // var newList = []
+        // newList.push(cart_items)
         ToastAndroid.show("Item added to cart", ToastAndroid.SHORT);
+          // this.addItemToCart()
     }
 
     renderRowSubCat(rowData, sectionID, rowID, highlightRow){
@@ -470,7 +485,7 @@ console.log(fetchApiLogin)
             </View>
 
             <View style={{width:50}}>
-              <TouchableOpacity style={styles.openNowButton} onPress={this.addItemToCart.bind(this)}>
+              <TouchableOpacity style={styles.openNowButton} onPress={this.addItemToCart.bind(this,grocery)}>
                 <Text style={{color:'#fff',fontSize:Fonts.mid, fontFamily:Fonts.base}}>ADD</Text>
               </TouchableOpacity>
             </View>
@@ -677,7 +692,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    cartItems: state
+    cartItems: state.cartItems
   }
 }
 

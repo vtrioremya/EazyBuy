@@ -16,6 +16,9 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import ToggleBox from 'react-native-show-hide-toggle-box'
 import Api from '../Services/AppServices'
 import Fonts from '../Themes/Fonts'
+import {getToken} from '../Services/lib'
+import AlertMessage from '../Components/AlertMessage'
+import Loader from '../Components/Loader'
 
 type Props = {};
 
@@ -28,6 +31,8 @@ export class OrderHistory extends Component<Props> {
       index:0,
       selectedTab: 0,
       orders: [],
+      deleteLoader:true,
+      nothingtoDisplay:'noDisplay',
       routes: [
       { key: 'first', title: 'First' },
       { key: 'second', title: 'Second' },
@@ -78,13 +83,34 @@ export class OrderHistory extends Component<Props> {
   //   }
 
   async componentDidMount(){
-
-      var token ='9bd316e1a9e455efac6a0bd9166779'
+    try{
+      let token = await getToken()
       let orders = await Api.getOrders(token);
-      // console.log(orders)
-      // this.setState({
-      //     orders: orders
-      // })
+      console.log(orders)
+      if(orders.orders.length == 0 || orders.orders.length == null){
+        this.setState({
+            orders: orders.orders,
+            deleteLoader:false,
+            nothingtoDisplay:'true'
+        })
+      }
+      else{
+        this.setState({
+            orders: orders.orders,
+            deleteLoader:false,
+            nothingtoDisplay:'false'
+        })
+      }
+
+    }
+    catch(e){
+      console.log(e)
+      this.setState({
+          deleteLoader:false,
+      })
+      this.props.navigation.navigate('Login')
+    }
+
   }
 
     productdetail = () => {
@@ -196,8 +222,15 @@ export class OrderHistory extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
+      <Loader
+        loading={this.state.deleteLoader} />
 
-
+      {(this.state.nothingtoDisplay=='true')?
+      [
+          <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+            <AlertMessage title="No orders to display!"/>
+          </View>
+      ]:[
         <View style={{width:width,marginBottom:40}}>
 
              <FlatList data={this.state.orders}
@@ -205,7 +238,7 @@ export class OrderHistory extends Component<Props> {
               ItemSeparatorComponent={this.renderSeparator}
             />
 
-        </View>
+        </View>]}
 
       </View>
     );
@@ -220,9 +253,10 @@ export class ScheduleOrder extends Component<Props> {
     this.state = {
       show: false,
       index:0,
+      schOrders: [],
+      deleteLoader:true,
+      nothingtoDisplay:'noDisplay',
       selectedTab: 0,
-      orders: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
-      stores: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
       routes: [
       { key: 'first', title: 'First' },
       { key: 'second', title: 'Second' },
@@ -246,31 +280,37 @@ export class ScheduleOrder extends Component<Props> {
     ),
   }
 
+  async componentDidMount(){
+    try{
+      let token = await getToken()
+      let schOrders = await Api.getScheduleOrders(token);
+      console.log(schOrders)
+      if(schOrders.orders.length == 0 || schOrders.orders.length == null){
+        this.setState({
+            schOrders: schOrders.orders,
+            deleteLoader:false,
+            nothingtoDisplay:'true'
+        })
+      }
+      else{
+        this.setState({
+            schOrders: schOrders.orders,
+            deleteLoader:false,
+            nothingtoDisplay:'false'
+        })
+      }
 
-  // static navigationOptions =  {
-  //   headerTitle: 'ORDERS',
-  //   headerStyle: {
-  //     backgroundColor: '#39385a',
-  //   },
-  //   headerTintColor: '#fff',
-  //   headerTitleStyle: {
-  //     fontWeight: '200',
-  //   },
-  //     headerLeft: (
-  //       <View style={{marginLeft:10}}>
-  //         <TouchableOpacity >
-  //           <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
-  //         </TouchableOpacity>
-  //       </View>
-  //     ),
-  //     headerRight: (
-  //       <View style={{marginRight:5}}>
-  //       <TouchableOpacity>
-  //         <Image source={require('../Images/delete.png')} style={{width:30, height:30}} />
-  //       </TouchableOpacity>
-  //       </View>
-  //     )
-  //   }
+    }
+    catch(e){
+      console.log(e)
+      this.setState({
+          deleteLoader:false,
+      })
+      this.props.navigation.navigate('Login')
+    }
+
+  }
+
 
     renderSeparator = () => (
 
@@ -353,7 +393,7 @@ export class ScheduleOrder extends Component<Props> {
                 <Text style={{margin:10,fontSize:23,fontFamily:Fonts.base,fontWeight:'bold',
                  color:'#000'}}>Products</Text>
               </View>
-                <FlatList data={this.state.orders}
+                <FlatList data={this.state.schOrders}
                  renderItem={this.renderRowOrders.bind(this)}
                  ItemSeparatorComponent={this.renderSeparator}
                />
@@ -373,16 +413,24 @@ export class ScheduleOrder extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
+      <Loader
+        loading={this.state.deleteLoader} />
 
+      {(this.state.nothingtoDisplay=='true')?
+      [
+          <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+            <AlertMessage title="No Scheduled orders to display!"/>
+          </View>
+      ]:[
 
         <View style={{width:width,marginBottom:40}}>
 
-             <FlatList data={this.state.stores}
+             <FlatList data={this.state.schOrders}
               renderItem={this.renderRow.bind(this)}
               ItemSeparatorComponent={this.renderSeparator}
             />
 
-        </View>
+        </View>]}
 
       </View>
     );

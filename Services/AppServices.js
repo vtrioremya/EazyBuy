@@ -177,6 +177,20 @@ async addFav(formData) {
     }
   },
 
+  async getScheduleOrders(token) {
+    try {
+      const response = await get(`/account/order/scheduled&token=${token}`)
+
+      if (!response.error) {
+        // const data = omit(response, 'error', 'message')
+        // return Object.keys(data).map(key => data[key])
+        return response
+      }
+    } catch (e) {
+      return []
+    }
+  },
+
   async sendFeedback(formdata) {
     try {
       const response = await post(`/information/feedback/submit`,formdata)

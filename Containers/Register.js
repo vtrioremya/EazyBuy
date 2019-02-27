@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, AsyncStorage, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
+import {Platform,ToastAndroid, AsyncStorage, StyleSheet, Text, View, Alert, Image, Dimensions, TextInput, TouchableOpacity} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
 import EmailValidation from '../Components/EmailValidation'
@@ -99,6 +99,43 @@ export default class Register extends Component<Props> {
   async login(){
 
     // console.log("login")
+
+      if(!this.state.fName && !this.state.lName && !this.state.email && !this.state.password && !this.state.confirm && !this.state.mobile){
+        ToastAndroid.show("Please fill all the fields", ToastAndroid.SHORT);
+        return;
+      }
+
+      if(!this.state.fName){
+        ToastAndroid.show("Firstname can't be blank", ToastAndroid.SHORT);
+        return;
+      }
+
+      if(!this.state.lName){
+        ToastAndroid.show("Lastname can't be blank", ToastAndroid.SHORT);
+        return;
+      }
+
+      if(!this.state.email){
+        ToastAndroid.show("Email can't be blank", ToastAndroid.SHORT);
+        return;
+      }
+
+      if(!this.state.password){
+        ToastAndroid.show("Password can't be blank", ToastAndroid.SHORT);
+        return;
+      }
+
+      if(!this.state.confirm){
+        ToastAndroid.show("Confirm Password can't be blank", ToastAndroid.SHORT);
+        return;
+      }
+
+      if(!this.state.mobile){
+        ToastAndroid.show("Mobile can't be blank", ToastAndroid.SHORT);
+        return;
+      }
+
+
 
       var formData = new FormData();
       formData.append('firstname', this.state.fName);
@@ -240,6 +277,8 @@ export default class Register extends Component<Props> {
             onChangeText={(mobile) => this.setState({mobile})}
             style={styles.textInputStyle4}
             underlineColorAndroid= '#cccccc'
+            keyboardType={'numeric'}
+            maxLength={13}
           />
 
           </View>

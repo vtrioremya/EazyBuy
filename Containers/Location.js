@@ -149,7 +149,7 @@ export default class Location extends Component<Props> {
   backbutton(){
     this.props.navigation.dispatch({
              type: NavigationActions.NAVIGATE,
-             routeName: 'HomeScreen',
+             routeName: 'Home',
              action: {
                type: NavigationActions.RESET,
                index: 0,

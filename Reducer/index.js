@@ -5,7 +5,8 @@
 // } from '../Actions/loadUserItems';
 
 const INITIAL_STATE = {
-  counter :  0
+  counter :  0,
+  cartItems: []
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -18,6 +19,10 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         counter: state.counter - 1
       }
+      case 'ADD_CART' : {
+      console.log("PAYLOAD",action.payload)
+       return [...state, ...action.payload]
+     }
   }
   return state;
 };

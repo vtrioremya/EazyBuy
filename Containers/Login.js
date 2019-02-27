@@ -60,16 +60,25 @@ export default class Login extends Component<Props> {
   backbutton(){
     this.props.navigation.dispatch({
              type: NavigationActions.NAVIGATE,
-             routeName: 'HomeScreen',
+             routeName: 'Home',
              action: {
                type: NavigationActions.RESET,
                index: 0,
-               actions: [{type: NavigationActions.NAVIGATE, routeName: 'HomeScreen'}]
+               actions: [{type: NavigationActions.NAVIGATE, routeName: 'Home'}]
              }
            })
   }
 
   async login(){
+    if(!this.state.email){
+      ToastAndroid.show("Email can't be blank", ToastAndroid.SHORT);
+      return;
+    }
+
+    if(!this.state.password){
+      ToastAndroid.show("Password can't be blank", ToastAndroid.SHORT);
+      return;
+    }
     this.setState({
       loader: true
     })
@@ -98,7 +107,7 @@ export default class Login extends Component<Props> {
         // console.log(token)
         AsyncStorage.setItem('user_object', JSON.stringify(user_object));
 
-        this.props.navigation.navigate('HomeScreen');
+        this.props.navigation.navigate('Home');
         ToastAndroid.show(fetchApiLogin.message, ToastAndroid.SHORT);
         // Alert.alert(fetchApiLogin.message);
 

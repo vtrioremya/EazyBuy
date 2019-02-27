@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    cartItems: state
+    cartItems: state.cartItems
   }
 }
 export default connect(mapStateToProps)(Cart)

@@ -155,7 +155,7 @@ export default class DrawerScreen extends Component<Props> {
 
     await AsyncStorage.clear()
     const navigateAction = NavigationActions.navigate({
-      routeName: 'HomeScreen'
+      routeName: 'Home'
     });
     this.props.navigation.dispatch(navigateAction);
     this.props.navigation.dispatch(DrawerActions.closeDrawer())
