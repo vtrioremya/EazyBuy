@@ -70,7 +70,7 @@ export default class Login extends Component<Props> {
   }
 
   async login(){
-    if(!this.state.email){
+    if(!this.state.email.trim()){
       ToastAndroid.show("Email can't be blank", ToastAndroid.SHORT);
       return;
     }
@@ -84,7 +84,7 @@ export default class Login extends Component<Props> {
     })
 
     var formData = new FormData();
-    formData.append('email', this.state.email);
+    formData.append('email', this.state.email.trim());
     formData.append('password', this.state.password);
     // formData.append('email', 'remya1@vtrio.com');
     // formData.append('password', 'remya1238');
@@ -213,12 +213,12 @@ const styles = StyleSheet.create({
   textStyle: {
     color:'#000',
     fontFamily:'Helventica',
-    fontSize:22
+    fontSize:Fonts.mid
   },
   textInputStyle : {
     width:width -100,
     fontFamily:Fonts.base,
-    fontSize:20,
+    fontSize:Fonts.nextRegular,
     margin:10
   },
   loginButton : {
@@ -235,12 +235,12 @@ const styles = StyleSheet.create({
   login : {
     color:'#fff',
     fontFamily:Fonts.base,
-    fontSize: 18,
+    fontSize:Fonts.regular,
   },
   forgotPassword: {
     color:'#aeaeae',
     fontFamily:Fonts.base,
-    fontSize:20
+    fontSize:Fonts.nextRegular
   },
   forgotView: {
     marginTop:20
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   account: {
     color:'#000',
     fontFamily:Fonts.base,
-    fontSize:22
+    fontSize:Fonts.input
   },
   accountView :{
     width:width,

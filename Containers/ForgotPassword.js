@@ -12,6 +12,7 @@ var {height, width} = Dimensions.get('window');
 import { NavigationActions, createStackNavigator } from 'react-navigation'
 import Api from '../Services/AppServices'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Fonts from '../Themes/Fonts'
 
 type Props = {};
 export default class ForgotPassword extends Component<Props> {
@@ -67,14 +68,14 @@ export default class ForgotPassword extends Component<Props> {
 
   async send(){
 
-    if(!this.state.email){
+    if(!this.state.email.trim()){
       ToastAndroid.show("Email should not be blank.", ToastAndroid.SHORT);
       // Alert.alert("Email should not be blank.")
       return;
     }
 
     var formData = new FormData();
-    formData.append('email', this.state.email);
+    formData.append('email', this.state.email.trim());
     console.log(formData)
 
     let fetchApiLogin = await Api.forgot(formData);
@@ -106,7 +107,7 @@ export default class ForgotPassword extends Component<Props> {
             </View>
 
             <View style={{margin:20}}>
-              <Text style={{fontSize:20, lineHeight: 40,color:'#000', textAlign:'center'}}>Enter your email address here to receive further instructions.</Text>
+              <Text style={{fontSize:Fonts.nextRegular, lineHeight: 40,color:'#000', textAlign:'center'}}>Enter your email address here to receive further instructions.</Text>
             </View>
           </View>
 
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle : {
     width:width -100,
-    fontSize:20,
+    fontSize:Fonts.nextRegular,
     margin:10
   },
   loginButton : {
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
   },
   login : {
     color:'#fff',
-    fontSize: 18,
+    fontSize:Fonts.regular
   },
   forgotPassword: {
     color:'#aeaeae',

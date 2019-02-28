@@ -20,10 +20,29 @@ import Loader from '../Components/Loader'
 import AlertMessage from '../Components/AlertMessage'
 import {getToken} from '../Services/lib'
 // import {addToCart} from '../Services/lib';
+// import reducer from '../Reducer/index'
 
 
 import { connect } from 'react-redux';
 type Props = {};
+
+const INCREMENT = "INCREMENT";
+const DECREMENT = "DECREMENT";
+
+const reducer = action => (state, props) => {
+  switch (action.type) {
+    case INCREMENT:
+      return {
+        counter: state.counter +1,
+      };
+    case DECREMENT:
+      return {
+        counter: state.counter - 1,
+      };
+    default:
+      return null;
+  }
+};
 
 class ProductList extends Component<Props> {
 
@@ -33,7 +52,8 @@ class ProductList extends Component<Props> {
 
     this.state = {
       index:0,
-      count:0,
+      count:5,
+      counter:0,
       favImage:'',
       selectedTab: 0,
       deleteLoader:true,
@@ -345,23 +365,65 @@ console.log(fetchApiLogin)
 
     }
 
-    decreaseCounter(rowID, rowData){
-      console.log(rowID)
-      console.log(rowData)
+    increment = () => {
+    this.setState(
+      reducer({
+        type: INCREMENT,
+      }),
+    );
+  };
 
-      this.setState({
-          count : this.state.count- 1
-        },()=>{
-          if(this.state.count <= 1){
-            this.setState({
-              count : 1
-            })
-          }
-        },()=>{
-          this.setState({
-            groceries:new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(array)
-          })
-        })
+  decrement = () => {
+  this.setState(
+    reducer({
+      type: DECREMENT,
+    }),
+  );
+};
+
+    decreaseCounter = (rowID, rowData) => {
+      // console.log(rowData.index)
+      // console.log(rowData)
+      // this.state.groceries[rowID].product_id
+    //   this.setState(reducer({
+    //     type: 'DECREASE_COUNTER'
+    //   })
+    // )
+
+//     this.setState((state, props) => {
+//   return {
+//     counter: state.counter + 1,
+//   };
+// });
+      //   counter:this.state.count - 1
+      // })
+      // console.log("decreaseCounter",this.state.counter)
+      // this.setState({
+      //   count:
+      // })
+      // this.setState({
+      //     count : this.state.count- 1
+      //   },()=>{
+      //     if(this.state.count <= 1){
+      //       this.setState({
+      //         count : 1
+      //       })
+      //     }
+      //   },()=>{
+      //     this.setState({
+      //       groceries:new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(array)
+      //     })
+        // })
+    }
+    increaseCounter(rowID, rowData){
+      // console.log(rowData.index)
+      // console.log(rowData)
+      // // this.state.groceries[rowID].product_id
+      // var countDecrement = this.state.count
+      // this.setState({
+      //   count: countDecrement + 1
+      // })
+      // console.log("increaseCounter",this.state.count)
     }
 
 
@@ -466,18 +528,18 @@ console.log(fetchApiLogin)
             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
 
                 <TouchableOpacity style={{width:40, alignItems:'center',justifyContent:'center'}}
-              onPress={this.decreaseCounter.bind(this,rowID,grocery)}>
+              onPress={this.decrement}>
                   <Image source={require('../Images/minus.png')}
                     style={{width:15,height:15}} />
                 </TouchableOpacity>
 
                 <View style={{alignItems:'center',width:25, borderColor:'gray',
                 borderWidth:0.5, borderRadius:5, justifyContent:'center'}}>
-                  <Text style={styles.ratandlocStyle}>{this.state.count}</Text>
+                  <Text style={styles.ratandlocStyle}>{this.state.counter}</Text>
                 </View>
 
                 <TouchableOpacity style={{width:40,  alignItems:'center',justifyContent:'center'}}
-                onPress={() => this.props.increaseCounter()}>
+                onPress={this.increment}>
                   <Image source={require('../Images/plus.png')}
                     style={{width:15,height:15}} />
                 </TouchableOpacity>
@@ -690,21 +752,22 @@ const styles = StyleSheet.create({
 //   items: state.counter,
 // })
 
-const mapStateToProps = (state) => {
-  return {
-    cartItems: state.cartItems
-  }
-}
+// const mapStateToProps = (state) => {
+//   return {
+//     cartItems: state.cartItems,
+//     counter: state.counter
+//   }
+// }
+//
+// const mapDispatchToProps = (dispatch)=> {
+//     return {
+//       addItemToCart : (products) => dispatch({
+//         type: 'ADD_TO_CART',
+//          payload: products
+//       })
+//     }
+//   }
 
-const mapDispatchToProps = (dispatch)=> {
-    return {
-      addItemToCart : (products) => dispatch({
-        type: 'ADD_TO_CART',
-         payload: products
-      })
-    }
-  }
 
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProductList)
+export default ProductList

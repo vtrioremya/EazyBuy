@@ -28,7 +28,7 @@ export default class Account extends Component<Props> {
 
   constructor(props){
     super(props);
-    this.uploadPhoto=this.uploadPhoto.bind(this)
+    // this.uploadPhoto=this.uploadPhoto.bind(this)
     this.state={
       firstname: 'Your name',
       lastname: '',
@@ -84,12 +84,13 @@ export default class Account extends Component<Props> {
 
   }
 
-  componentDidMount(){
-     this.retrieveCurrentUser();
-  }
 
+componentWillMount(){
+  console.log("will")
+}
 
    componentDidMount(){
+     console.log("did")
       this.retrieveCurrentUser();
     // if(this.props.navigation.state.params.settings == 'yes'){
     //   this.setState({
@@ -119,14 +120,14 @@ async retrieveCurrentUser(token){
 
     try{
       // Alert.alert("hai")
-      console.log('hai')
+      // console.log('hai')
       let token = await getToken()
       this.setState({
         token: token
       })
       let accountDetails = await Api.getAccount(token);
       let list = await Api.listAddress(token);
-      console.log("all addresses",list.address)
+      // console.log("account",accountDetails)
       let lists =list.address
 
       this.setState({
@@ -156,6 +157,7 @@ async retrieveCurrentUser(token){
  // }
 
  componentWillReceiveProps(nextProps) {
+   console.log("recevie")
    if (nextProps.navigation.state.params.token) {
      this.retrieveCurrentUser(this.props.navigation.state.params.token);
    }
@@ -213,37 +215,26 @@ async retrieveCurrentUser(token){
 
            let token = await getToken()
            var formData = new FormData()
-           // formData.append('file',image.data)
+           formData.append('file',image.data)
            formData.append('token',token)
 
 
            let imageUpload = await Api.uploadPhoto(formData)
-           console.log("uploaded", imageUpload)
+           // console.log("uploaded", imageUpload)
+
+            // this.retrieveCurrentUser()
+
              ToastAndroid.show(imageUpload.message, ToastAndroid.SHORT);
-           // this.setState({
-           //     profile_pic_new: image.path,
-           //     profile_pic: image.path,
-           //     url: photo
-           // })
+             // this.setState({
+             //   profile_pic_new: image.path,
+             //   profile_pic: image.path,
+             //   url: photo,
+             // })
 
        });
-       // this.setState({
-       //     profile_pic_new: image.path,
-       //     profile_pic: image.path,
-       //     url: photo
-       // })
+    }
 
 
-
-
-}
-
-async uploadPhoto(profile_pic_new){
-  Alert.alert("uploadPhoto")
-  let imageUpload = await uploadPhoto(profile_pic_new,this.state.token)
-  console.log("uploaded", imageUpload)
-
-}
 
 payment(){
   this.setState({
@@ -319,16 +310,16 @@ renderRow(rowData, sectionID, rowID, highlightRow){
 }
 
 _dropdownListMonth(id, value){
-  console.log(value)
-  console.log(id)
+  // console.log(value)
+  // console.log(id)
   this.setState({
     month: value
   })
 }
 
 _dropdownListYear(id, value){
-  console.log(value)
-  console.log(id)
+  // console.log(value)
+  // console.log(id)
   this.setState({
     year: value
   })

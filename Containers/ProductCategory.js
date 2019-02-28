@@ -77,7 +77,7 @@ export default class ProductCategory extends Component<Props> {
 
     let fetchApiLogin = await Api.getCategory();
 
-
+console.log(fetchApiLogin)
         this.setState({
           category: fetchApiLogin,
           deleteLoader:false,
@@ -128,6 +128,8 @@ export default class ProductCategory extends Component<Props> {
     let list = []
     let i = 0
     let cat = rowData.item
+    console.log(cat.name)
+    var catname = cat.name.toString()
     list.push(
 
       <View style={{width:width/3,height:height/6,alignItems:'center', marginTop:5, marginBottom:5}}>
@@ -137,7 +139,7 @@ export default class ProductCategory extends Component<Props> {
           <Image source={{uri: cat.image}}
           style={{width: width/3.8, height:80}}/>
           <Text numberOfLines={2} style={{width:100, textAlign:'center', fontSize:Fonts.verySmall,fontFamily:Fonts.base,
-          color:'#000'}}>{cat.name}</Text>
+          color:'#000'}}>{catname}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -145,16 +147,7 @@ export default class ProductCategory extends Component<Props> {
     return (<View>{list}</View>)
   }
 
-  renderSeparator = () => (
 
-    <View
-      style={{
-        backgroundColor: 'gray',
-        height: 0.05,
-        // margin:20
-      }}
-    />
-  );
 
 
 
@@ -205,7 +198,6 @@ export default class ProductCategory extends Component<Props> {
           renderItem={this._renderRow.bind(this)}
           contentContainerStyle={{ width:width}}
           numColumns={3}
-          ItemSeparatorComponent={this.renderSeparator}
           keyExtractor= {(item, index) => item.id}
         />
 
