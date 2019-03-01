@@ -115,9 +115,9 @@ export default class Location extends Component<Props> {
               // console.log(address.formatted_address)
               return address.formatted_address;
             })
-            // console.log("hai last",addresses)
+            console.log("hai last",addresses)
 
-            // console.log(result[0].address_components)
+            console.log(result[0].address_components)
 
             var flat = result[0].address_components
             var building = result[1].address_components
@@ -126,9 +126,9 @@ export default class Location extends Component<Props> {
             // console.log(flat[2].long_name)
 
             this.setState({
-              fullAddress: addresses[1] ,
-              address1_flat : flat[0].long_name + ','+ flat[1].long_name,
-              address_building : building[0].long_name + ','+ building[1].long_name
+              fullAddress: flat[1].long_name + ', '+ flat[2].long_name +', '+ flat[5].long_name,
+              // address1_flat : flat[0].long_name + ','+ flat[1].long_name,
+              // address_building : building[0].long_name + ','+ building[1].long_name
             })
         })
 
@@ -174,7 +174,7 @@ export default class Location extends Component<Props> {
             <Text style={styles.textStyle} onPress={() => {
               RNGooglePlaces.openPlacePickerModal()
               .then((place) => {
-                  // console.log(place);
+                  console.log(place);
                   // place represents user's selection from the
                   // suggestions and it is a simplified Google Place object.
               })
@@ -189,6 +189,9 @@ export default class Location extends Component<Props> {
 
         <MapView
           style={{position:'absolute',top:0,left:0,right:0,bottom:0}}
+          showsUserLocation={true}
+          showsMyLocationButton={false}
+          zoomEnabled = {true}
           initialRegion={{
             latitude: this.state.latitude,
             longitude: this.state.longitude,
@@ -238,16 +241,21 @@ export default class Location extends Component<Props> {
                 <TextInput placeholder='Flat/Villa No.'
                            placeholderTextColor='#d3d3d3'
                            value={this.state.address1_flat}
+                           selection={{start:0, end:0}}
+                           ellipsizeMode="head"
                            style={styles.selectedLocationStyle}/>
                 <TextInput placeholder='Building Name/Number'
                            placeholderTextColor='#d3d3d3'
                            value={this.state.address_building}
+                           selection={{start:0, end:0}}
+                           ellipsizeMode="head"
                            style={styles.selectedLocationStyle}/>
-
-                <TouchableOpacity style={styles.saveButton}
-                        onPress={this.confirm.bind(this)}>
-                  <Text style={styles.saveText}>SAVE</Text>
-                </TouchableOpacity>
+                <View style={{width:width/2, alignItems:'center'}}>
+                  <TouchableOpacity style={styles.saveButton}
+                          onPress={this.confirm.bind(this)}>
+                    <Text style={styles.saveText}>SAVE</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
 
@@ -323,7 +331,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     backgroundColor:'#fff',
     width: width/1.5,
-    height: height/2,
+    height: height/2.7,
     shadowColor:'#000'
   },
   selectedLocationStyle :{
@@ -335,8 +343,10 @@ const styles = StyleSheet.create({
     fontFamily:Fonts.base
   },
   saveButton: {
+    width:width/3,
+    justifyContent:'center',
     alignItems:'center',
-    padding:15,
+    padding:10,
     backgroundColor:'#262050',
     borderColor:'transparent',
     borderRadius:50,

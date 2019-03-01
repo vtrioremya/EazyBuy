@@ -58,7 +58,8 @@ export default class Account extends Component<Props> {
       loader:true,
       token:null,
       allSave:false,
-      cardNo:''
+      cardNo:'',
+      keyboardSet: -195
     }
   }
 
@@ -275,7 +276,8 @@ editProfile(){
   this.setState({
     editable:true,
     autoFocus:true,
-    allSave: true
+    allSave: true,
+    keyboardSet:-155
 
   })
 }
@@ -328,7 +330,8 @@ _dropdownListYear(id, value){
   render() {
     return (
 
-        <KeyboardAvoidingView behavior={'padding'} style={{flex:1}} keyboardVerticalOffset={-500}>
+        <KeyboardAvoidingView behavior={'padding'} style={{flex:1}}
+        keyboardVerticalOffset={this.state.keyboardSet} >
           <ScrollView>
             <View style={styles.container}>
 
@@ -339,10 +342,15 @@ _dropdownListYear(id, value){
 
                 <View style={styles.Image}>
                   <TouchableOpacity onPress={this.addPhoto}>
-                    { (this.state.profile_pic) ? <Image source={{uri: this.state.profile_pic}}
-                    style={{width:width/3.5,height:height/6,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/> :
+                    { (this.state.profile_pic) ?
+                      <Image source={{uri: this.state.profile_pic}}
+                    style={{width:width/3.5,height:height/6,borderColor:'#ffb013',
+                    borderWidth:1,borderRadius:80}}/>
+                    :
                     <Image source={require('../Images/blank_profile_pic.png')}
-                    style={{width:width/3.5,height:height/6,borderColor:'#ffb013',borderWidth:1,borderRadius:80}}/>}
+                    style={{width:width/3.5,height:height/6,borderColor:'#ffb013',
+                    borderWidth:1,borderRadius:80}}/>
+                  }
                   </TouchableOpacity>
                 </View>
 
@@ -365,7 +373,8 @@ _dropdownListYear(id, value){
                     <TextInput
                       onChangeText={(email) => this.setState({email})}
                       editable={this.state.editable}
-                      style={{fontSize:Fonts.nextRegular,fontFamily: Fonts.base, color:'#6c6c6c', width:width/2.5}}
+                      style={{fontSize:Fonts.nextRegular,fontFamily: Fonts.base, color:'#6c6c6c',
+                      width:width/2.2}}
                       value={this.state.email}/>
                   </View>
 
@@ -453,9 +462,7 @@ _dropdownListYear(id, value){
                              onChangeText={(postcode) => this.setState({postcode})}
                              value={this.state.postcode}/>
                 </View>
-
-
-
+                 <View style={{ height: 60 }} />
               </View>}
 
                 {this.state.paymentClick && <View style={styles.addressTextArea}>
@@ -653,7 +660,7 @@ _dropdownListYear(id, value){
               </View>}
 
 
-
+              <View style={{height:40}}/>
 
             </View>
             </ScrollView>

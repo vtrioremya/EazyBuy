@@ -76,10 +76,10 @@ export default class Swipers extends Component<Props> {
   }
 
   render() {
-    
+
     return (
       <View style={styles.container}>
-      <OfflineNotice />
+      
         <Swiper style={{width:width}}
                 showsButtons={true}
                 dot= {

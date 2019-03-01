@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   textStyle: {
     color:'#000',
     fontFamily:'Helventica',
-    fontSize:Fonts.mid
+    fontSize:Fonts.input
   },
   textInputStyle : {
     width:width -100,

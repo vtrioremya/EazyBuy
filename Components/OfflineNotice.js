@@ -62,8 +62,8 @@ class OfflineNotice extends Component<Props> {
 
 
   render() {
-    console.log("net status",this.state.netStatus)
-    console.log("connection",this.state.isConnected)
+    // console.log("net status",this.state.netStatus)
+    // console.log("connection",this.state.isConnected)
 
     if (!this.state.isConnected) {
       return <MiniOfflineSign />;

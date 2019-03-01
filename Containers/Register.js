@@ -251,7 +251,7 @@ export default class Register extends Component<Props> {
         />
 
         <View style={{flexDirection:'row', borderBottomWidth:1, borderColor:'#d3d3d3' ,alignItems:'center', margin:10,width:width/1.19 }}>
-          <Text style={{fontSize:20,marginRight:5, color:'#000'}}> {this.state.value}</Text>
+          <Text style={{fontSize:Fonts.regular,marginRight:5, color:'#000'}}> {this.state.value}</Text>
           <CountryPicker
             countryList={this.state.countries}
             onChange={value => {
@@ -272,7 +272,7 @@ export default class Register extends Component<Props> {
           />
 
           <TextInput
-            placeholder = 'Enter Mobile Number'
+            placeholder = 'Phone Number'
             placeholderTextColor = '#ababab'
             value={this.state.mobile}
             onChangeText={(mobile) => this.setState({mobile})}
@@ -307,27 +307,27 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color:'#000',
-    fontSize:22
+    fontSize:Fonts.input
   },
   textInputStyle : {
     width:width/1.19,
-    fontSize:20,
+    fontSize:Fonts.regular,
     margin:10
   },
   textInputStyle2 : {
     width:width/2.5,
-    fontSize:20,
+    fontSize:Fonts.regular,
     margin:10
   },
   textInputStyle3 : {
     width:width/3.5,
-    fontSize:20,
+    fontSize:Fonts.regular,
     margin:10,
     color:'#000'
   },
   textInputStyle4 : {
     width:width/2,
-    fontSize:20,
+    fontSize:Fonts.regular,
     margin:10
   },
   loginButton : {
@@ -343,18 +343,18 @@ const styles = StyleSheet.create({
   },
   login : {
     color:'#fff',
-    fontSize: 18,
+    fontSize:Fonts.nextRegular
   },
   forgotPassword: {
     color:'#aeaeae',
-    fontSize:20
+    fontSize:Fonts.regular
   },
   forgotView: {
-    marginTop:20
+    fontSize:Fonts.regular
   },
   account: {
     color:'#000',
-    fontSize:22
+    fontSize:Fonts.input
   },
   accountView :{
     marginTop:30

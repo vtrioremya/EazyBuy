@@ -16,6 +16,7 @@ target 'EasyBuy' do
   target 'EasyBuy-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
+
   end
 
   target 'EasyBuyTests' do
