@@ -74,12 +74,13 @@ export default class Account extends Component<Props> {
       fontWeight: '200',
     },
     headerLeft: (
-      <View style={{marginLeft:10}}>
-        <TouchableOpacity >
+      <View style={{marginLeft:10, flexDirection:'row',flex:1}}>
+        <TouchableOpacity style={{width:50}}>
           <Image source={require('../Images/hamp.png')} style={{width:30,height:30}}/>
         </TouchableOpacity>
-        <View>
-          <Text>Account</Text>
+        <View style={{width:width/1.4,alignItems:'center', justifyContent:'center'}}>
+          <Text style={{fontWeight: '200',fontSize: 18,
+          fontFamily:Fonts.base, color:'#fff', alignItems:'center', justifyContent:'center'}}>Account</Text>
         </View>
       </View>
     ),
@@ -343,12 +344,12 @@ _dropdownListYear(id, value){
                   <TouchableOpacity onPress={this.addPhoto.bind(this)}>
                     { (this.state.profile_pic) ?
                       <Image source={{uri: this.state.profile_pic}}
-                    style={{width:width/3.5,height:height/5.7,borderColor:'#ffb013',
-                    borderWidth:1,borderRadius:80}}/>
+                    style={{width:120,height:120,borderColor:'#ffb013',
+                    borderWidth:1,borderRadius:120/2}}/>
                     :
                     <Image source={require('../Images/blank_profile_pic.png')}
-                    style={{width:width/3.5,height:height/5.7,borderColor:'#ffb013',
-                    borderWidth:1,borderRadius:80}}/>
+                    style={{width:120,height:120,borderColor:'#ffb013',
+                    borderWidth:1,borderRadius:120/2}}/>
                   }
                   </TouchableOpacity>
                 </View>

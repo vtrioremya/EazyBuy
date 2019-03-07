@@ -19,6 +19,7 @@ import Fonts from '../Themes/Fonts'
 import Loader from '../Components/Loader'
 
 import { connect } from 'react-redux';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 type Props = {};
 class ProductDetails extends Component<Props> {
@@ -28,13 +29,15 @@ class ProductDetails extends Component<Props> {
     // this.splash=this.splash.bind(this);
     this.state = {
       index:0,
+      defaultName:'Qty',
       selectedTab: 0,
       groceries: [{key: 'a'}, {key: 'b'}, {key: 'c'}, {key: 'd'}, {key: 'e'}, {key: 'f'}],
       details: [],
       loader:true,
-      size: null,
+      size: [],
       sliderImages:[],
-      bannerImage:[]
+      bannerImage:[],
+      sizeName: []
     };
   }
 
@@ -90,26 +93,29 @@ class ProductDetails extends Component<Props> {
       this.setState({
         details : fetchApiLogin.products,
         loader:false,
-        size: this.state.details.size,
+        size: fetchApiLogin.products.size,
         sliderImages: fetchApiLogin.images
       })
-console.log(this.state.details)
-      // var weights = this.state.size
-      // var weightName = []
-      // var weightId = []
-      // var weightResult = []
-      //
-      // weights.map((size)=>{
-      //
-      //   weightName.push(size.name)
-      //   weightId.push(size.option_value_id)
-      //   var object = []
-      //   object=[{'id': size.option_value_id,
-      //       'value': size.name,
-      //   }]
-      //   weightResult.push(object)
-      //
-      // })
+// console.log(this.state.details)
+      var weights = this.state.size
+      var weightName = []
+      var weightId = []
+      var weightResult = []
+
+      weights.map((size)=>{
+
+        weightName.push(size.name)
+        weightId.push(size.option_value_id)
+        var object = []
+        object=[{'id': size.option_value_id,
+            'value': size.name,
+        }]
+        weightResult.push(object)
+
+      })
+      this.setState({
+        sizeName: weightName
+      })
 
       this.props.navigation.setParams({
         backbutton: this.backbutton.bind(this),
@@ -140,6 +146,13 @@ console.log(this.state.details)
                  actions: [{type: NavigationActions.NAVIGATE, routeName: 'Cart'}]
                }
              })
+    }
+
+    _dropdownList(index,value){
+      console.log(value)
+        this.setState({
+          defaultName: value
+        })
     }
 
 
@@ -192,18 +205,76 @@ console.log(this.state.details)
 
             <View style={{marginTop:20, marginBottom:20,flexDirection:'row',
              justifyContent:'space-around'}}>
-              { this.state.size  ? <View style={{borderRadius:10, borderColor:'gray', borderWidth:1,
-              width:width/4, height:40,alignItems:'center', justifyContent:'center'}}>
-                <Text style={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base, color:'#000'}}>1 Kg </Text>
-              </View>:<View></View>}
+              { this.state.size.length < 0  ?
+                this.state.size.map((name) => {
+                  return (
+                    <TouchableOpacity activeOpacity={0.5}>
+                      <View style={{borderRadius:10, borderColor:'gray', borderWidth:1,
+                        width:width/4, height:40,alignItems:'center', justifyContent:'center'}}>
+                        <Text style={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base,
+                          color:'#000'}}>{name.option_name}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )
+                }):
+                  <View style={{flexDirection:'row', justifyContent:'space-between', width:width/1.75}}>
+                      <TouchableOpacity activeOpacity={0.5}>
+                        <View style={{borderRadius:10, borderColor:'gray', borderWidth:1,
+                          width:width/4, height:40,alignItems:'center', justifyContent:'center'}}>
 
-              { this.state.size ? <View style={{borderRadius:10, borderColor:'gray', borderWidth:1,width:width/4, height:40,alignItems:'center',
-              justifyContent:'center'}}>
-                <Text style={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base, color:'#000'}}>500 gms </Text>
-              </View>:<View></View>}
+                          <ModalDropdown options={this.state.sizeName}
+                            style={{height:30,fontSize:Fonts.verySmall,
+                            fontFamily:Fonts.base}} 
+                            dropdownTextStyle={{fontSize:Fonts.verySmall, fontFamily:Fonts.base}}
+                            onSelect={(idx, value) => this._dropdownList(idx, value)}
+                            dropdownStyle={{borderColor:'gray', borderWidth:1, borderRadius:5, width:90}}
+                          >
+
+                          <View style={{  width:width/4,alignItems:'center',flexDirection:'row',
+                          justifyContent:'space-between'}}>
+                            <View style={{alignItems:'center',justifyContent:'center'}}>
+                            <Text style={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base,
+                              color:'#000'}}>{this.state.defaultName}</Text>
+                            </View>
+
+                            <View style={{width:30, alignItems:'center'}}>
+                              <Image source={require('../Images/drop-down-arrow.png')}
+                              style={{width:10,height:10}} />
+                            </View>
+
+                          </View>
+                          </ModalDropdown>
+
+
+                        </View>
+                      </TouchableOpacity>
+                      <View style={{flexDirection:'row',alignItems:'center',
+                      justifyContent:'space-between',width:width/4,height:40}}>
+
+
+                          <TouchableOpacity style={{width:40, alignItems:'center',
+                          justifyContent:'center'}}>
+                            <Image source={require('../Images/minus.png')}
+                              style={{width:15,height:15}} />
+                          </TouchableOpacity>
+
+                          <View style={{alignItems:'center',width:30,justifyContent:'center',height:40,
+                          borderColor:'gray', borderWidth:0.5, borderRadius:5}}>
+                            <Text style={styles.ratandlocStyle}>0</Text>
+                          </View>
+
+                          <TouchableOpacity style={{width:40, alignItems:'center',justifyContent:'center'}}>
+                            <Image source={require('../Images/plus.png')}
+                              style={{width:15,height:15}} />
+                          </TouchableOpacity>
+
+                      </View>
+                </View>}
+
+
 
               <View style={{width:width/4, height:40,}}>
-                <TouchableOpacity style={{width:width/4.5, height:40,
+                <TouchableOpacity activeOpacity={0.5} style={{width:width/4.5, height:40,
                   alignItems:'center', backgroundColor:'#a9cf46',borderRadius:10, borderColor:'#a9cf46', borderWidth:1,
                   justifyContent:'center'}} onPress={() => this.props.navigation.navigate('Cart')}>
                   <Text style={{fontSize:Fonts.regular, fontFamily:Fonts.base, color:'#fff'}}>ADD +</Text>
@@ -307,7 +378,7 @@ const styles = StyleSheet.create({
     // borderWidth:1
   },
   ratandlocStyle: {
-    marginLeft:5,
+    // marginLeft:5,
     fontSize:17
   },
   headerName: {

@@ -24,14 +24,15 @@ export default class Checkout extends Component<Props> {
     this.splash=this.splash.bind(this);
     this.state = {
       isChecked: false,
-      checked1: true
+      checked1: true,
+      radioButton:'value1'
     };
   }
 
   static navigationOptions = ({ navigation }) => {
       const { params = {} } = navigation.state;
       return {
-    headerTitle: 'CHECKOUT',
+    headerTitle: '',
     headerStyle: {
       backgroundColor: '#39385a',
     },
@@ -40,10 +41,14 @@ export default class Checkout extends Component<Props> {
       fontWeight: '200',
     },
       headerLeft: (
-        <View style={{marginLeft:10}}>
-          <TouchableOpacity onPress={()=> params.backbutton()}>
+        <View style={{marginLeft:10,flexDirection:'row',flex:1}}>
+          <TouchableOpacity style={{width:50}} onPress={()=> params.backbutton()}>
             <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
           </TouchableOpacity>
+          <View style={{width:width-100,alignItems:'center', justifyContent:'center'}}>
+            <Text style={{fontWeight: '200',fontSize: 18,
+            fontFamily:Fonts.base, color:'#fff', alignItems:'center', justifyContent:'center'}}>CHECKOUT</Text>
+          </View>
         </View>
       ),
       headerRight: (<View></View>),
@@ -78,6 +83,19 @@ export default class Checkout extends Component<Props> {
     this.props.navigation.navigate('Location')
   }
 
+  cash(){
+    this.setState({
+      radioButton: 'value1'
+    })
+    // this.props.navigation.navigate('Checkout')
+  }
+
+  card(){
+    this.setState({
+      radioButton: 'value2',
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -103,12 +121,8 @@ export default class Checkout extends Component<Props> {
           <View style={styles.paymentMethod}>
           <CheckBox
               style={{flex: 1, padding: 10}}
-              onClick={()=>{
-                this.setState({
-                    isChecked:!this.state.isChecked
-                })
-              }}
-              isChecked={this.state.isChecked}
+              onClick={this.cash.bind(this)}
+              isChecked={this.state.radioButton === 'value1'}
               leftText={"Cash on Delivery"}
               leftTextStyle={{fontSize:Fonts.nextRegular, fontFamily:Fonts.base,color:'#000'}}
               checkedImage={<Image source={require('../Images/radio-but-chk.png')}
@@ -119,12 +133,8 @@ export default class Checkout extends Component<Props> {
 
             <CheckBox
                 style={{flex: 1, padding: 10}}
-                onClick={()=>{
-                  this.setState({
-                      isChecked:!this.state.isChecked
-                  })
-                }}
-                isChecked={this.state.checked1}
+                onClick={this.card.bind(this)}
+                isChecked={this.state.radioButton === 'value2'}
                 leftText={"Card Payment"}
                 leftTextStyle={{fontSize:Fonts.nextRegular,fontFamily:Fonts.base, color:'#000'}}
                 checkedImage={<Image source={require('../Images/radio-but-chk.png')}
@@ -162,7 +172,7 @@ const styles = StyleSheet.create({
 
   },
   locationText :{
-    fontSize: Fonts.mid, color:'#000',
+    fontSize: 18, color:'#000',fontWeight:'bold',
     fontFamily:Fonts.base,
 
   },
@@ -190,7 +200,8 @@ const styles = StyleSheet.create({
     marginTop:20
   },
   pay: {
-    fontSize: Fonts.mid,
+    fontSize: 18,
+    fontWeight:'bold',
     fontFamily:Fonts.base,
     color:'#000'
   },

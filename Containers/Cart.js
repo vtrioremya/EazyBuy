@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
+import {Platform, Modal,TouchableHighlight, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
@@ -16,9 +16,11 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import ToggleBox from 'react-native-show-hide-toggle-box'
 import {connect} from 'react-redux'
 import Fonts from '../Themes/Fonts'
+import DatePicker from 'react-native-datepicker'
+import moment from 'moment';
 
 type Props = {};
-
+var newDate = moment(new Date()).format('DD-MM-YYYY');
 class Cart extends Component<Props> {
 
   constructor(props){
@@ -27,7 +29,9 @@ class Cart extends Component<Props> {
     this.state = {
       index:0,
       selectedTab: 0,
+      date:newDate ,
       coupon:'',
+      modalVisible:false,
       groceries: [{key: 'a'}, {key: 'b'}],
       history: [{key: 'a'}, {key: 'b'}],
       routes: [
@@ -86,6 +90,10 @@ class Cart extends Component<Props> {
     productdetail = () => {
       // Alert.alert("splash");
       this.props.navigation.navigate('ProductDetails')
+    }
+
+    setModalVisible(visible) {
+      this.setState({modalVisible: visible});
     }
 
     renderHistory(rowData, sectionID, rowID, highlightRow){
@@ -185,9 +193,9 @@ class Cart extends Component<Props> {
 
 
   render() {
-    // console.log("cart item length",this.props.cartItems.length)
-    console.log("REDUX PROPS",this.props)
-    console.log("REDUX cart",this.props.cartItems)
+    // console.warn("date",this.state.date)
+    // console.log("REDUX PROPS",this.props)
+    // console.log("REDUX cart",this.props.cartItems)
     return (
       <ScrollView>
       <View style={styles.container}>
@@ -296,11 +304,60 @@ class Cart extends Component<Props> {
           <View style={{width:width/2,alignItems:'center'}}>
             <TouchableOpacity style={{width:width/2.2, backgroundColor:'#fdc82a', borderRadius: width/3 /2,
               height:60, borderColor:'transparent', borderWidth:1, justifyContent:'center'}}>
-              <Text style={{fontSize:Fonts.input, fontFamily:Fonts.base,color:'#fff', textAlign:'center'}}>SCHEDULE</Text>
+              <Text style={{fontSize:Fonts.input, fontFamily:Fonts.base,color:'#fff',
+              textAlign:'center'}} onPress={() => {
+                this.setModalVisible(true);
+              }}>SCHEDULE</Text>
             </TouchableOpacity>
           </View>
         </View>
         </View>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+
+          <TouchableHighlight
+            onPress={() => {
+              this.setModalVisible(!this.state.modalVisible);
+            }} style={styles.outerModal}>
+
+            <View style={styles.modalView}>
+              <View style={{width:width/2,  justifyContent:'center'}}>
+              <DatePicker
+                style={{width: 200}}
+                date={this.state.date}
+                mode="datetime"
+                placeholder="select date"
+                format="DD-MM-YYYY ,h:mm:ss"
+
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                customStyles={{
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0
+                  },
+                  dateInput: {
+                    marginLeft: 36
+                  }
+                  // ... You can check the source to find the other keys.
+                }}
+                onDateChange={(date) => {this.setState({date: date})}}
+              />
+
+              </View>
+            </View>
+
+          </TouchableHighlight>
+
+        </Modal>
 
 
       </View>
@@ -409,7 +466,23 @@ const styles = StyleSheet.create({
     fontSize: Fonts.mid,
     fontFamily:Fonts.base,
     color:'#9b9b9b'
-  }
+  },
+  outerModal: {
+    flex:1,
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  modalView :{
+    alignItems:'center',
+    elevation: 4,
+    borderColor:'gray',
+    borderRadius:20,
+    justifyContent:'center',
+    backgroundColor:'#fff',
+    width: width/1.5,
+    height: height/4.5,
+    shadowColor:'#000'
+  },
 });
 
 const mapStateToProps = (state) => {

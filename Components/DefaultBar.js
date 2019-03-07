@@ -16,7 +16,7 @@ const DefaultBar = (props) => {
         </TouchableOpacity>
       </View>
 
-    
+
 
     </View>
   );
