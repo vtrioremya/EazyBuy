@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   textStyle: {
     marginTop:10,
     flexDirection:'column',
-     width:width/4,
+     width:width/2.5,
   },
   text :{
     fontSize:Fonts.input,

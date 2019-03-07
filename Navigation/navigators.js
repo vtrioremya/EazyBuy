@@ -149,9 +149,9 @@ export const Stack = createStackNavigator({
             </View>
 
             <View style={{width: width/2, height: 50, flexDirection:'row'}} >
-              <TextInput placeholder='Sample Address, Address Feild 1, Feild 2'
+              <TextInput placeholder='Sample Address, Address Feild 1, Feild 2 fields.....'
               placeholderTextColor= '#fff'
-              style={{width:width/1.5, fontSize:12, color:'#fff'}}/>
+              style={{width:width/1.55, fontSize:12, color:'#fff'}}/>
               <TouchableOpacity style={{width:20, height:50, justifyContent:'center', alignItems:'center'}}>
                 <Image source={require('../Images/drop-down-arrow.png')} style={{width:12, height:12}}/>
               </TouchableOpacity>

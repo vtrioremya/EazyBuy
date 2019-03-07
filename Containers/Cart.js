@@ -93,7 +93,7 @@ class Cart extends Component<Props> {
       let history =rowData.item
       let list = []
       list.push(
-          <View style={{flexDirection:'row',padding:20, justifyContent:'space-between'}}>
+          <View style={{flexDirection:'row',padding:5, justifyContent:'space-between'}}>
             <View style={{justifyContent:'space-around'}}>
               <Text style={styles.points}>20 Pts</Text>
               <Text style={styles.date}>11/05/2018</Text>
@@ -204,11 +204,12 @@ class Cart extends Component<Props> {
 
           <ToggleBox label={<Text>Add Coupon Code</Text>}  expanded={false} arrowDownType='add'
           arrowUpType='remove' style={{borderColor:'#d6d6d6',backgroundColor: '#fff', borderBottomWidth: 1,fontSize:20}}>
-            <View style={{alignItems: 'center',height:200,marginBottom:20,
+            <View style={{alignItems: 'center',height:100,marginBottom:20,
              backgroundColor: '#fff'}} arrowUpType='remove'>
 
 
-              <TextInput style={{borderColor:'#d3d3d3',borderWidth:1,borderRadius:10,fontFamily:Fonts.base}}
+              <TextInput style={{borderColor:'#d3d3d3',borderWidth:1,borderRadius:10,
+              fontFamily:Fonts.base, width:width/1.5}}
               placeholder='Enter coupon code' value={this.state.coupon}
               onChangeText={(coupon)=>this.setState({coupon})}/>
 
@@ -221,7 +222,8 @@ class Cart extends Component<Props> {
 
 
           <ToggleBox label={<Text>Loyalty Points</Text>} expanded={false} arrowDownType='add'
-          arrowUpType='remove' style={{borderColor:'#d6d6d6',backgroundColor: '#fff', borderBottomWidth: 1,fontSize:20}}>
+          arrowUpType='remove' style={{borderColor:'#d6d6d6',backgroundColor: '#fff',
+          borderBottomWidth: 1,fontSize:20}}>
             <View style={{alignItems: 'center', marginBottom:20,
              backgroundColor: '#fff'}}>
 
@@ -232,8 +234,8 @@ class Cart extends Component<Props> {
                 <Text style={{color:'#fff', fontSize:Fonts.nextRegular,fontFamily:Fonts.base }}>REDEEM</Text>
               </TouchableOpacity>
 
-              <View style={{borderTopWidth:1,borderColor:'#e5e5e5', marginTop:20, width:width}}>
-                <View style={{padding:20}}>
+              <View style={{borderTopWidth:1,borderColor:'#e5e5e5', marginTop:10, width:width}}>
+                <View style={{paddingTop:10, paddingLeft:10}}>
                   <Text style={styles.history}>HISTORY</Text>
                 </View>
 
@@ -259,7 +261,7 @@ class Cart extends Component<Props> {
           </View>
 
           <View style={{flexDirection:'row', justifyContent:'space-between',marginTop:10}}>
-            <Text style={{fontSize:Fonts.mid,fontFamily:Fonts.base,color:'#000'}}>Service Fee</Text>
+            <Text style={{fontSize:Fonts.mid,fontFamily:Fonts.base,color:'#000'}}>Delivery Fee</Text>
             <Text style={{fontSize:Fonts.mid,fontFamily:Fonts.base,color:'#000'}}>AED 00</Text>
           </View>
 
@@ -273,7 +275,8 @@ class Cart extends Component<Props> {
           <Text style={{fontSize:20,color:'#000', fontWeight:'bold'}}>Order Total</Text>
           <View style={{alignItems:'flex-end', flexDirection:'column'}}>
             <Text style={{fontSize:20,color:'#000', fontWeight:'bold'}}>AED 30</Text>
-            <Text style={{textDecorationLine: 'underline',fontFamily:Fonts.base, color: '#7694ca', fontSize:Fonts.mid}}>Add an Item</Text>
+            <Text style={{textDecorationLine: 'underline',marginTop:10,fontFamily:Fonts.base, color: '#7694ca',
+            fontSize:Fonts.mid}} >Add an Item</Text>
           </View>
         </View>
 

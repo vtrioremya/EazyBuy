@@ -74,7 +74,7 @@ class ProductList extends Component<Props> {
   static navigationOptions = ({ navigation }) => {
       const { params = {} } = navigation.state;
       return {
-    headerTitle: params.heading,
+    headerTitle: '',
     headerStyle: {
       backgroundColor: '#39385a',
     },
@@ -84,10 +84,14 @@ class ProductList extends Component<Props> {
       fontFamily:Fonts.base
     },
       headerLeft: (
-        <View style={{marginLeft:10}}>
-          <TouchableOpacity onPress={()=> params.backbutton()}>
+        <View style={{marginLeft:10, flexDirection:'row',flex:1}}>
+          <TouchableOpacity style={{width:50}} onPress={()=> params.backbutton()}>
             <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
           </TouchableOpacity>
+          <View style={{width:width/1.4,alignItems:'center', justifyContent:'center'}}>
+            <Text style={{fontWeight: '200',fontSize: 18,
+            fontFamily:Fonts.base, color:'#fff', alignItems:'center', justifyContent:'center'}}>{params.heading}</Text>
+          </View>
         </View>
       ),
       headerRight: (
@@ -244,7 +248,7 @@ console.log(fetchApiLogin)
     // }
 
     _dropdownList(index,value){
-
+ console.log(value)
         this.setState({
           weightValue: value
         })
@@ -487,19 +491,20 @@ console.log(fetchApiLogin)
               <Text style={styles.headerName}>{grocery.name}</Text>
               <TouchableOpacity onPress={()=>this.props.navigation.navigate('Comparison')}>
                   <View>
-                    <Text style={{textDecorationLine: 'underline',color:'#7694ca', fontSize:Fonts.mid,  fontFamily:Fonts.base}} >
+                    <Text style={{textDecorationLine: 'underline',color:'#7694ca', fontSize:Fonts.mid,
+                      fontFamily:Fonts.base}}>
                     Compare Price</Text>
                   </View>
               </TouchableOpacity>
             </View>
-            <View style={{flexDirection:'row'}}>
+            <View style={{flexDirection:'row', marginTop:5,marginBottom:5}}>
               <Text style={{fontSize:Fonts.verySmall, color:'#000', fontFamily:Fonts.base}}>AED {grocery.price} </Text>
               <Text style={{fontSize:Fonts.verySmall, fontFamily:Fonts.base}}>({grocery.discount_percentage}% Off)</Text>
             </View>
           </View>
 
           <View style={{flexDirection:'row',width:width/1.8,alignItems:'center',
-          justifyContent:'space-between'}}>
+          justifyContent:'space-between', marginTop:5}}>
 
 
                 <ModalDropdown options={weightName}
@@ -704,6 +709,7 @@ const styles = StyleSheet.create({
     // borderWidth:1
   },
   ratandlocStyle: {
+    marginTop:3,
     marginLeft:5,
     fontSize:Fonts.verySmall,
      fontFamily:Fonts.base,

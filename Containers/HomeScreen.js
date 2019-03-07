@@ -21,7 +21,7 @@ import PropTypes from "prop-types";
 import Api from '../Services/AppServices'
 import {getToken} from '../Services/lib'
 import Fonts from '../Themes/Fonts'
-import { Rating } from 'react-native-ratings';
+import { Rating,AirbnbRating } from 'react-native-ratings';
 import RNGooglePlaces from 'react-native-google-places';
 
 import { connect } from 'react-redux';
@@ -33,7 +33,7 @@ class HomeScreen extends Component<Props> {
 
   constructor(props){
     super(props);
-    // this.splash=this.splash.bind(this);
+    // this.finished=this.finished.bind(this);
     this.state = {
       index:0,
       deleteLoader:true,
@@ -149,7 +149,7 @@ class HomeScreen extends Component<Props> {
     })
     // try{
       let token = await getToken()
-      console.log(token)
+      // console.log(token)
       var formData = new FormData();
       formData.append('store_id', this.state.storeId);
       formData.append('token', token);
@@ -157,7 +157,7 @@ class HomeScreen extends Component<Props> {
       formData.append('comments', '');
       console.log(formData)
       let rating = await Api.addStoreRating(formData)
-      console.log("rating api", rating.message)
+      // console.log("rating api", rating.message)
       ToastAndroid.show(rating.message, ToastAndroid.SHORT);
       // Alert.alert(rating.message)
     // }
@@ -166,17 +166,17 @@ class HomeScreen extends Component<Props> {
     // }
   }
 
-  finished(rating){
-    console.log(rating)
+  finished = (rating)=> {
+    // console.log(rating)
 
     this.setState({
       ratings: rating
     })
-
+    // console.log(this.state.ratings)
   }
 
   renderRow(rowData, sectionID, rowID, highlightRow){
-    console.log(rowData)
+    // console.log(rowData)
     let grocery =rowData.item
     let list = []
     var avg = Math.floor(grocery.rating_avg.avg * 100) / 100
@@ -212,7 +212,7 @@ class HomeScreen extends Component<Props> {
             <Text style={styles.headerName}>{grocery.name}</Text>
             <Text style={{fontFamily:Fonts.base}}>{grocery.address_arabic}</Text>
 
-            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+            <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',marginTop:5}}>
               <View style={{flexDirection:'row'}}>
 
                   <Image source={require('../Images/map-1.png')}
@@ -302,7 +302,7 @@ class HomeScreen extends Component<Props> {
 
         <View>
           <MaterialTabs
-            items={['Groceries', 'Maid Services', 'Techservice']}
+            items={['Groceries', 'Maid Service', 'Techservice']}
             selectedIndex={this.state.selectedTab}
             onChange={index => this.setState({ selectedTab: index })}
             barColor='#fff'
@@ -350,12 +350,10 @@ class HomeScreen extends Component<Props> {
                       RATE ME
                 </Text>
 
-                <Rating
-                  type='star'
-                  ratingCount={5}
-                  imageSize={40}
-                  ratingColor={'yellow'}
-                  showRating
+                <AirbnbRating
+                  count={5}
+                  defaultRating={this.state.ratings}
+                  size={40}
                   onFinishRating={this.finished.bind(this)}
                 />
 

@@ -41,6 +41,7 @@ export default class Location extends Component<Props> {
       fullAddress:[],
       address1_flat:'',
       address_building:'',
+      hideConfirm:true,
       searchText:'Enter Delivery Address'
     };
   }
@@ -73,7 +74,7 @@ export default class Location extends Component<Props> {
 
 
   setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+    this.setState({modalVisible: visible, hideConfirm: !this.state.hideConfirm});
   }
 
   async confirm(){
@@ -210,13 +211,13 @@ export default class Location extends Component<Props> {
 
         </MapView>
 
-        <View style={styles.confirm}>
+        {this.state.hideConfirm ? <View style={styles.confirm}>
           <TouchableOpacity style={styles.confirmButton} onPress={() => {
             this.setModalVisible(true);
           }}>
             <Text style={{color:'#fff', fontSize:Fonts.input,fontFamily:Fonts.base}}>CONFIRM</Text>
           </TouchableOpacity>
-        </View>
+        </View> : <View></View> }
 
 
         <Modal
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems:'center',
     position:'absolute',
-    marginLeft:5,
+    // marginLeft:5,
     marginRight:5,
     zIndex:2,
     top:0,

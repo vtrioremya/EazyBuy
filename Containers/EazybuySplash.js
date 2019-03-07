@@ -57,7 +57,7 @@ export default class EazybuySplash extends Component<Props> {
           style={{width: 150, height: 150}}/>
 
           <View>
-            <Text>Version 15.0</Text>
+            <Text>Version 16.0</Text>
           </View>
 
           <View style={styles.english}>
@@ -65,7 +65,7 @@ export default class EazybuySplash extends Component<Props> {
           </View>
 
 
-            <Image source={require('../Images/splash-bot-img.jpg')} style={{resizeMode: 'stretch',width:width, height:height/1.9}}/>
+            <Image source={require('../Images/splash.jpg')} style={{resizeMode: 'stretch',width:width, height:height/1.9}}/>
         </View>
       </View>
     );

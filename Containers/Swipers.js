@@ -79,7 +79,7 @@ export default class Swipers extends Component<Props> {
 
     return (
       <View style={styles.container}>
-      
+
         <Swiper style={{width:width}}
                 showsButtons={true}
                 dot= {
@@ -88,6 +88,7 @@ export default class Swipers extends Component<Props> {
                 activeDot= {
                   <View style={{backgroundColor: '#fff', width: 8, height: 8, borderRadius: 4, marginLeft: 10, marginRight: 10, marginTop: 3, marginBottom: 3,}} />
                 }
+                autoplay={true}
                 loop={false}
                 nextButton={
                   <View style={{ width:50, height:50}}>
@@ -109,7 +110,7 @@ export default class Swipers extends Component<Props> {
 
                   <WelcomeText
                   bg={require('../Images/welcome-bg-2.jpg')}
-                  picture={require('../Images/welcome-2.jpg')}
+                  picture={require('../Images/welcome-pic-2.jpg')}
                   text={this.state.welcome2_title}
                   description={this.state.welcome2_description}
                   buttonColor='#2f2c49'
@@ -119,7 +120,7 @@ export default class Swipers extends Component<Props> {
 
                 <WelcomeText
                 bg={require('../Images/welcome-bg-1.jpg')}
-                picture={require('../Images/welcome-3.jpg')}
+                picture={require('../Images/welcome-pic-3.jpg')}
                 text={this.state.welcome3_title}
                 description={this.state.welcome3_description}
                 buttonColor='#fbbc00'

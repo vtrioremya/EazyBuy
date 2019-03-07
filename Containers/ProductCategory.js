@@ -136,10 +136,10 @@ console.log(fetchApiLogin)
         <TouchableOpacity style={{width:width/3,height:height/6,
           alignItems:'center', }}
           onPress={this.productlist.bind(this, cat.category_id, cat.name)}>
-          <Image source={{uri: cat.image}}
-          style={{width: width/3.8, height:80}}/>
-          <Text numberOfLines={2} style={{width:100, textAlign:'center', fontSize:Fonts.verySmall,fontFamily:Fonts.base,
-          color:'#000'}}>{catname}</Text>
+            <Image source={{uri: cat.image}}
+            style={{width: width/3.8, height:80}}/>
+            <Text numberOfLines={2} style={{width:100, marginTop:5, textAlign:'center', fontSize:Fonts.verySmall,fontFamily:Fonts.base,
+            color:'#000'}}>{catname}</Text>
         </TouchableOpacity>
       </View>
     );

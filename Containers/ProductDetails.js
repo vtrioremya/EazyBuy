@@ -41,7 +41,7 @@ class ProductDetails extends Component<Props> {
   static navigationOptions = ({ navigation }) => {
       const { params = {} } = navigation.state;
       return {
-        headerTitle: params.heading,
+        headerTitle: '',
         headerStyle: {
           backgroundColor: '#39385a',
 
@@ -52,10 +52,14 @@ class ProductDetails extends Component<Props> {
           // textTransform: 'uppercase'
         },
           headerLeft: (
-            <View style={{marginLeft:10}}>
-              <TouchableOpacity onPress={()=> params.backbutton()}>
+            <View style={{marginLeft:10, flexDirection:'row',flex:1}}>
+              <TouchableOpacity style={{width:50}} onPress={()=> params.backbutton()}>
                 <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
               </TouchableOpacity>
+              <View style={{width:width/1.4,alignItems:'center', justifyContent:'center'}}>
+                <Text style={{fontWeight: '200',fontSize: 18,
+                fontFamily:Fonts.base, color:'#fff', alignItems:'center', justifyContent:'center'}}>{params.heading}</Text>
+              </View>
             </View>
           ),
           headerRight: (
@@ -89,7 +93,7 @@ class ProductDetails extends Component<Props> {
         size: this.state.details.size,
         sliderImages: fetchApiLogin.images
       })
-
+console.log(this.state.details)
       // var weights = this.state.size
       // var weightName = []
       // var weightId = []
@@ -182,7 +186,7 @@ class ProductDetails extends Component<Props> {
                     style={{backgroundColor:'#fdc82a', width:width-50,
                     height: 50, alignItems:'center', justifyContent:'center',
                   borderRadius:50, borderColor:'transparent', borderWidth:1}}>
-                <Text style={{fontFamily:Fonts.base,color:'#000', fontSize:Fonts.nextRegular}}>{this.state.details.special_price}</Text>
+                <Text style={{fontFamily:Fonts.base,color:'#000', fontSize:Fonts.nextRegular}}>AED {this.state.details.price}</Text>
               </View>
             </View>
 

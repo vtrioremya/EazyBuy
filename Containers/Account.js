@@ -29,6 +29,7 @@ export default class Account extends Component<Props> {
   constructor(props){
     super(props);
     // this.uploadPhoto=this.uploadPhoto.bind(this)
+    // this.addPhoto=this.addPhoto.bind(this)
     this.state={
       firstname: 'Your name',
       lastname: '',
@@ -226,11 +227,9 @@ async retrieveCurrentUser(token){
             // this.retrieveCurrentUser()
 
              ToastAndroid.show(imageUpload.message, ToastAndroid.SHORT);
-             // this.setState({
-             //   profile_pic_new: image.path,
-             //   profile_pic: image.path,
-             //   url: photo,
-             // })
+             this.setState({
+               profile_pic: image.path
+             })
 
        });
     }
@@ -341,14 +340,14 @@ _dropdownListYear(id, value){
               <View style={styles.proImage}>
 
                 <View style={styles.Image}>
-                  <TouchableOpacity onPress={this.addPhoto}>
+                  <TouchableOpacity onPress={this.addPhoto.bind(this)}>
                     { (this.state.profile_pic) ?
                       <Image source={{uri: this.state.profile_pic}}
-                    style={{width:width/3.5,height:height/6,borderColor:'#ffb013',
+                    style={{width:width/3.5,height:height/5.7,borderColor:'#ffb013',
                     borderWidth:1,borderRadius:80}}/>
                     :
                     <Image source={require('../Images/blank_profile_pic.png')}
-                    style={{width:width/3.5,height:height/6,borderColor:'#ffb013',
+                    style={{width:width/3.5,height:height/5.7,borderColor:'#ffb013',
                     borderWidth:1,borderRadius:80}}/>
                   }
                   </TouchableOpacity>
@@ -373,6 +372,7 @@ _dropdownListYear(id, value){
                     <TextInput
                       onChangeText={(email) => this.setState({email})}
                       editable={this.state.editable}
+                      selection={{start:0, end:0}}
                       style={{fontSize:Fonts.nextRegular,fontFamily: Fonts.base, color:'#6c6c6c',
                       width:width/2.2}}
                       value={this.state.email}/>
@@ -714,7 +714,8 @@ const styles = StyleSheet.create({
   Image: {
     width: width/3,
     // backgroundColor:'red',
-    alignItems:'center',justifyContent:'center'
+    // alignItems:'center',
+    justifyContent:'center'
   },
   editButton: {
     width:40,
