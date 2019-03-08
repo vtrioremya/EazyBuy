@@ -57,7 +57,7 @@ export default class EazybuySplash extends Component<Props> {
           style={{width: 150, height: 150}}/>
 
           <View>
-            <Text>Version 16.0</Text>
+            <Text>Version 17.0</Text>
           </View>
 
           <View style={styles.english}>

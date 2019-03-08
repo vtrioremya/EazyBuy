@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, Modal,TouchableHighlight, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
+import {Platform, Button, Modal,TouchableHighlight, ScrollView, FlatList, StyleSheet, Text, View, TouchableOpacity, Dimensions, Image, Alert, TextInput} from 'react-native';
 var {height, width} = Dimensions.get('window');
 import { NavigationActions } from 'react-navigation'
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
@@ -44,7 +44,7 @@ class Cart extends Component<Props> {
   static navigationOptions = ({ navigation }) => {
       const { params = {} } = navigation.state;
       return {
-    headerTitle: 'YOUR CART',
+    headerTitle: '',
     headerStyle: {
       backgroundColor: '#39385a',
     },
@@ -53,10 +53,15 @@ class Cart extends Component<Props> {
       fontWeight: '200',
     },
       headerLeft: (
-        <View style={{marginLeft:10}}>
-          <TouchableOpacity onPress={()=> params.backbutton()}>
+        <View style={{marginLeft:10, flex:1,flexDirection:'row'}}>
+          <TouchableOpacity style={{width:50}} onPress={()=> params.backbutton()}>
             <Image source={require('../Images/back.png')} style={{width:30,height:30}}/>
           </TouchableOpacity>
+          <View style={{width:width/1.4,alignItems:'center', justifyContent:'center'}}>
+            <Text style={{fontWeight: '200',fontSize: 18,
+            fontFamily:Fonts.base, color:'#fff', alignItems:'center',
+            justifyContent:'center'}}>YOUR CART</Text>
+          </View>
         </View>
       ),
       headerRight: (
@@ -190,6 +195,7 @@ class Cart extends Component<Props> {
     );
     return (<View>{list}</View>)
   }
+
 
 
   render() {
@@ -328,12 +334,13 @@ class Cart extends Component<Props> {
 
             <View style={styles.modalView}>
               <View style={{width:width/2,  justifyContent:'center'}}>
+
               <DatePicker
                 style={{width: 200}}
                 date={this.state.date}
-                mode="datetime"
+                mode="date"
                 placeholder="select date"
-                format="DD-MM-YYYY ,h:mm:ss"
+                format="DD-MM-YYYY"
 
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
@@ -351,6 +358,40 @@ class Cart extends Component<Props> {
                 }}
                 onDateChange={(date) => {this.setState({date: date})}}
               />
+
+              <DatePicker
+                style={{width: 200, marginTop:10}}
+                date={this.state.date}
+                mode="time"
+                placeholder="select time"
+                format="HH:MM:SS a"
+                is24Hour={false}
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                customStyles={{
+                  dateIcon: {
+                    position: 'absolute',
+                    left: 0,
+                    top: 4,
+                    marginLeft: 0
+                  },
+                  dateInput: {
+                    marginLeft: 36
+                  }
+                  // ... You can check the source to find the other keys.
+                }}
+                onDateChange={(date) => {this.setState({date: date})}}
+              />
+              <View style={{alignItems:'center',justifyContent:'center'}}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    this.setModalVisible(false);
+                  }}
+                  >
+                  <Text> Ok </Text>
+                </TouchableOpacity>
+              </View>
 
               </View>
             </View>
@@ -372,6 +413,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flexDirection: 'column',
 
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    width: width/4,
+    marginTop:10,
+    padding:10
   },
 
   english: {
@@ -470,7 +518,8 @@ const styles = StyleSheet.create({
   outerModal: {
     flex:1,
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'center',
+    backgroundColor:'rgba(0,0,0,0.5)'
   },
   modalView :{
     alignItems:'center',

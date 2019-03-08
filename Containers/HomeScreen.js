@@ -11,7 +11,7 @@ import {Platform,ToastAndroid,TouchableHighlight,Modal,AsyncStorage, ScrollView,
 var {height, width} = Dimensions.get('window');
 import { NavigationActions, DrawerActions } from 'react-navigation'
 import Swiper from 'react-native-swiper';
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
 import MaterialTabs from 'react-native-material-tabs';
 import CartComponents from '../Components/CartComponents'
 import Loader from '../Components/Loader'
@@ -35,7 +35,7 @@ class HomeScreen extends Component<Props> {
     super(props);
     // this.finished=this.finished.bind(this);
     this.state = {
-      index:0,
+      index: 0,
       deleteLoader:true,
       nothingtoDisplay: 'nodisplay',
       selectedTab: 0,
@@ -47,6 +47,8 @@ class HomeScreen extends Component<Props> {
       ratings:3
     };
   }
+
+
 
   // static navigationOptions = ({ navigation }) => ({
   //
@@ -266,6 +268,17 @@ class HomeScreen extends Component<Props> {
       return Sticky_header_View;
   }
 
+  setTab = (selectedTab,index) => {
+    this.setState({ selectedTab });
+    var idx = selectedTab.toString()
+    if(idx == 1 || idx == 2){
+      ToastAndroid.show("Coming Soon", ToastAndroid.SHORT);
+    }else {
+
+    }
+
+  };
+
 
   render() {
 
@@ -304,7 +317,7 @@ class HomeScreen extends Component<Props> {
           <MaterialTabs
             items={['Groceries', 'Maid Service', 'Techservice']}
             selectedIndex={this.state.selectedTab}
-            onChange={index => this.setState({ selectedTab: index })}
+            onChange={(index) => this.setTab(index)}
             barColor='#fff'
             indicatorColor='#eebd17'
             activeTextColor='#484848'
@@ -313,6 +326,9 @@ class HomeScreen extends Component<Props> {
             textStyle={{fontSize:18, fontFamily:Fonts.base}}
           />
         </View>
+
+
+
 
         <View style={{width:width, height: height/1.95}}>
 

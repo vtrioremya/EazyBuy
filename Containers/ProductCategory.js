@@ -15,6 +15,7 @@ import Api from '../Services/AppServices'
 import Fonts from '../Themes/Fonts'
 import Loader from '../Components/Loader'
 
+
 type Props = {};
 export default class ProductCategory extends Component<Props> {
 
@@ -129,17 +130,19 @@ console.log(fetchApiLogin)
     let i = 0
     let cat = rowData.item
     console.log(cat.name)
-    var catname = cat.name.toString()
+    var catname = cat.name
+    var newStr = catname.replace('&amp;', '&')
+    console.log("CAT NAME",newStr)
     list.push(
 
       <View style={{width:width/3,height:height/6,alignItems:'center', marginTop:5, marginBottom:5}}>
         <TouchableOpacity style={{width:width/3,height:height/6,
           alignItems:'center', }}
-          onPress={this.productlist.bind(this, cat.category_id, cat.name)}>
+          onPress={this.productlist.bind(this, cat.category_id, newStr)}>
             <Image source={{uri: cat.image}}
             style={{width: width/3.8, height:80}}/>
             <Text numberOfLines={2} style={{width:100, marginTop:5, textAlign:'center', fontSize:Fonts.verySmall,fontFamily:Fonts.base,
-            color:'#000'}}>{catname}</Text>
+            color:'#000'}}>{newStr}</Text>
         </TouchableOpacity>
       </View>
     );

@@ -224,7 +224,7 @@ class ProductDetails extends Component<Props> {
 
                           <ModalDropdown options={this.state.sizeName}
                             style={{height:30,fontSize:Fonts.verySmall,
-                            fontFamily:Fonts.base}} 
+                            fontFamily:Fonts.base}}
                             dropdownTextStyle={{fontSize:Fonts.verySmall, fontFamily:Fonts.base}}
                             onSelect={(idx, value) => this._dropdownList(idx, value)}
                             dropdownStyle={{borderColor:'gray', borderWidth:1, borderRadius:5, width:90}}

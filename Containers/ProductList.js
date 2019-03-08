@@ -210,7 +210,8 @@ console.log(fetchApiLogin)
 
     productdetail(prodId){
       // Alert.alert("splash");
-      this.props.navigation.navigate('ProductDetails',{prodId:prodId, storeId:this.props.navigation.state.params.storeId})
+      this.props.navigation.navigate('ProductDetails',{prodId:prodId,
+        storeId:this.props.navigation.state.params.storeId})
     }
 
 
@@ -720,7 +721,8 @@ const styles = StyleSheet.create({
   headerName: {
     fontSize:Fonts.nextRegular,
     fontFamily: Fonts.base,
-    color:'#000'
+    color:'#000',
+    fontWeight:'bold'
   },
   searchView: {
     flexDirection:'row',
